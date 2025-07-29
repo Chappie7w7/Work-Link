@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Inicio de sesión</title>
+</head>
+<body>
+    <h1>Inicio de sesión</h1>
+
+    {# Mostrar mensajes flash #}
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% if mensajes %}
+            <ul>
+                {% for categoria, mensaje in mensajes %}
+                    <li style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
+                        {{ mensaje }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="post" action="">
+        <label for="correo">Correo</label><br />
+        <input type="text" id="correo" name="correo" required maxlength="100" /><br /><br />
+
+        <label for="password">Contraseña</label><br />
+        <input type="password" id="password" name="password" required maxlength="100" /><br /><br />
+        
+        <button type="submit">Entrar</button>
+    </form>
+</body>
+</html>
