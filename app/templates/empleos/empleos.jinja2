@@ -1,0 +1,185 @@
+
+{% import "components/navbar.jinja2" as components %}
+{% import "components/footer.jinja2" as footer %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Empleos</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .top-bar {
+            background-color: #22d3ee;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 999px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+        }
+
+        .content {
+            padding: 30px 40px;
+        }
+
+        .result-header {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .result-sub {
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .job-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .job-label {
+            background-color: #fde68a;
+            color: #92400e;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 5px;
+            width: fit-content;
+            margin-bottom: 4px;
+        }
+
+        .job-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .job-meta {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .job-button {
+            background-color: white;
+            border: 2px solid #22d3ee;
+            color: #22d3ee;
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .job-button:hover {
+            background-color: #e0f7fa;
+        }
+
+        .filters {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background-color: #22d3ee;
+            color: white;
+            border-color: #22d3ee;
+        }
+    </style>
+</head>
+<body>
+
+    {{ components.navbar("empleos", "empleos", current_user) }}
+
+    <div class="content">
+        <h2 class="result-header">Empleos</h2>
+        <p class="result-sub">774 resultados para <strong>"desarrollador"</strong> en Chiapas</p>
+
+        <!-- Oferta destacada -->
+        <div class="job-card">
+            <div class="job-info">
+                <span class="job-label">Destacado</span>
+                <span class="job-title">Desarrollador Backend PHP</span>
+                <span class="job-meta">Nova Studio · Tuxtla Gutiérrez</span>
+            </div>
+            <button class="job-button">Encontrar</button>
+        </div>
+
+        <!-- Empleos normales -->
+        <div class="job-card">
+            <div class="job-info">
+                <span class="job-title">Decarrollador Web Junior</span>
+                <span class="job-meta">TechoSoluciones · Ocosingo Chiapas</span>
+            </div>
+            <button class="job-button">Ver estado</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-info">
+                <span class="job-title">Desarrollador JavaScript</span>
+                <span class="job-meta">Prototech · Comitán Chiapas</span>
+            </div>
+            <button class="job-button">Ver detalles</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-info">
+                <span class="job-title">Desarrollador Full Stack</span>
+                <span class="job-meta">Bitcorp · San Cristóbal Chiapas</span>
+            </div>
+            <button class="job-button active">Más filtros</button>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters">
+            <button class="filter-btn">Región</button>
+            <button class="filter-btn">Tipo de empleo</button>
+            <button class="filter-btn">Fecha</button>
+            <button class="filter-btn">Modalidad</button>
+        </div>
+    </div>
+
+    {{ footer.footer() }}
+</body>
+</html>

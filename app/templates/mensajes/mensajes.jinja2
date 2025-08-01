@@ -1,0 +1,183 @@
+{% import "components/navbar.jinja2" as components %}
+{% import "components/footer.jinja2" as footer %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mensajes</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .container {
+            display: flex;
+        }
+
+
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #ddd;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .chat-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .chat-item {
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .chat-item:hover,
+        .chat-item.active {
+            background-color: #e0f7fa;
+        }
+
+        .chat-item .name {
+            font-weight: bold;
+        }
+
+        .chat-item .last-msg {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .chat-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f9fafb;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            background-color: white;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 65%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message.sent {
+            background-color: #22d3ee;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .message.received {
+            background-color: #e5e7eb;
+            color: black;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px 20px;
+            background-color: white;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .chat-input button {
+            background-color: #22d3ee;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .chat-input button:hover {
+            background-color: #0ea5e9;
+        }
+    </style>
+</head>
+
+<body>
+
+    {{ components.navbar("mensajes", "mensajes", current_user) }}
+
+    <div class="container">
+        <!-- Conversaciones -->
+        <div class="sidebar">
+            <h2>Conversaciones</h2>
+            <ul class="chat-list">
+                <li class="chat-item active">
+                    <div class="name">Nova Studio</div>
+                    <div class="last-msg">Gracias por tu solicitud</div>
+                </li>
+                <li class="chat-item">
+                    <div class="name">Bitcorp</div>
+                    <div class="last-msg">¿Tienes portafolio?</div>
+                </li>
+                <li class="chat-item">
+                    <div class="name">TechoSoluciones</div>
+                    <div class="last-msg">Te avisamos pronto.</div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Chat -->
+        <div class="chat-box">
+            <div class="chat-header">Nova Studio</div>
+            <div class="chat-messages">
+                <div class="message received">Hola, gracias por aplicar al empleo.</div>
+                <div class="message sent">¡Hola! Gracias a ustedes por considerarme.</div>
+                <div class="message received">¿Puedes enviarnos tu CV actualizado?</div>
+                <div class="message sent">Claro, lo adjunto a continuación.</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Escribe un mensaje...">
+                <button>Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    {{ footer.footer() }}
+</body>
+
+</html>
