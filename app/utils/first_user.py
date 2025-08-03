@@ -3,10 +3,10 @@ from app.db.sql import db
 
 def first_user():
     """Crea un usuario admin por defecto si no existe"""
-    if not UsuarioModel.query.filter_by(correo="admin@worklink.com").first():
+    if not UsuarioModel.query.filter_by(correo="adminyahir@worklink.com").first():
         admin = UsuarioModel(
             nombre="Admin",
-            correo="adminAle@worklink.com",
+            correo="adminyahir@worklink.com",
             contraseña="admin123",  
             tipo_usuario="admin"
         )

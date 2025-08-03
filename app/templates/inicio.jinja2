@@ -1,0 +1,79 @@
+
+{% import "components/navbar.jinja2" as components %}
+{% import 'components/footer.jinja2' as footer %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio - Worklink</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #ffffff;
+        }
+
+        /* Estilos del contenido principal */
+        .main-content {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .left-column, .right-column {
+            width: 20%;
+        }
+
+        .center-column {
+            width: 60%;
+        }
+
+        .box {
+            background-color: #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .circle {
+            width: 100px;
+            height: 100px;
+            background-color: gray;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    {{ components.navbar("inicio", "inicio", current_user) }}
+
+    <div class="main-content">
+        <div class="column left-column">
+            <div class="box"><div class="circle"></div></div>
+            <div class="box" style="height: 150px;"></div>
+        </div>
+
+        <div class="column center-column">
+            <div class="box" style="font-weight: bold;">
+                Reduce tiempo y esfuerzo en la <br> búsqueda de trabajo y contratación
+            </div>
+            <div class="box" style="height: 100px;"></div>
+            <div class="box" style="height: 100px;"></div>
+            <div class="box" style="height: 100px;"></div>
+        </div>
+
+        <div class="column right-column">
+            <div class="box" style="height: 400px;"></div>
+        </div>
+    </div>
+{{ footer.footer() }}
+</body>
+</html>

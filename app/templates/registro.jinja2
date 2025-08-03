@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>Inicio de sesión</title>
+    <title>Registrarse</title>
     <style>
         body {
             background-color: white;
@@ -39,7 +39,7 @@
             height: calc(100vh - 80px);
         }
 
-        .login-box {
+        .register-box {
             background-color: #e5e5e5;
             padding: 40px;
             border-radius: 30px;
@@ -47,7 +47,7 @@
             width: 400px;
         }
 
-        .login-box h2 {
+        .register-box h2 {
             text-align: center;
             font-size: 24px;
             margin-bottom: 30px;
@@ -60,6 +60,7 @@
         }
 
         input[type="text"],
+        input[type="email"],
         input[type="password"] {
             width: 100%;
             padding: 12px;
@@ -71,29 +72,15 @@
 
         button {
             display: block;
-            width: 140px;
+            width: 160px;
             padding: 10px;
             font-size: 16px;
             border-radius: 20px;
-            margin: 15px auto 0;
+            margin: 20px auto 0;
             border: none;
             cursor: pointer;
             color: white;
-        }
-
-        .btn-entrar {
-            background-color: orange;
-        }
-
-        .btn-registrarse {
-            background-color: yellow;
-            color: black;
-            margin-top: 10px;
-        }
-
-        .btn-recuperar {
-            background-color: #3b82f6;
-            margin-top: 10px;
+            background-color: #10b981;
         }
 
         .mensajes {
@@ -110,8 +97,8 @@
     </header>
 
     <div class="container">
-        <div class="login-box">
-            <h2>Inicio de Sesión</h2>
+        <div class="register-box">
+            <h2>Registro</h2>
 
             {# Mostrar mensajes flash #}
             <div class="mensajes">
@@ -127,21 +114,19 @@
             </div>
 
             <form method="post" action="">
-                <label for="correo">Usuario</label>
-                <input type="text" id="correo" name="correo" required maxlength="100" />
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required maxlength="100" />
+
+                <label for="correo">Correo</label>
+                <input type="email" id="correo" name="correo" required maxlength="100" />
 
                 <label for="password">Contraseña</label>
                 <input type="password" id="password" name="password" required maxlength="100" />
 
-                <button type="submit" class="btn-entrar">Aceptar</button>
-            </form>
+                <label for="confirmar">Confirmar contraseña</label>
+                <input type="password" id="confirmar" name="confirmar" required maxlength="100" />
 
-            <form method="get" action="{{ url_for('IndexRoute.registro') }}">
-                <button type="submit" class="btn-registrarse">Registrarse</button>
-            </form>
-
-            <form method="get" action="">
-                <button type="submit" class="btn-recuperar">¿Olvidaste tu contraseña?</button>
+                <button type="submit">Crear cuenta</button>
             </form>
         </div>
     </div>
