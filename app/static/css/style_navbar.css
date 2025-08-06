@@ -1,0 +1,65 @@
+/*Estilos del NavBar*/
+.navbar {
+    background-color: #22d3ee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    flex-wrap: wrap;
+}
+
+.logo-placeholder {
+    width: 50px;
+    height: 50px;
+    background-color: #ddd;
+    border-radius: 10px;
+}
+
+.search-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background-color: #e5e5e5;
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin: 0 20px;
+    max-width: 400px;
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    width: 100%;
+    padding: 8px;
+    outline: none;
+}
+
+.menu-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.icon-item {
+    text-align: center;
+    font-size: 13px;
+}
+
+.usuario-dropdown {
+    margin-left: 15px;
+}
+
+.usuario-dropdown summary {
+    cursor: pointer;
+}
+
+.usuario-dropdown ul {
+    background: white;
+    list-style: none;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 0;
+}
+
+.usuario-dropdown ul li {
+    margin-top: 5px;
+}
