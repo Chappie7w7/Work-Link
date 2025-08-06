@@ -1,0 +1,120 @@
+/*Estilos de la página de Empleos*/
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #f9f9f9;
+}
+
+.top-bar {
+    background-color: #22d3ee;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 6px 12px;
+    border-radius: 999px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+}
+
+.content {
+    padding: 30px 40px;
+}
+
+.result-header {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.result-sub {
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.job-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.job-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.job-label {
+    background-color: #fde68a;
+    color: #92400e;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 5px;
+    width: fit-content;
+    margin-bottom: 4px;
+}
+
+.job-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.job-meta {
+    font-size: 14px;
+    color: #555;
+}
+
+.job-button {
+    background-color: white;
+    border: 2px solid #22d3ee;
+    color: #22d3ee;
+    padding: 6px 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.job-button:hover {
+    background-color: #e0f7fa;
+}
+
+.filters {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background-color: #22d3ee;
+    color: white;
+    border-color: #22d3ee;
+}

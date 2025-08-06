@@ -1,0 +1,42 @@
+/*Estilos de la página principal*/
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #ffffff;
+}
+
+.main-content {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.left-column,
+.right-column {
+    width: 20%;
+}
+
+.center-column {
+    width: 60%;
+}
+
+.box {
+    background-color: #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+.circle {
+    width: 100px;
+    height: 100px;
+    background-color: gray;
+    border-radius: 50%;
+    margin: 0 auto;
+}

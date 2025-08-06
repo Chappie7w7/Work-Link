@@ -5,59 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Notificaciones</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: sans-serif;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .filtros {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .filtro-btn {
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid #777;
-            background-color: #e5e5e5;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .notificacion {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #777;
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin-bottom: 15px;
-        }
-
-        .notificacion .icono {
-            font-size: 28px;
-        }
-
-        .notificacion button {
-            background-color: #e5e5e5;
-            border: 1px solid #777;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_notificaciones.css') }}">
 </head>
 <body>
 
@@ -74,17 +22,17 @@
 
         <div class="notificacion">
             <div class="icono">✅</div>
-            <button>ver vacante</button>
+            <button>Ver vacantes</button>
         </div>
 
         <div class="notificacion">
             <div class="icono">➡️</div>
-            <button>ver estado</button>
+            <button>Ver estado</button>
         </div>
 
         <div class="notificacion">
             <div class="icono">⭐</div>
-            <button>ver detalles</button>
+            <button>Ver detalles</button>
         </div>
     </div>
 {{ footer.footer() }}
