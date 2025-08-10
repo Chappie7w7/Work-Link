@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Inicio de sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="logo"></div>
+        <h1>WorkLink</h1>
+    </header>
+
+    <div class="container">
+        <div class="login-box">
+            <h2>Inicio de Sesión</h2>
+
+            {# Mostrar mensajes flash #}
+            <div class="mensajes">
+            {% with mensajes = get_flashed_messages(with_categories=true) %}
+                {% if mensajes %}
+                    {% for categoria, mensaje in mensajes %}
+                        <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
+                            {{ mensaje }}
+                        </p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            </div>
+
+            <form method="post" action="">
+                <label for="correo">Usuario</label>
+                <input type="text" id="correo" name="correo" required maxlength="100" />
+
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required maxlength="100" />
+
+                <button type="submit" class="btn-entrar">Aceptar</button>
+            </form>
+
+            <form method="get" action="{{ url_for('IndexRoute.registro') }}">
+                <button type="submit" class="btn-registrarse">Registrarse</button>
+            </form>
+
+            <form method="get" action="">
+                <button type="submit" class="btn-recuperar">¿Olvidaste tu contraseña?</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

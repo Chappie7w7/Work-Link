@@ -1,6 +1,6 @@
 /*Estilos del NavBar*/
 .navbar {
-    background-color: #22d3ee;
+    background-color: #11304F;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -62,4 +62,27 @@
 
 .usuario-dropdown ul li {
     margin-top: 5px;
+}
+
+
+
+
+.icon-item {
+    text-align: center;
+    color: white; /* Texto blanco */
+    font-size: 0.8em;
+}
+
+.icon-item span:first-child {
+    font-size: 1.1em; /* Tamaño más grande para el icono */
+    display: block;
+}
+
+.icon-item a {
+    color: white; /* Asegura que los enlaces también sean blancos */
+    text-decoration: none;
+}
+
+.icon-item a:hover {
+    opacity: 0.8; /* Efecto al pasar el mouse */
 }
