@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>Inicio de sesión</title>
+    <title>WorkLink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}">
 </head>
 <body>
@@ -10,42 +11,26 @@
     <header>
         <div class="logo"></div>
         <h1>WorkLink</h1>
+        <a href="{{ url_for('IndexRoute.login') }}" class="btn-login">Iniciar sesión</a>
     </header>
 
-    <div class="container">
-        <div class="login-box">
-            <h2>Inicio de Sesión</h2>
+    <!-- Sección principal -->
+    <div class="hero">
+        <h2>Encuentra tu próximo trabajo</h2>
+        <p>Oportunidades laborales cerca de ti, rápido y fácil</p>
+    </div>
 
-            {# Mostrar mensajes flash #}
-            <div class="mensajes">
-            {% with mensajes = get_flashed_messages(with_categories=true) %}
-                {% if mensajes %}
-                    {% for categoria, mensaje in mensajes %}
-                        <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
-                            {{ mensaje }}
-                        </p>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+    <!-- Lista de trabajos -->
+    <div class="jobs-section">
+        <h3 class="jobs-title">Ofertas destacadas</h3>
+        <div class="jobs-grid">
+            {% for job in jobs %}
+            <div class="job-card">
+                <h4 class="job-title">{{ job.title }}</h4>
+                <p class="job-company">{{ job.company }}</p>
+                <p class="job-location">{{ job.location }}</p>
             </div>
-
-            <form method="post" action="">
-                <label for="correo">Usuario</label>
-                <input type="text" id="correo" name="correo" required maxlength="100" />
-
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" required maxlength="100" />
-
-                <button type="submit" class="btn-entrar">Aceptar</button>
-            </form>
-
-            <form method="get" action="{{ url_for('IndexRoute.registro') }}">
-                <button type="submit" class="btn-registrarse">Registrarse</button>
-            </form>
-
-            <form method="get" action="">
-                <button type="submit" class="btn-recuperar">¿Olvidaste tu contraseña?</button>
-            </form>
+            {% endfor %}
         </div>
     </div>
 

@@ -17,12 +17,24 @@ def index():
     else:
         current_user = None
 
-    return render_template('index.jinja2', current_user=current_user)
+    # Lista de trabajos de ejemplo (puedes luego cargarlos desde la BD)
+    jobs = [
+        {"title": "Desarrollador Web", "company": "Tech Solutions", "location": "Ocosingo, Chiapas"},
+        {"title": "Diseñador Gráfico", "company": "Creativa Studio", "location": "San Cristóbal de las Casas"},
+        {"title": "Vendedor de Campo", "company": "Ventas MX", "location": "Palenque, Chiapas"},
+        {"title": "Recepcionista", "company": "Hotel Paraíso", "location": "Ocosingo, Chiapas"},
+    ]
+
+    return render_template('index.jinja2', current_user=current_user, jobs=jobs)
 
 
+# Mostrar formulario de login
+@index_bp.route('/login')
+def login_form():
+    return render_template('login.jinja2')
 
 # Procesar el login
-@index_bp.route('/', methods=['POST'])
+@index_bp.route('/login', methods=['POST'])
 def login():
     correo = request.form.get('correo', '').strip()
     password = request.form.get('password', '').strip()
@@ -37,7 +49,7 @@ def login():
         return redirect(url_for('IndexRoute.inicio'))
     
     flash('Usuario o contraseña incorrectos', 'error')
-    return redirect(url_for('IndexRoute.index'))
+    return redirect(url_for('IndexRoute.login'))
 
 # Página de inicio
 @index_bp.route('/inicio')
@@ -105,3 +117,4 @@ def registro():
             return redirect(url_for('IndexRoute.index'))
 
     return render_template("registro.jinja2")
+

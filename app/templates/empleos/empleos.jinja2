@@ -11,6 +11,23 @@
 <body>
 
     {{ components.navbar("empleos", "empleos", current_user) }}
+    <div class="search-filter-container">
+    <div class="search-bar">
+        <span class="icon">🔍</span>
+        <input type="text" placeholder="Buscar empleo" />
+    </div>
+    <div class="filter-dropdown">
+        <select>
+            <option value="">Tipo de empleo</option>
+            <option value="tiempo-completo">Tiempo completo</option>
+            <option value="medio-tiempo">Medio tiempo</option>
+            <option value="temporal">Temporal</option>
+            <option value="prácticas">Prácticas</option>
+            <option value="remoto">Remoto</option>
+        </select>
+    </div>
+</div>
+
 
     <div class="content">
         <h2 class="result-header">Empleos</h2>
@@ -23,41 +40,9 @@
                 <span class="job-title">Desarrollador Backend PHP</span>
                 <span class="job-meta">Nova Studio · Tuxtla Gutiérrez</span>
             </div>
-            <button class="job-button">Encontrar</button>
-        </div>
-
-        <!-- Empleos normales -->
-        <div class="job-card">
-            <div class="job-info">
-                <span class="job-title">Decarrollador Web Junior</span>
-                <span class="job-meta">TechoSoluciones · Ocosingo Chiapas</span>
-            </div>
-            <button class="job-button">Ver estado</button>
-        </div>
-
-        <div class="job-card">
-            <div class="job-info">
-                <span class="job-title">Desarrollador JavaScript</span>
-                <span class="job-meta">Prototech · Comitán Chiapas</span>
-            </div>
             <button class="job-button">Ver detalles</button>
         </div>
 
-        <div class="job-card">
-            <div class="job-info">
-                <span class="job-title">Desarrollador Full Stack</span>
-                <span class="job-meta">Bitcorp · San Cristóbal Chiapas</span>
-            </div>
-            <button class="job-button active">Más filtros</button>
-        </div>
-
-        <!-- Filtros -->
-        <div class="filters">
-            <button class="filter-btn">Región</button>
-            <button class="filter-btn">Tipo de empleo</button>
-            <button class="filter-btn">Fecha</button>
-            <button class="filter-btn">Modalidad</button>
-        </div>
     </div>
 
     {{ footer.footer() }}
