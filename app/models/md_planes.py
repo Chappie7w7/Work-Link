@@ -14,7 +14,7 @@ class PlanModel(db.Model):
     beneficios = Column(Text, nullable=True)
     duracion_dias = Column(Integer, nullable=True)
 
-    # Relación opcional (si los usuarios usan este plan)
+    # Relación opcional
     usuarios = relationship('UsuarioModel', backref='plan', lazy=True)
 
     def __init__(self, nombre_plan=None, tipo=None, descripcion=None, precio=None,

@@ -18,7 +18,7 @@ class VacanteModel(db.Model):
     salario_aprox = Column(Numeric(10, 2), nullable=True)
     modalidad = Column(Enum('presencial', 'remoto', 'híbrido'), nullable=True)
 
-    # Relación con EmpresaModel
+   
     empresa = relationship('EmpresaModel', backref='vacantes')
 
     def __init__(self, empresa_id=None, titulo=None, descripcion=None, requisitos=None,

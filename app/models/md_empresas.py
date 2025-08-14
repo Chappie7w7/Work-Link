@@ -13,7 +13,7 @@ class EmpresaModel(db.Model):
     direccion = Column(String(255), nullable=True)
     telefono = Column(String(20), nullable=True)
 
-    # Relación uno a uno con UsuarioModel
+    # Relación uno 
     usuario = relationship('UsuarioModel', backref='empresa', uselist=False)
 
     def __init__(self, id, nombre_empresa=None, rfc=None, sector=None, descripcion=None, direccion=None, telefono=None):

@@ -12,7 +12,7 @@ class EmpleadoModel(db.Model):
     habilidades = Column(Text, nullable=True)
     cv_destacado = Column(Boolean, default=False)
 
-    # Relación con el modelo UsuarioModel
+    # Relación
     usuario = relationship('UsuarioModel', backref='empleado', uselist=False)
 
     def __init__(self, id, curriculum_url=None, educacion=None, experiencia=None, habilidades=None, cv_destacado=False):

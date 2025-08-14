@@ -12,7 +12,7 @@ class MetricaVacanteModel(db.Model):
     postulaciones = Column(Integer, nullable=True)
     fecha_ultimo_reporte = Column(DateTime, nullable=True)
 
-    # Relación con el modelo VacanteModel
+    # Relación con
     vacante = relationship('VacanteModel', backref='metricas')
 
     def __init__(self, vacante_id=None, vistas=None, postulaciones=None, fecha_ultimo_reporte=None):

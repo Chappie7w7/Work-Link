@@ -12,7 +12,7 @@ class CursoUsuarioModel(db.Model):
     fecha_inicio = Column(DateTime, nullable=True)
     completado = Column(Boolean, default=False)
 
-    # Relaciones
+    # Relaci
     usuario = relationship('UsuarioModel', backref='cursos_usuario')
     curso = relationship('CursoCapacitacionModel', backref='usuarios_curso')
 

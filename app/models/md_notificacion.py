@@ -13,7 +13,7 @@ class NotificacionModel(db.Model):
     leido = Column(Boolean, default=False)
     fecha_envio = Column(DateTime, nullable=True)
 
-    # Relación con UsuarioModel
+    # Rela
     usuario = relationship('UsuarioModel', backref='notificaciones')
 
     def __init__(self, usuario_id=None, mensaje=None, tipo=None, leido=False, fecha_envio=None):

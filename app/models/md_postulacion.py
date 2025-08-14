@@ -13,7 +13,7 @@ class PostulacionModel(db.Model):
     estado = Column(Enum('postulado', 'visto', 'en_proceso', 'rechazado', 'contratado'), nullable=True)
     notas_empresa = Column(Text, nullable=True)
 
-    # Relaciones
+  
     vacante = relationship('VacanteModel', backref='postulaciones')
     empleado = relationship('EmpleadoModel', backref='postulaciones')
 

@@ -9,7 +9,7 @@ class CursoCapacitacionModel(db.Model):
     descripcion = Column(Text, nullable=True)
     url = Column(Text, nullable=True)
     premium_online = Column(Boolean, default=False)
-
+  #cursos
     def __init__(self, titulo=None, descripcion=None, url=None, premium_online=False):
         self.titulo = titulo
         self.descripcion = descripcion
