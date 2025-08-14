@@ -13,41 +13,6 @@
 
     {{ components.navbar("mensajes", "mensajes", current_user) }}
 
-    <div class="container">
-        <!-- Conversaciones -->
-        <div class="sidebar">
-            <h2>Conversaciones</h2>
-            <ul class="chat-list">
-                <li class="chat-item active">
-                    <div class="name">Nova Studio</div>
-                    <div class="last-msg">Gracias por tu solicitud</div>
-                </li>
-                <li class="chat-item">
-                    <div class="name">Bitcorp</div>
-                    <div class="last-msg">¿Tienes portafolio?</div>
-                </li>
-                <li class="chat-item">
-                    <div class="name">TechoSoluciones</div>
-                    <div class="last-msg">Te avisamos pronto.</div>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Chat -->
-        <div class="chat-box">
-            <div class="chat-header">Nova Studio</div>
-            <div class="chat-messages">
-                <div class="message received">Hola, gracias por aplicar al empleo.</div>
-                <div class="message sent">¡Hola! Gracias a ustedes por considerarme.</div>
-                <div class="message received">¿Puedes enviarnos tu CV actualizado?</div>
-                <div class="message sent">Claro, lo adjunto a continuación.</div>
-            </div>
-            <div class="chat-input">
-                <input type="text" placeholder="Escribe un mensaje...">
-                <button>Enviar</button>
-            </div>
-        </div>
-    </div>
 
     {{ footer.footer() }}
 </body>
