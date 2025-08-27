@@ -19,7 +19,6 @@ Crear el entorno virtual de python
 
 ```sh
 python -m venv .venv
-source .venv/Scripts/Activate
 ```
 
 Instalar los requerimientos
@@ -52,8 +51,12 @@ A continuación un breve descripción para cada variable de entorno
 ## Ejecutar el proyecto
 
 ```sh
-#para activar el entorno virtual
-.\.venv\Scripts\activate
+#Para activar el entorno virtual
+.\.venv\Scripts\activate 
+# o
+source .venv/Scripts/Activate
+
+#Para ejecutar el proyecto
 flask --app main.py run -h '0.0.0.0'
 # o
 flask run --debug -h '0.0.0.0'
