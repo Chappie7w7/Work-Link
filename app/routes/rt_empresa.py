@@ -27,7 +27,7 @@ def dashboard():
 # Ruta para publicar empleo
 @rt_empresa.route("/publicar")
 def publicar_empleo():
-    return "<h3>Aquí irá el formulario para publicar empleo</h3>"
+    return render_template("empresa/publicar_empleo.jinja2")
 
 
 # Ruta para ver perfil de candidato
