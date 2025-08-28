@@ -1,18 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <title>WorkLink</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}">
 </head>
+
 <body>
 
     <header>
         <div class="logo"></div>
         <h1>WorkLink</h1>
-        <a href="{{ url_for('LoginRoute.login_form') }}" class="btn-login">Iniciar sesión</a>
+
+        <!-- Botones de acceso -->
+        <div class="auth-links">
+            <a href="{{ url_for('LoginRoute.login_form') }}" class="link-auth">Iniciar sesión</a>
+
+            <!-- Menú desplegable para crear cuenta -->
+            <div class="dropdown">
+                <span class="link-auth">Crear cuenta</span>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('RegistroRoute.registro') }}">Soy usuario</a>
+                    <a href="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}">Soy empresa</a>
+                </div>
+            </div>
+        </div>
     </header>
+
+
 
     <!-- Sección principal -->
     <div class="hero">
@@ -35,4 +52,5 @@
     </div>
 
 </body>
+
 </html>
