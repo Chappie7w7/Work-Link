@@ -1,94 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <title>Registrarse</title>
-    <style>
-        body {
-            background-color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #22d3ee;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        header .logo {
-            width: 40px;
-            height: 40px;
-            background-color: #d1d5db;
-            border-radius: 8px;
-            margin-right: 10px;
-        }
-
-        header h1 {
-            color: white;
-            font-size: 32px;
-            margin: 0;
-        }
-
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 80px);
-        }
-
-        .register-box {
-            background-color: #e5e5e5;
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-        }
-
-        .register-box h2 {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 30px;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 25px;
-            margin-top: 5px;
-            font-size: 16px;
-        }
-
-        button {
-            display: block;
-            width: 160px;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 20px;
-            margin: 20px auto 0;
-            border: none;
-            cursor: pointer;
-            color: white;
-            background-color: #10b981;
-        }
-
-        .mensajes {
-            margin-top: 10px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_registro.css') }}">
 </head>
+
 <body>
 
     <header>
@@ -102,15 +20,15 @@
 
             {# Mostrar mensajes flash #}
             <div class="mensajes">
-            {% with mensajes = get_flashed_messages(with_categories=true) %}
+                {% with mensajes = get_flashed_messages(with_categories=true) %}
                 {% if mensajes %}
-                    {% for categoria, mensaje in mensajes %}
-                        <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
-                            {{ mensaje }}
-                        </p>
-                    {% endfor %}
+                {% for categoria, mensaje in mensajes %}
+                <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
+                    {{ mensaje }}
+                </p>
+                {% endfor %}
                 {% endif %}
-            {% endwith %}
+                {% endwith %}
             </div>
 
             <form method="post" action="">
@@ -127,9 +45,14 @@
                 <input type="password" id="confirmar" name="confirmar" required maxlength="100" />
 
                 <button type="submit">Crear cuenta</button>
-            </form>
+                <small>¿Ya tienes cuenta?
+                    <a href="{{ url_for('LoginRoute.login_form') }}">Inicia sesión</a>
+                </small>
         </div>
+        </form>
+    </div>
     </div>
 
 </body>
+
 </html>

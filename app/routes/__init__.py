@@ -6,6 +6,8 @@ from .rt_planes import rt_planes
 from .rt_empleos import rt_empleos
 from .rt_mensajes import rt_mensajes
 from .rt_registro import rt_registro
+from .rt_empresa import rt_empresa
+from .rt_registro_empresa import rt_registro_empresa
 
 def register_routes(app):
     app.register_blueprint(rt_index)
@@ -16,4 +18,6 @@ def register_routes(app):
     app.register_blueprint(rt_empleos)
     app.register_blueprint(rt_mensajes)
     app.register_blueprint(rt_registro)
+    app.register_blueprint(rt_registro_empresa)
+    app.register_blueprint(rt_empresa)
 

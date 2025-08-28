@@ -1,0 +1,110 @@
+
+    body {
+      background-color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #11304F;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    header .logo {
+      width: 40px;
+      height: 40px;
+      background-color: #d1d5db;
+      border-radius: 8px;
+      margin-right: 10px;
+    }
+
+    header h1 {
+      color: white;
+      font-size: 32px;
+      margin: 0;
+    }
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 100px); /* ocupa pantalla sin solaparse */
+  padding-top: 40px; /* separación extra debajo del header */
+  padding-bottom: 40px;
+}
+
+
+    .register-box {
+      background-color: #e5e5e5;
+      padding: 40px;
+      border-radius: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+
+    .register-box h2 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      margin-top: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: none;
+      border-radius: 15px;
+    }
+
+    button {
+      display: block;
+      width: 160px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 20px;
+      margin: 20px auto 0;
+      border: none;
+      cursor: pointer;
+      color: white;
+      background-color: #10b981;
+      transition: background 0.2s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #059669;
+    }
+
+    .card-footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+    }
+
+    .card-footer a {
+      color: #10b981;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .card-footer a:hover {
+      text-decoration: underline;
+    }
