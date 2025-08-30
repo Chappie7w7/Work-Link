@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Vacante</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_registro.css') }}">
+
+</head>
+
+<body>
+    <header>
+        <div class="logo"></div>
+        <h1>WorkLink</h1>
+    </header>
+
+    <div class="container">
+        <div class="register-box">
+            <h2>Registrar Vacante</h2>
+            <form action="#" method="POST">
+                <label for="empresa_id">Empresa</label>
+                <input type="text" id="empresa_id" name="empresa_id" placeholder="Nombre de la empresa">
+
+                <label for="titulo">Título de la vacante</label>
+                <input type="text" id="titulo" name="titulo" maxlength="150" required>
+
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="descripcion" rows="3" required></textarea>
+
+                <label for="requisitos">Requisitos</label>
+                <textarea id="requisitos" name="requisitos" rows="3"></textarea>
+
+                <label for="ubicacion">Ubicación</label>
+                <input type="text" id="ubicacion" name="ubicacion" maxlength="255">
+
+                <label for="estado">Estado
+                    <select id="estado" name="estado" required>
+                        <option value="publicada">Publicada</option>
+                        <option value="cerrada">Cerrada</option>
+                        <option value="pausada">Pausada</option>
+                    </select>
+                </label>
+
+                <div class="form-check">
+                    <label for="destacada">¿Vacante destacada?
+                        <input type="checkbox" id="destacada" name="destacada" value="true">
+                    </label>
+                </div>
+
+                <label for="salario_aprox">Salario aproximado
+                    <input type="number" step="1500" id="salario_aprox" name="salario_aprox">
+                </label>
+
+                <label for="modalidad">Modalidad
+                    <select id="modalidad" name="modalidad">
+                        <option value="presencial">Presencial</option>
+                        <option value="remoto">Remoto</option>
+                        <option value="híbrido">Híbrido</option>
+                    </select>
+                </label>
+
+                <button type="submit">Registrar</button>
+            </form>
+
+        </div>
+    </div>
+</body>
+
+</html>

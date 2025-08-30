@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro Empresa - WorkLink</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_registro.css') }}">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo"></div>
+    <h1>WorkLink</h1>
+  </header>
+
+  <!-- FORMULARIO -->
+  <div class="container">
+    <div class="register-box">
+      <h2>Registro de Empresa</h2>
+      <form method="POST" action="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}">
+        
+        <label for="nombre_empresa">Nombre de la empresa</label>
+        <input type="text" name="nombre_empresa" id="nombre_empresa" required>
+
+        <label for="rfc">RFC</label>
+        <input type="text" name="rfc" id="rfc">
+
+        <label for="sector">Sector</label>
+        <input type="text" name="sector" id="sector">
+
+        <label for="descripcion">Descripción</label>
+        <textarea name="descripcion" id="descripcion" rows="3"></textarea>
+
+        <label for="direccion">Dirección</label>
+        <input type="text" name="direccion" id="direccion">
+
+        <label for="telefono">Teléfono</label>
+        <input type="text" name="telefono" id="telefono">
+
+        <label for="email">Correo electrónico</label>
+        <input type="email" name="email" id="email" required>
+
+        <label for="password">Contraseña</label>
+        <input type="password" name="password" id="password" required>
+
+        <button type="submit">Registrar empresa</button>
+      </form>
+
+      <div class="card-footer">
+        <small>¿Ya tienes cuenta? 
+          <a href="{{ url_for('LoginRoute.login_form') }}">Inicia sesión</a>
+        </small>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

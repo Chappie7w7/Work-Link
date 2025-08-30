@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Empresa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo"></div>
+        <h1><b>WorkLink</b></h1>
+    </header>
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Panel de Empresa</h2>
+
+        <!-- Dashboard resumen -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Ofertas activas</h5>
+                        <p class="display-6">{{ ofertas_activas }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Postulantes totales</h5>
+                        <p class="display-6">{{ postulantes_totales }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Estadísticas</h5>
+                        <p class="text-muted">En construcción</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Notificaciones</h5>
+                        <p class="text-muted">0 nuevas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón publicar -->
+        <div class="text-end mb-3">
+            <a href="{{ url_for('rt_empresa.publicar_empleo') }}" class="btn btn-primary">
+                + Publicar empleo
+            </a>
+        </div>
+
+        <div class="row">
+            <!-- Ofertas laborales -->
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-dark text-white">
+                        Mis ofertas laborales
+                    </div>
+                    <div class="card-body">
+                        {% if ofertas %}
+                        <ul class="list-group">
+                            {% for oferta in ofertas %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ oferta.titulo }}
+                                <span class="badge bg-success">{{ oferta.estado }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No tienes ofertas activas.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidatos -->
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-dark text-white">
+                        Postulantes recientes
+                    </div>
+                    <div class="card-body">
+                        {% if candidatos %}
+                        <ul class="list-group">
+                            {% for c in candidatos %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ c.nombre }}
+                                <a href="{{ url_for('rt_empresa.ver_candidato', candidato_id=c.id) }}"
+                                    class="btn btn-sm btn-outline-primary">Ver perfil</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No tienes postulantes recientes.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
