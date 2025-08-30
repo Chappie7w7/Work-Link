@@ -105,3 +105,8 @@ flask db upgrade
 ```
 
 Todos los comandos deben de tener un resultado exitoso y ver los cambios en la bd
+
+
+Ejecuta tu app con:
+python main.py 
+para que debug=True funcione directamente.

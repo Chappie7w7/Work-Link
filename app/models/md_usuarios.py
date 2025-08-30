@@ -17,7 +17,7 @@ class UsuarioModel(db.Model):
     foto_perfil = Column(String(255), nullable=True)
     fecha_registro = Column(DateTime, default=datetime.utcnow)
     premium = Column(Boolean, default=False)
-    #plan_id = Column(Integer, ForeignKey('planes.id'), nullable=True)
+    plan_id = Column(Integer, ForeignKey('planes.id'), nullable=True)
     ubicacion = Column(String(100), nullable=True)
     ultimo_login = Column(DateTime, nullable=True)
 
@@ -25,16 +25,19 @@ class UsuarioModel(db.Model):
     #plan = relationship("PlanModel", backref="usuarios")
 
     def __init__(self, nombre, correo, contraseña, tipo_usuario, foto_perfil=None,
-                 premium=False, plan_id=None, ubicacion=None):
+            premium=False, plan_id=None, ubicacion=None, fecha_registro=None,
+            ultimo_login=None):
         self.nombre = nombre
         self.correo = correo
         self.contraseña = contraseña
+        self.tipo_usuario = tipo_usuario 
         self.tipo_usuario = tipo_usuario
         self.foto_perfil = foto_perfil
         self.premium = premium
         self.plan_id = plan_id
         self.ubicacion = ubicacion
-        self.fecha_registro = datetime.utcnow()
+        self.fecha_registro = fecha_registro or datetime.utcnow()
+        self.ultimo_login = ultimo_login
 
     def to_json(self):
         return {
