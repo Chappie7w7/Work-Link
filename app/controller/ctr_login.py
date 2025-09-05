@@ -1,4 +1,4 @@
-from flask import session, flash, redirect, url_for
+from flask import session, flash
 from datetime import datetime
 from app.models.md_usuarios import UsuarioModel
 from app.db.sql import db
@@ -6,21 +6,20 @@ from app.db.sql import db
 def login_user(correo, password):
     usuario = UsuarioModel.query.filter_by(correo=correo).first()
 
-    if usuario and usuario.contraseña == password:
-        # Guardar último login
-        usuario.ultimo_login = datetime.utcnow()
-        db.session.commit()
+    if not usuario:
+        return None, "Usuario no encontrado"
 
-        # Guardar en sesión
-        session['usuario'] = usuario.correo
-        session['nombre'] = usuario.nombre
-        session['user_id'] = usuario.id
+    if usuario.contraseña != password:  
+        return None, "Contraseña incorrecta"
 
-        return True, redirect(url_for("InicioRoute.inicio"))
-    
-    flash("Usuario o contraseña incorrectos", "error")
-    return False, redirect(url_for("LoginRoute.login_form"))
+    # Guardar último login
+    usuario.ultimo_login = datetime.utcnow()
+    db.session.commit()
+
+    # Guardar en sesión (pero dejamos que la ruta decida qué guardar)
+    return usuario, None
+
 
 def logout_user():
     session.clear()
-    return redirect(url_for("IndexRoute.index"))
+    return True
