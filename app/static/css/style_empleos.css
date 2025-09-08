@@ -49,3 +49,23 @@ body {
     font-size: 1rem;
     min-width: 180px;
 }
+
+/*dieño de vista empleos*/
+.vacantes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.vacante-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.vacante-card h3 {
+    margin-top: 0;
+    color: #22d3ee;
+}

@@ -1,32 +1,54 @@
-
 {% import "components/navbar.jinja2" as components %}
 {% import "components/footer.jinja2" as footer %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Empleos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empleos.css') }}">
 </head>
+
 <body>
 
     {{ components.navbar("empleos", "empleos", current_user) }}
     <div class="search-filter-container">
-    <div class="search-bar">
-        <span class="icon">🔍</span>
-        <input type="text" placeholder="Buscar empleo" />
+        <div class="search-bar">
+            <span class="icon">🔍</span>
+            <input type="text" placeholder="Buscar empleo" />
+        </div>
+        <div class="filter-dropdown">
+            <select>
+                <option value="">Tipo de empleo</option>
+                <option value="tiempo-completo">Tiempo completo</option>
+                <option value="medio-tiempo">Medio tiempo</option>
+                <option value="temporal">Temporal</option>
+                <option value="prácticas">Prácticas</option>
+                <option value="remoto">Remoto</option>
+            </select>
+        </div>
     </div>
-    <div class="filter-dropdown">
-        <select>
-            <option value="">Tipo de empleo</option>
-            <option value="tiempo-completo">Tiempo completo</option>
-            <option value="medio-tiempo">Medio tiempo</option>
-            <option value="temporal">Temporal</option>
-            <option value="prácticas">Prácticas</option>
-            <option value="remoto">Remoto</option>
-        </select>
+    <div class="vacantes-container">
+        {% if vacantes %}
+        {% for v in vacantes %}
+        <div class="vacante-card">
+            <h3>{{ v.titulo }}</h3>
+            <p><strong>Empresa:</strong> {{ v.empresa.nombre if v.empresa else "Sin empresa" }}</p>
+            <p><strong>Ubicación:</strong> {{ v.ubicacion or "No especificada" }}</p>
+            <p><strong>Modalidad:</strong> {{ v.modalidad }}</p>
+            <p><strong>Estado:</strong> {{ v.estado }}</p>
+            {% if v.salario_aprox %}
+            <p><strong>Salario aprox:</strong> ${{ "%.2f"|format(v.salario_aprox) }}</p>
+            {% endif %}
+            <p>{{ v.descripcion[:150] }}...</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No hay vacantes registradas aún.</p>
+        {% endif %}
     </div>
-</div>
+
     {{ footer.footer() }}
 </body>
+
 </html>
