@@ -17,7 +17,7 @@
     <div class="container">
         <div class="register-box">
             <h2>Registrar Vacante</h2>
-            <form action="#" method="POST">
+            <form action="{{ url_for('EmpleosRoute.nueva_vacante') }}" method="POST">
                 <label for="empresa_id">Empresa</label>
                 <input type="text" id="empresa_id" name="empresa_id" placeholder="Nombre de la empresa">
 
