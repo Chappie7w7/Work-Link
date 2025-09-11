@@ -229,52 +229,46 @@ header h1 {
 }
 
 /* Estilo para el modal */
-/* Modal */
+/* Fondo oscuro detrás del modal */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  z-index: 1000; /* Encima de todo */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Scroll si el contenido es largo */
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro */
 }
 
+/* Caja del modal */
 .modal-content {
-    background: #1e293b;
-    /* Fondo dark */
-    color: #e2e8f0;
-    /* Texto claro */
-    margin: 5% auto;
-    padding: 20px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 600px;
-    position: relative;
+  background-color: #fff;
+  margin: 10% auto; /* Centrado vertical */
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px; /* No más ancho de 600px */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease;
 }
 
+/* Botón de cerrar */
 .close {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #f8fafc;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.card-btn {
-    display: inline-block;
-    padding: 8px 16px;
-    background: #38bdf8;
-    color: #0f172a;
-    border-radius: 8px;
-    text-decoration: none;
-    margin-top: 10px;
-    transition: 0.2s;
+.close:hover {
+  color: #000;
 }
 
-.card-btn:hover {
-    background: #0ea5e9;
+/* Animación suave */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
