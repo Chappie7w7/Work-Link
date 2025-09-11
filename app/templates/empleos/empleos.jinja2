@@ -12,6 +12,7 @@
 <body>
 
     {{ components.navbar("empleos", "empleos", current_user) }}
+
     <div class="search-filter-container">
         <div class="search-bar">
             <span class="icon">🔍</span>
@@ -28,12 +29,13 @@
             </select>
         </div>
     </div>
+
     <div class="vacantes-container">
         {% if vacantes %}
         {% for v in vacantes %}
         <div class="vacante-card">
             <h3>{{ v.titulo }}</h3>
-            <p><strong>Empresa:</strong> {{ v.empresa.nombre if v.empresa else "Sin empresa" }}</p>
+            <p><strong>Empresa:</strong> {{ v.empresa.nombre_empresa if v.empresa else "Sin empresa" }}</p>
             <p><strong>Ubicación:</strong> {{ v.ubicacion or "No especificada" }}</p>
             <p><strong>Modalidad:</strong> {{ v.modalidad }}</p>
             <p><strong>Estado:</strong> {{ v.estado }}</p>
@@ -41,6 +43,7 @@
             <p><strong>Salario aprox:</strong> ${{ "%.2f"|format(v.salario_aprox) }}</p>
             {% endif %}
             <p>{{ v.descripcion[:150] }}...</p>
+            <a href="#" class="card-btn" onclick="openModal('{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Sin empresa')|escape }}')">Ver más</a>
         </div>
         {% endfor %}
         {% else %}
@@ -48,7 +51,37 @@
         {% endif %}
     </div>
 
-    {{ footer.footer() }}
-</body>
+    <!-- Modal flotante -->
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p><strong>Empresa:</strong> <span id="modalEmpresa"></span></p>
+            <p id="modalDesc"></p>
+        </div>
+    </div>
 
+    {{ footer.footer() }}
+
+    <script>
+        function openModal(title, desc, empresa) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalDesc").innerText = desc;
+            document.getElementById("modalEmpresa").innerText = empresa;
+            document.getElementById("jobModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("jobModal").style.display = "none";
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function(event) {
+            const modal = document.getElementById("jobModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
 </html>
