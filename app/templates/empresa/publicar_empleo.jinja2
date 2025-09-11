@@ -17,10 +17,10 @@
     <div class="container">
         <div class="register-box">
             <h2>Registrar Vacante</h2>
-            <form action="{{ url_for('EmpleosRoute.nueva_vacante') }}" method="POST">
-                <label for="empresa_id">Empresa</label>
-                <input type="text" id="empresa_id" name="empresa_id" placeholder="Nombre de la empresa">
-
+            <form action="{{ url_for('rt_empresa.nueva_vacante') }}" method="POST">
+                <p><strong>Empresa:</strong> {{ usuario.nombre }}</p>
+                <input type="hidden" name="empresa_id" value="{{ usuario.id }}">
+                
                 <label for="titulo">Título de la vacante</label>
                 <input type="text" id="titulo" name="titulo" maxlength="150" required>
 
