@@ -10,13 +10,16 @@
 
 <body>
 
+    <!-- HEADER -->
     <header>
         <div class="logo"></div>
         <h1>WorkLink</h1>
 
         <!-- Botones de acceso -->
         <div class="auth-links">
+            <a href="{{ url_for('DesarrolladoresRoute.desarrolladores') }}" class="link-auth">Desarrolladores</a>
             <a href="{{ url_for('LoginRoute.login_form') }}" class="link-auth">Iniciar sesión</a>
+            
 
             <!-- Menú desplegable para crear cuenta -->
             <div class="dropdown">
@@ -29,15 +32,22 @@
         </div>
     </header>
 
+   <div class="hero">
+    <iframe class="hero-video" 
+        src="https://www.youtube.com/embed/vDMyIZ2nsS0?autoplay=1&mute=1&loop=1&playlist=vDMyIZ2nsS0"
 
-
-    <!-- Sección principal -->
-    <div class="hero">
-        <h2>Encuentra tu próximo trabajo</h2>
-        <p>Oportunidades laborales cerca de ti, rápido y fácil</p>
+        title="Video de búsqueda de empleo" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen>
+            </iframe>
+            <div class="hero-content">
+            <h2>Encuentra tu próximo trabajo</h2>
+            <p>Oportunidades laborales cerca de ti, rápido y fácil</p>
+        </div>
     </div>
 
-    <!-- Lista de trabajos -->
+    <!-- LISTA DE TRABAJOS -->
     <div class="jobs-section">
         <h3 class="jobs-title">Ofertas destacadas</h3>
         <div class="jobs-grid">
@@ -50,6 +60,68 @@
             {% endfor %}
         </div>
     </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <h4>WorkLink</h4>
+                <p>Conectando talento con oportunidades laborales de forma rápida y sencilla.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Enlaces</h4>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#">Empresas</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p>Email: contacto@worklink.com</p>
+                <p>Tel: +52 55 1234 5678</p>
+            </div>
+
+            <div class="footer-social">
+                <h4>Síguenos</h4>
+                <div class="footer-social">
+                <a href="https://www.facebook.com/tu_pagina" target="_blank">
+                    <img src="{{ url_for('static', filename='img/2023_Facebook_icon.svg') }}" alt="Facebook" class="social-icon">
+                </a>
+                <a href="https://www.linkedin.com/tu_pagina" target="_blank">
+                    <img src="{{ url_for('static', filename='img/LinkedIn_icon.svg') }}" alt="LinkedIn" class="social-icon">
+                </a>
+                <a href="https://twitter.com/tu_pagina" target="_blank">
+                    <img src="{{ url_for('static', filename='img/Logo_of_Twitter.svg') }}" alt="Twitter" class="social-icon">
+                </a>
+            </div>
+
+            </div>
+
+            <!-- Métodos de pago -->
+            <div class="footer-payments">
+                <h4>Métodos de pago</h4>
+                <div class="footer-payments">
+                    <div class="payment-icons">
+                        <img src="{{ url_for('static', filename='img/Visa.svg') }}" alt="Visa">
+                        <img src="{{ url_for('static', filename='img/Mastercard-logo.svg') }}" alt="MasterCard">
+                        <img src="{{ url_for('static', filename='img/Paypal.svg') }}" alt="PayPal">
+                        <img src="{{ url_for('static', filename='img/American_Express_logo.svg') }}" alt="American Express">
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 WorkLink. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    
 
 </body>
 
