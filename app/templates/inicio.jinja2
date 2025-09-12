@@ -15,13 +15,20 @@
         {{ components.navbar("inicio", "inicio", current_user) }}
 
         <div class="main-content">
+            <!-- Columna izquierda: perfil del usuario -->
             <div class="column left-column">
-                <div class="box">
+                <div class="box perfil-box">
                     <div class="circle"></div>
+                    <h3>{{ current_user.nombre if current_user else '' }}</h3>
+                    <p>📧 {{ current_user.correo if current_user else '' }}</p>
+                    {% if current_user.ubicacion %}
+                    <p>📍 {{ current_user.ubicacion }}</p>
+                    {% endif %}
                 </div>
                 <div class="box" style="height: 150px;"></div>
             </div>
 
+            <!-- Columna central: presentación -->
             <div class="column center-column">
                 <div class="box" style="font-weight: bold;">
                     Reduce tiempo y esfuerzo en la <br> búsqueda de trabajo y contratación
@@ -31,6 +38,7 @@
                 <div class="box" style="height: 100px;"></div>
             </div>
 
+            <!-- Columna derecha -->
             <div class="column right-column">
                 <div class="box" style="height: 400px;"></div>
             </div>
