@@ -5,3 +5,5 @@ python-dotenv
 pymysql 
 flask-login
 cryptography
+requests
+
