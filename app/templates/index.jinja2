@@ -45,7 +45,7 @@
 
     <!-- LISTA DE TRABAJOS -->
     <div class="jobs-section">
-        <h3 class="jobs-title">Ofertas destacadas</h3>
+        <h2 class="jobs-title">Ofertas destacadas</h2>
         <div class="jobs-grid">
             {% if jobs %}
             {% for v in jobs %}
@@ -84,6 +84,31 @@
             <p id="modalDesc"></p>
         </div>
     </div>
+
+    <script>
+        function openModal(button) {
+            const title = button.getAttribute("data-titulo");
+            const desc = button.getAttribute("data-descripcion");
+            const empresa = button.getAttribute("data-empresa");
+
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalDesc").innerText = desc;
+            document.getElementById("modalEmpresa").innerText = empresa;
+            document.getElementById("jobModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("jobModal").style.display = "none";
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function (event) {
+            const modal = document.getElementById("jobModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 
     <!-- FOOTER -->
     <footer>
@@ -149,31 +174,6 @@
             <p>© 2025 WorkLink. Todos los derechos reservados.</p>
         </div>
     </footer>
-
-    <script>
-        function openModal(button) {
-            const title = button.getAttribute("data-titulo");
-            const desc = button.getAttribute("data-descripcion");
-            const empresa = button.getAttribute("data-empresa");
-
-            document.getElementById("modalTitle").innerText = title;
-            document.getElementById("modalDesc").innerText = desc;
-            document.getElementById("modalEmpresa").innerText = empresa;
-            document.getElementById("jobModal").style.display = "block";
-        }
-
-        function closeModal() {
-            document.getElementById("jobModal").style.display = "none";
-        }
-
-        // Cerrar modal al hacer clic fuera de él
-        window.onclick = function (event) {
-            const modal = document.getElementById("jobModal");
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
 
 
 </body>
