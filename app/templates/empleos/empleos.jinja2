@@ -1,73 +1,200 @@
 {% import "components/navbar.jinja2" as components %}
-{% import "components/footer.jinja2" as footer %}
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <title>Empleos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empleos.css') }}">
 </head>
-
 <body>
 
     {{ components.navbar("empleos", "empleos", current_user) }}
 
-    <div class="search-filter-container">
-        <div class="search-bar">
-            <span class="icon">🔍</span>
-            <input type="text" placeholder="Buscar empleo" />
-        </div>
-        <div class="filter-dropdown">
-            <select>
-                <option value="">Tipo de empleo</option>
-                <option value="tiempo-completo">Tiempo completo</option>
-                <option value="medio-tiempo">Medio tiempo</option>
-                <option value="temporal">Temporal</option>
-                <option value="prácticas">Prácticas</option>
-                <option value="remoto">Remoto</option>
-            </select>
+    <!-- ===== SECCIÓN DEL BUSCADOR CON FONDO ===== -->
+    <div class="search-section">
+        <div class="search-container">
+            <!-- Buscador principal -->
+            <div class="search-bar">
+                <span class="icon">🔍</span>
+                <input type="text" placeholder="Buscar empleo por título, empresa..." />
+            </div>
+
+            <!-- Filtro por tipo de empleo -->
+            <div class="filter-dropdown">
+                <select>
+                    <option value="">Tipo de empleo</option>
+                    <option value="tiempo-completo">Tiempo completo</option>
+                    <option value="medio-tiempo">Medio tiempo</option>
+                    <option value="temporal">Temporal</option>
+                    <option value="prácticas">Prácticas</option>
+                    <option value="remoto">Remoto</option>
+                </select>
+            </div>
+
+            <!-- Filtro por fecha -->
+            <div class="filter-dropdown">
+                <input type="date" />
+            </div>
+
+            <!-- Filtro por ubicación -->
+            <div class="filter-dropdown">
+                <input type="text" placeholder="Ubicación" />
+            </div>
         </div>
     </div>
 
+    <!-- ===== LISTA DE VACANTES ===== -->
     <div class="vacantes-container">
         {% if vacantes %}
-        {% for v in vacantes %}
-        <div class="vacante-card">
-            <h3>{{ v.titulo }}</h3>
-            <p><strong>Empresa:</strong> {{ v.empresa.nombre_empresa if v.empresa else "Sin empresa" }}</p>
-            <p><strong>Ubicación:</strong> {{ v.ubicacion or "No especificada" }}</p>
-            <p><strong>Modalidad:</strong> {{ v.modalidad }}</p>
-            <p><strong>Estado:</strong> {{ v.estado }}</p>
-            {% if v.salario_aprox %}
-            <p><strong>Salario aprox:</strong> ${{ "%.2f"|format(v.salario_aprox) }}</p>
-            {% endif %}
-            <p>{{ v.descripcion[:150] }}...</p>
-            <a href="#" class="card-btn" onclick="openModal('{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Sin empresa')|escape }}')">Ver más</a>
-        </div>
-        {% endfor %}
+            {% for v in vacantes %}
+            <div class="vacante-card">
+                <div class="card-header">
+                    <img src="{{ v.avatar_url if v.avatar_url else url_for('static', filename='img/default-user.png') }}"
+                         alt="Avatar vacante" class="avatar">
+                    {% if v.rating %}
+                    <div class="rating-star">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#f59e0b" width="16" height="16">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.18c.969 0 
+                            1.371 1.24.588 1.81l-3.387 2.46a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 
+                            1.688-1.54 1.118l-3.387-2.459a1 1 0 00-1.175 0l-3.387 2.459c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 
+                            0 00-.364-1.118L2.045 9.394c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 
+                            00.95-.69l1.286-3.967z"/>
+                        </svg>
+                        {{ "%.1f"|format(v.rating) }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <h3>{{ v.titulo }}</h3>
+
+                <div class="info-row">
+                    <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 21V3h18v18H3zm2-2h14V5H5v14z"/>
+                    </svg>
+                    <span class="info-label">Empresa:</span>
+                    <span class="info-text">{{ v.empresa.nombre_empresa if v.empresa else "Sin empresa" }}</span>
+                </div>
+
+                <div class="info-row">
+                    <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 
+                                 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 
+                                 11.5 12 11.5z"/>
+                    </svg>
+                    <span class="info-label">Ubicación:</span>
+                    <span class="info-text">{{ v.ubicacion or "No especificada" }}</span>
+                </div>
+
+                <div class="tags-row">
+                    {% if v.modalidad %}<span class="tag">{{ v.modalidad }}</span>{% endif %}
+                    {% if v.estado %}<span class="tag-estado">{{ v.estado }}</span>{% endif %}
+                    {% if v.salario_aprox %}<span class="tag-salary">💰 ${{ "%.2f"|format(v.salario_aprox) }}</span>{% endif %}
+                </div>
+
+                <p>{{ v.descripcion[:100] }}...</p>
+
+                <a href="#" class="card-btn"
+                   onclick="openModal('{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Sin empresa')|escape }}', '{{ v.empresa.logo_url|default(url_for('static', filename='img/default-company.png')) }}', '{{ v.avatar_url|default(url_for('static', filename='img/default-user.png')) }}')">
+                   Ver más
+                </a>
+            </div>
+            {% endfor %}
         {% else %}
-        <p>No hay vacantes registradas aún.</p>
+            <p>No hay vacantes registradas aún.</p>
         {% endif %}
     </div>
 
-    <!-- Modal flotante -->
+    <!-- ===== MODAL ===== -->
     <div id="jobModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle"></h2>
-            <p><strong>Empresa:</strong> <span id="modalEmpresa"></span></p>
-            <p id="modalDesc"></p>
+            <div class="modal-header">
+                <span id="modalTitle">Vacante</span>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-company-row">
+                    <div class="modal-company">
+                        <img id="modalEmpresaLogo" src="{{ url_for('static', filename='img/default-company.png') }}" alt="Logo empresa">
+                        <span id="modalEmpresaName">Empresa</span>
+                    </div>
+                    <div class="modal-company">
+                        <img id="modalUserLogo" src="{{ url_for('static', filename='img/default-user.png') }}" alt="Avatar vacante">
+                        <span>Candidato</span>
+                    </div>
+                </div>
+
+                <div class="modal-description-box">
+                    <p id="modalDesc">Descripción de la vacante...</p>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="modal-btn">Postular</a>
+                </div>
+            </div>
         </div>
     </div>
 
-    {{ footer.footer() }}
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <h4>WorkLink</h4>
+                <p>Conectando talento con oportunidades laborales de forma rápida y sencilla.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Enlaces</h4>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#">Empresas</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p>Email: contacto@worklink.com</p>
+                <p>Tel: +52 55 1234 5678</p>
+            </div>
+
+            <div class="footer-social">
+                <h4>Síguenos</h4>
+                <a href="https://www.facebook.com/tu_pagina" target="_blank">
+                    <img src="{{ url_for('static', filename='img/2023_Facebook_icon.svg') }}" alt="Facebook" class="social-icon">
+                </a>
+                <a href="https://www.linkedin.com/tu_pagina" target="_blank">
+                    <img src="{{ url_for('static', filename='img/LinkedIn_icon.svg') }}" alt="LinkedIn" class="social-icon">
+                </a>
+                <a href="https://twitter.com/tu_pagina" target="_blank">
+                    <img src="{{ url_for('static', filename='img/Logo_of_Twitter.svg') }}" alt="Twitter" class="social-icon">
+                </a>
+            </div>
+
+            <div class="footer-payments">
+                <h4>Métodos de pago</h4>
+                <div class="payment-icons">
+                    <img src="{{ url_for('static', filename='img/Visa.svg') }}" alt="Visa">
+                    <img src="{{ url_for('static', filename='img/Mastercard-logo.svg') }}" alt="MasterCard">
+                    <img src="{{ url_for('static', filename='img/Paypal.svg') }}" alt="PayPal">
+                    <img src="{{ url_for('static', filename='img/American_Express_logo.svg') }}" alt="American Express">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 WorkLink. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script>
-        function openModal(title, desc, empresa) {
+        function openModal(title, desc, empresa, empresaLogo, userLogo) {
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalDesc").innerText = desc;
-            document.getElementById("modalEmpresa").innerText = empresa;
+            document.getElementById("modalEmpresaName").innerText = empresa;
+            document.getElementById("modalEmpresaLogo").src = empresaLogo;
+            document.getElementById("modalUserLogo").src = userLogo;
             document.getElementById("jobModal").style.display = "block";
         }
 
@@ -75,7 +202,6 @@
             document.getElementById("jobModal").style.display = "none";
         }
 
-        // Cerrar modal al hacer clic fuera de él
         window.onclick = function(event) {
             const modal = document.getElementById("jobModal");
             if (event.target == modal) {
@@ -83,5 +209,6 @@
             }
         }
     </script>
+
 </body>
 </html>

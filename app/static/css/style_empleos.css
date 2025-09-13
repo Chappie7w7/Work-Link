@@ -1,173 +1,459 @@
-/*Estilos de la página de Empleos*/
+/* ======== ESTILOS GENERALES ======== */
 body {
     margin: 0;
-    font-family: sans-serif;
-    background-color: #f9f9f9;
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+    color: #0f172a;
 }
 
-/*barra de busqueda*/
-.search-filter-container {
+/* ======== SECCIÓN DEL BUSCADOR CON FONDO ======== */
+.search-section {
+    position: relative;
+    background: url("../img/dev4.jpg") no-repeat center center/cover;
+    padding: 100px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
-    margin: 20px auto;
-    max-width: 800px;
-    padding: 0 10px;
-    flex-wrap: wrap;
 }
 
-.search-bar {
+.search-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+.search-container {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+    padding: 30px 35px;
+    border-radius: 50px;
+    max-width: 1100px;
+    margin: auto;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+}
+
+.search-container:hover {
+    transform: scale(1.02);
+}
+
+/* ======== INPUT PRINCIPAL ======== */
+.search-container .search-bar {
+    flex-grow: 2;
+    min-width: 320px;
     display: flex;
     align-items: center;
-    background: #f1f1f1;
-    padding: 10px 15px;
-    border-radius: 25px;
-    flex-grow: 1;
-    min-width: 250px;
+    background: #f8fafc;
+    padding: 16px 22px;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
 }
 
-.search-bar .icon {
-    margin-right: 8px;
-    font-size: 1.2rem;
-    color: #555;
+.search-container .search-bar:hover {
+    border-color: #3b82f6;
 }
 
-.search-bar input {
+.search-container .search-bar .icon {
+    font-size: 1.6rem;
+    color: #3b82f6;
+    margin-right: 12px;
+}
+
+.search-container .search-bar input {
     border: none;
-    background: transparent;
     outline: none;
+    background: transparent;
     width: 100%;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    color: #0f172a;
 }
 
-.filter-dropdown select {
-    padding: 10px 15px;
-    border-radius: 25px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+/* ======== FILTROS ======== */
+.search-container .filter-dropdown select,
+.search-container .filter-dropdown input[type="date"],
+.search-container .filter-dropdown input[type="text"] {
+    padding: 14px 20px;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+    min-width: 160px;
     font-size: 1rem;
-    min-width: 180px;
+    color: #0f172a;
+    font-weight: 500;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
-/*dieño de vista empleos*/
-/* 🎨 Estilos para cards de vacantes */
-.vacantes-container,
-.jobs-grid {
+.search-container .filter-dropdown select:hover,
+.search-container .filter-dropdown input:hover {
+    border-color: #2563eb;
+}
+
+.search-container .filter-dropdown select:focus,
+.search-container .filter-dropdown input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
+}
+
+/* ======== GRID DE CARDS ======== */
+.vacantes-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
-    margin: 30px auto;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 25px;
+    margin: 40px auto;
     padding: 20px;
     max-width: 1200px;
 }
 
-.vacante-card,
-.job-card {
+/* ======== CARD ======== */
+.vacante-card {
     background: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
     border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
 }
 
-.vacante-card:hover,
-.job-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    border-color: #0ea5e9;
+.vacante-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    border-color: #3b82f6;
 }
 
-/* Títulos */
-.vacante-card h3,
-.job-card h4 {
+.avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 2px solid #e5e7eb;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.rating-star {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #f59e0b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.vacante-card h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #0f172a;
     margin-bottom: 8px;
+    color: #0f172a;
 }
 
-/* Texto */
-.vacante-card p,
-.job-card p {
+.vacante-card p {
     font-size: 0.95rem;
-    color: #374151;
+    color: #475569;
+    margin: 5px 0;
+}
+
+/* ======== INFO ROW ======== */
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     margin: 4px 0;
 }
 
-/* Nombre empresa destacado */
-.job-company,
-.vacante-card strong {
+.info-icon {
+    width: 16px;
+    height: 16px;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.info-label {
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 1rem;
+}
+
+.info-text {
+    font-weight: 400;
+    color: #475569;
+}
+
+/* ======== ETIQUETAS ======== */
+.tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.tag, .tag-modalidad, .tag-estado, .tag-salary, .tag-published {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.85rem;
     font-weight: 600;
-    color: #0ea5e9;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
 }
 
-/* Salario con estilo */
-.vacante-card p strong,
-.job-card p strong {
-    color: #1e293b;
-}
+.tag-fulltime { background: #3a78c8f4; color: #fff; box-shadow: 0 4px 12px rgba(58,120,200,0.3);}
+.tag-parttime { background: #ede9fe; color: #5b21b6; box-shadow: 0 4px 12px rgba(91,33,182,0.3);}
+.tag-remote { background: #f0fdf4; color: #166534; box-shadow: 0 4px 12px rgba(22,101,52,0.3);}
+.tag-internship { background: #fff7ed; color: #9a3412; box-shadow: 0 4px 12px rgba(154,52,18,0.3);}
+.tag-temporary { background: #fef2f2; color: #b91c1c; box-shadow: 0 4px 12px rgba(185,28,28,0.3);}
+.tag-modalidad { background: #e0f2fe; color: #0369a1; box-shadow: 0 4px 12px rgba(3,105,161,0.2);}
+.tag-estado { background: #ede9fe; color: #6d28d9; box-shadow: 0 4px 12px rgba(109,40,217,0.2);}
+.tag-salary { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; font-weight: 700; box-shadow: 0 4px 12px rgba(22,101,52,0.3);}
+.tag-published { background: linear-gradient(135deg, #facc15, #eab308); color: #fff; font-weight: 700; box-shadow: 0 4px 12px rgba(202,138,4,0.3);}
 
-/* Botón "Ver más" */
+/* ======== BOTÓN ======== */
 .card-btn {
     display: inline-block;
-    margin-top: 10px;
-    padding: 10px 16px;
-    background: #0ea5e9;
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
     color: #fff;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
     text-decoration: none;
-    transition: background 0.3s ease;
+    box-shadow: 0 5px 15px rgba(37,99,235,0.35);
+    transition: all 0.3s ease;
+    margin-top: 10px;
 }
 
 .card-btn:hover {
-    background: #0284c7;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(37,99,235,0.45);
 }
 
-/* Estilos para los modals */
-/* Fondo oscuro detrás del modal */
+/* ======== MODAL ======== */
 .modal {
-  display: none; /* Oculto por defecto */
-  position: fixed;
-  z-index: 1000; /* Encima de todo */
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto; /* Scroll si el contenido es largo */
-  background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro */
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
 }
 
-/* Caja del modal */
 .modal-content {
-  background-color: #fff;
-  margin: 10% auto; /* Centrado vertical */
-  padding: 20px;
-  border-radius: 10px;
-  width: 80%;
-  max-width: 600px; /* No más ancho de 600px */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.3s ease;
+    background-color: #ffffff;
+    margin: 5% auto;
+    border-radius: 25px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    animation: fadeIn 0.4s ease;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    position: relative;
+    font-family: 'Inter', sans-serif;
 }
 
-/* Botón de cerrar */
+.modal-header {
+    background: linear-gradient(135deg, #25c7eb, #1eaf90a5);
+    padding: 20px 25px;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-company {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-company img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid #e5e7eb;
+}
+
+.modal-body {
+    padding: 20px 25px;
+    color: #1e293b;
+}
+
+.modal-company-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-company-row img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e5e7eb;
+}
+
+.modal-description-box {
+    border: 1px solid #e5e7eb;
+    padding: 15px;
+    border-radius: 15px;
+    background: #f1f5f9;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.modal-btn {
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #10b981, #047857);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(16,185,129,0.35);
+}
+
+.modal-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 10px 22px rgba(16,185,129,0.45);
+}
+
 .close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .close:hover {
-  color: #000;
+    color: #f87171;
+    transform: scale(1.2);
 }
 
-/* Animación suave */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* -------------------- FOOTER -------------------- */
+footer {
+    background: #0d2a4d;
+    color: white;
+    padding: 40px 20px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-container h4 {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.footer-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-container ul li {
+    margin: 8px 0;
+}
+
+.footer-container a {
+    color: #ddd;
+    text-decoration: none;
+}
+
+.footer-container a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #bbb;
+}
+
+/* -------------------- MÉTODOS DE PAGO -------------------- */
+.payment-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.payment-icons img {
+    width: 50px;
+    height: auto;
+    transition: transform 0.2s ease;
+}
+
+.payment-icons img:hover {
+    transform: scale(1.1);
+}
+
+/* -------------------- REDES SOCIALES -------------------- */
+.footer-social {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.footer-social a {
+    display: inline-block;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.footer-social a:hover {
+    transform: scale(1.2);
+    opacity: 0.9;
+}
+
+.social-icon {
+    width: 30px;
+    height: auto;
+    display: block;
 }
