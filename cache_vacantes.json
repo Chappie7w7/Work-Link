@@ -1,32 +1,32 @@
 [
   {
-    "id": 27,
-    "titulo": "hola",
-    "descripcion": "hola",
-    "ubicacion": "hola",
+    "id": 32,
+    "titulo": "ls",
+    "descripcion": "ls",
+    "ubicacion": ",s",
     "modalidad": "presencial",
     "estado": "publicada",
-    "salario_aprox": -21000.0,
-    "empresa": "carlos"
+    "salario_aprox": 6000.0,
+    "empresa": "worklink23"
   },
   {
-    "id": 26,
-    "titulo": "hola8",
-    "descripcion": "hkjahjkahj",
-    "ubicacion": "kjlajlajlajaljk",
-    "modalidad": "presencial",
+    "id": 31,
+    "titulo": "front",
+    "descripcion": "hola",
+    "ubicacion": "kajla",
+    "modalidad": "remoto",
     "estado": "publicada",
     "salario_aprox": 7500.0,
     "empresa": "worklink23"
   },
   {
-    "id": 25,
-    "titulo": "desarrollador backend",
-    "descripcion": "hola lanzo esta convocatoria para quien guste aspirar a un lugar en nuetro equipo de desarrolladores enviar cv",
-    "ubicacion": "nose",
+    "id": 30,
+    "titulo": "h",
+    "descripcion": "ka",
+    "ubicacion": "jka",
     "modalidad": "presencial",
     "estado": "publicada",
-    "salario_aprox": 6000.0,
+    "salario_aprox": 4500.0,
     "empresa": "worklink23"
   }
 ]

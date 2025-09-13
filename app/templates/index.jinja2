@@ -13,13 +13,16 @@
 
 <body>
 
+    <!-- HEADER -->
     <header>
         <div class="logo"></div>
         <h1>WorkLink</h1>
 
         <!-- Botones de acceso -->
         <div class="auth-links">
+            <a href="{{ url_for('DesarrolladoresRoute.desarrolladores') }}" class="link-auth">Desarrolladores</a>
             <a href="{{ url_for('LoginRoute.login_form') }}" class="link-auth">Iniciar sesión</a>
+
 
             <!-- Menú desplegable para crear cuenta -->
             <div class="dropdown">
@@ -32,17 +35,20 @@
         </div>
     </header>
 
-
-
-    <!-- Sección principal -->
     <div class="hero">
-        <h2>Encuentra tu próximo trabajo</h2>
-        <p>Oportunidades laborales cerca de ti, rápido y fácil</p>
+        <iframe class="hero-video"
+            src="https://www.youtube.com/embed/vDMyIZ2nsS0?autoplay=1&mute=1&loop=1&playlist=vDMyIZ2nsS0"
+            title="Video de búsqueda de empleo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+        </iframe>
+        <div class="hero-content">
+            <h2>Encuentra tu próximo trabajo</h2>
+            <p>Oportunidades laborales cerca de ti, rápido y fácil</p>
+        </div>
     </div>
 
-    <!-- Lista de trabajos -->
+    <!-- LISTA DE TRABAJOS -->
     <div class="jobs-section">
-        <h3 class="jobs-title">Ofertas destacadas</h3>
+        <h2 class="jobs-title">Ofertas destacadas</h2>
         <div class="jobs-grid">
             {% if jobs %}
             {% for v in jobs %}
@@ -98,16 +104,16 @@
             document.getElementById("jobModal").style.display = "none";
         }
 
-        // Cerrar modal al hacer clic fuera de él
-        window.onclick = function (event) {
-            const modal = document.getElementById("jobModal");
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
+    // Cerrar modal al hacer clic fuera de él
+    window.onclick = function(event) {
+        const modal = document.getElementById("jobModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
         }
-    </script>
-    
-    <script>
+    }
+</script>
+
+<script>
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
       .then(() => console.log("✅ Service Worker registrado"))

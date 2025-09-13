@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>WorkLink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_desarrolladores.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo"></div>
+        <h1>WorkLink</h1>
+        <div class="auth-links">
+        <a href="{{ url_for('IndexRoute.index') }}" class="link-auth">Volver</a>
+    </div>
+
+        <div class="auth-links">
+            <a href="{{ url_for('DesarrolladoresRoute.desarrolladores') }}" class="link-auth">Desarrolladores</a>
+            <a href="{{ url_for('LoginRoute.login_form') }}" class="link-auth">Iniciar sesión</a>
+
+            <div class="dropdown">
+                <span class="link-auth">Crear cuenta</span>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('RegistroRoute.registro') }}">Soy usuario</a>
+                    <a href="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}">Soy empresa</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== EQUIPO DE DESARROLLADORES ===================== -->
+    <section class="watchlist">
+
+    
+
+        <!-- Cuadro vertical con información -->
+        <!-- Cuadro vertical con información -->
+        <div class="vertical-box">
+            <img src="{{ url_for('static', filename='img/dev3.jpg') }}" alt="Información WorkLink" class="vertical-image">
+            <h3>Sobre WorkLink</h3>
+            <p>WorkLink es una plataforma que conecta talento con oportunidades laborales de forma rápida y sencilla.</p>
+            <p>Actualmente estamos en fase de inventario de información, pero pronto podrás explorar todos nuestros desarrolladores y servicios.</p>
+        </div>
+
+
+        <!-- Grid de tarjetas -->
+        <div class="card-grid">
+        
+
+            <!-- Tarjeta 1 -->
+            <div class="card">
+                <img src="{{ url_for('static', filename='img/dev1.jpg') }}" alt="Felix Alexis">
+                <div class="card-content">
+                    <h3>Felix Alexis</h3>
+                    <p class="role">💻 Backend</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2 -->
+            <div class="card">
+                <img src="{{ url_for('static', filename='img/dev2.jpg') }}" alt="Janilet Pérez">
+                <div class="card-content">
+                    <h3>Janilet Pérez</h3>
+                    <p class="role">🎨 Frontend</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 3 -->
+            <div class="card">
+                <img src="{{ url_for('static', filename='img/dev3.jpg') }}" alt="Carlos Yahir">
+                <div class="card-content">
+                    <h3>Carlos Yahir</h3>
+                    <p class="role">🗄️ Base de datos</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 4 -->
+            <div class="card">
+                <img src="{{ url_for('static', filename='img/dev4.jpg') }}" alt="Josue">
+                <div class="card-content">
+                    <h3>Josue</h3>
+                    <p class="role">⚙️ QA Tester</p>
+                </div>
+            </div>
+             <!-- Contenedor de flechas -->
+    <div class="arrows-container">
+        <button class="arrow prev">&#10094;</button>
+        <button class="arrow next">&#10095;</button>
+    </div>
+                    
+        </div>
+    </section>
+    <!-- ===================== FIN DE SECCIÓN ===================== -->
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <h4>WorkLink</h4>
+                <p>Conectando talento con oportunidades laborales de forma rápida y sencilla.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Enlaces</h4>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#">Empresas</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p>Email: contacto@worklink.com</p>
+                <p>Tel: +52 55 1234 5678</p>
+            </div>
+
+            <div class="footer-social">
+                <h4>Síguenos</h4>
+                <a href="#"><img src="{{ url_for('static', filename='img/2023_Facebook_icon.svg') }}" alt="Facebook" class="social-icon"></a>
+                <a href="#"><img src="{{ url_for('static', filename='img/LinkedIn_icon.svg') }}" alt="LinkedIn" class="social-icon"></a>
+                <a href="#"><img src="{{ url_for('static', filename='img/Logo_of_Twitter.svg') }}" alt="Twitter" class="social-icon"></a>
+            </div>
+
+            <div class="footer-payments">
+                <h4>Métodos de pago</h4>
+                <div class="payment-icons">
+                    <img src="{{ url_for('static', filename='img/Visa.svg') }}" alt="Visa">
+                    <img src="{{ url_for('static', filename='img/Mastercard-logo.svg') }}" alt="MasterCard">
+                    <img src="{{ url_for('static', filename='img/Paypal.svg') }}" alt="PayPal">
+                    <img src="{{ url_for('static', filename='img/American_Express_logo.svg') }}" alt="American Express">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 WorkLink. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
