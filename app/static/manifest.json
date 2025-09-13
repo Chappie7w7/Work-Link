@@ -1,0 +1,21 @@
+{
+  "name": "WorkLink",
+  "short_name": "WorkLink",
+  "description": "Encuentra tu próximo trabajo fácilmente",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/static/icons/car.jpg",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/profile_picture.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -10,6 +10,10 @@
       padding: 20px;
       display: flex;
       align-items: center;
+      display: flex;
+      justify-content: space-between;
+      /* logo + título a la izquierda, botón a la derecha */
+      padding: 15px 30px;
     }
 
     header .logo {
@@ -26,14 +30,16 @@
       margin: 0;
     }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 100px); /* ocupa pantalla sin solaparse */
-  padding-top: 40px; /* separación extra debajo del header */
-  padding-bottom: 40px;
-}
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 100px);
+      /* ocupa pantalla sin solaparse */
+      padding-top: 40px;
+      /* separación extra debajo del header */
+      padding-bottom: 40px;
+    }
 
 
     .register-box {
@@ -105,5 +111,20 @@
     }
 
     .card-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Estilos para boton regresar*/
+    .btn-regresar {
+      background: none;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn-regresar:hover {
       text-decoration: underline;
     }

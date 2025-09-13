@@ -7,6 +7,7 @@ from app.utils.roles import Roles
 from app.db.sql import db
 from app.models.md_vacantes import VacanteModel
 from app.models.md_empresas import EmpresaModel
+from app.models.md_postulacion import PostulacionModel 
 
 rt_empresa = Blueprint("rt_empresa", __name__, url_prefix="/empresa")
 
@@ -16,23 +17,40 @@ rt_empresa = Blueprint("rt_empresa", __name__, url_prefix="/empresa")
 @rt_empresa.route("/")
 @login_role_required(Roles.EMPRESA)
 def dashboard():
-    ofertas = [
-        {"id": 1, "titulo": "Desarrollador Backend", "estado": "Activo"},
-        {"id": 2, "titulo": "Diseñador UX/UI", "estado": "Activo"},
-    ]
+    user = get_user_from_session(session)
+    if not user:
+        return redirect(url_for("IndexRoute.index"))
 
-    candidatos = [
-        {"id": 101, "nombre": "Juan Pérez"},
-        {"id": 102, "nombre": "María López"},
-    ]
+    # 🔹 Traer vacantes de la empresa logueada
+    vacantes_empresa = VacanteModel.query.filter_by(empresa_id=user["id"]).all()
+
+    # 🔹 Contar postulaciones de todas las vacantes de la empresa
+    postulantes_totales = (
+        db.session.query(PostulacionModel)
+        .join(VacanteModel)
+        .filter(VacanteModel.empresa_id == user["id"])
+        .count()
+    )
+
+    # 🔹 Contar ofertas activas
+    ofertas_activas = VacanteModel.query.filter_by(empresa_id=user["id"], estado="publicada").count()
+
+    # 🔹 Traer lista de postulaciones si quieres mostrar detalles
+    postulantes = (
+        db.session.query(PostulacionModel)
+        .join(VacanteModel)
+        .filter(VacanteModel.empresa_id == user["id"])
+        .all()
+    )
 
     return render_template(
         "empresa/empresa.jinja2",
-        ofertas_activas=len(ofertas),
-        postulantes_totales=len(candidatos),
-        ofertas=ofertas,
-        candidatos=candidatos,
+        ofertas_activas=ofertas_activas,
+        postulantes_totales=postulantes_totales,
+        ofertas=vacantes_empresa,
+        candidatos=postulantes,
     )
+
 
 # Ruta para publicar empleo
 @rt_empresa.route("/publicar")
