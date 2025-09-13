@@ -1,3 +1,4 @@
+{% import 'components/footer.jinja2' as footer %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -93,53 +94,7 @@
         </div>
     </section>
     <!-- ===================== FIN DE SECCIÓN ===================== -->
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-about">
-                <h4>WorkLink</h4>
-                <p>Conectando talento con oportunidades laborales de forma rápida y sencilla.</p>
-            </div>
-
-            <div class="footer-links">
-                <h4>Enlaces</h4>
-                <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Ofertas</a></li>
-                    <li><a href="#">Empresas</a></li>
-                    <li><a href="#">Contacto</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-contact">
-                <h4>Contacto</h4>
-                <p>Email: contacto@worklink.com</p>
-                <p>Tel: +52 55 1234 5678</p>
-            </div>
-
-            <div class="footer-social">
-                <h4>Síguenos</h4>
-                <a href="#"><img src="{{ url_for('static', filename='img/2023_Facebook_icon.svg') }}" alt="Facebook" class="social-icon"></a>
-                <a href="#"><img src="{{ url_for('static', filename='img/LinkedIn_icon.svg') }}" alt="LinkedIn" class="social-icon"></a>
-                <a href="#"><img src="{{ url_for('static', filename='img/Logo_of_Twitter.svg') }}" alt="Twitter" class="social-icon"></a>
-            </div>
-
-            <div class="footer-payments">
-                <h4>Métodos de pago</h4>
-                <div class="payment-icons">
-                    <img src="{{ url_for('static', filename='img/Visa.svg') }}" alt="Visa">
-                    <img src="{{ url_for('static', filename='img/Mastercard-logo.svg') }}" alt="MasterCard">
-                    <img src="{{ url_for('static', filename='img/Paypal.svg') }}" alt="PayPal">
-                    <img src="{{ url_for('static', filename='img/American_Express_logo.svg') }}" alt="American Express">
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>© 2025 WorkLink. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+{{ footer.footer() }}
 
 </body>
 </html>
