@@ -8,11 +8,8 @@ from .rt_mensajes import rt_mensajes
 from .rt_registro import rt_registro
 from .rt_empresa import rt_empresa
 from .rt_registro_empresa import rt_registro_empresa
+from .rt_perfil import rt_perfil
 from .rt_desarrolladores import DesarrolladoresRoute
-
-
-
-
 
 def register_routes(app):
     app.register_blueprint(rt_index)
@@ -25,7 +22,10 @@ def register_routes(app):
     app.register_blueprint(rt_registro)
     app.register_blueprint(rt_registro_empresa)
     app.register_blueprint(rt_empresa)
+
+    app.register_blueprint(rt_perfil)
     app.register_blueprint(DesarrolladoresRoute)
+
 
 
 

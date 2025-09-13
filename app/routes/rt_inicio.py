@@ -10,4 +10,4 @@ def inicio():
     usuario = session.get("usuario")
     if not usuario:
         return redirect(url_for("LoginRoute.login_form"))
-    return render_template("inicio.jinja2", usuario=usuario)
+    return render_template("inicio.jinja2", current_user=usuario)
