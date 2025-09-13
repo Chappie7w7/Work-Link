@@ -33,19 +33,16 @@
     </header>
 
    <div class="hero">
-    <iframe class="hero-video" 
-        src="https://www.youtube.com/embed/vDMyIZ2nsS0?autoplay=1&mute=1&loop=1&playlist=vDMyIZ2nsS0"
-
-        title="Video de búsqueda de empleo" 
-        frameborder="0" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen>
-            </iframe>
-            <div class="hero-content">
-            <h2>Encuentra tu próximo trabajo</h2>
-            <p>Oportunidades laborales cerca de ti, rápido y fácil</p>
-        </div>
+    <video class="hero-video" autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='video/mi_video.mp4') }}" type="video/mp4">
+        Tu navegador no soporta la etiqueta de video.
+    </video>
+    <div class="hero-content">
+        <h2>Encuentra tu próximo trabajo</h2>
+        <p>Oportunidades laborales cerca de ti, rápido y fácil</p>
     </div>
+</div>
+
 
     <!-- LISTA DE TRABAJOS -->
     <div class="jobs-section">
