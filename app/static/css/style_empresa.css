@@ -1,51 +1,82 @@
     body {
         background-color: #f4f6f9;
     }
+
     header {
-      background-color: #11304F;
-      padding: 20px;
-      display: flex;
-      align-items: center;
+        background-color: #11304F;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        /* distribuye logo, título y botón */
+        padding: 15px 30px;
     }
 
     header .logo {
-      width: 40px;
-      height: 40px;
-      background-color: #d1d5db;
-      border-radius: 8px;
-      margin-right: 10px;
+        width: 40px;
+        height: 40px;
+        background-color: #d1d5db;
+        border-radius: 8px;
+        margin-right: 10px;
     }
 
     header h1 {
-      color: white;
-      font-size: 32px;
-      margin: 0;
+        color: white;
+        font-size: 32px;
+        margin: 0;
     }
+
     .dashboard-header {
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 20px;
     }
+
     .card {
         border: none;
         border-radius: 15px;
     }
+
     .card-header {
         font-weight: 600;
     }
+
     .stat-card {
         border-radius: 15px;
         transition: transform 0.2s ease;
     }
+
     .stat-card:hover {
         transform: translateY(-3px);
     }
+
     .stat-value {
         font-size: 2rem;
         font-weight: bold;
         color: #2563eb;
     }
+
     .btn-primary {
         border-radius: 25px;
         padding: 10px 20px;
+    }
+
+    /* Estilos para el botón de regresar */
+    .btn-regresar {
+        background: none;
+        /* sin fondo */
+        border: none;
+        /* sin borde */
+        color: #fff;
+        /* texto blanco */
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        /* sin subrayado */
+    }
+
+    .btn-regresar:hover {
+        text-decoration: underline;
+        /* subrayado al pasar el mouse */
     }

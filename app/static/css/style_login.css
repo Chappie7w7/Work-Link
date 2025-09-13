@@ -11,6 +11,9 @@ header {
     padding: 20px;
     display: flex;
     align-items: center;
+    display: flex;
+    justify-content: space-between; /* distribuye logo, título y botón */
+    padding: 15px 30px;
 }
 
 header .logo {
@@ -94,4 +97,25 @@ button {
 .mensajes {
     margin-top: 10px;
     text-align: center;
+}
+
+/* Estilos para el botón de regresar */
+
+.btn-regresar {
+    background: none;
+    /* sin fondo */
+    border: none;
+    /* sin borde */
+    color: #fff;
+    /* texto blanco */
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    /* sin subrayado */
+}
+
+.btn-regresar:hover {
+    text-decoration: underline;
+    /* subrayado al pasar el mouse */
 }
