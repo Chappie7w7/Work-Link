@@ -1,0 +1,51 @@
+{% import "components/navbar.jinja2" as components %}
+{% import "components/footer.jinja2" as footer %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_perfil.css') }}">
+</head>
+<body>
+
+    {{ components.navbar("perfil", "perfil", current_user) }}
+
+    <div class="main-content">
+        <div class="form-container">
+            <h2>Editar Perfil</h2>
+
+            <form action="{{ url_for('PerfilRoute.editar') }}" method="post" class="perfil-form">
+                <!-- Nombre -->
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" 
+                           value="{{ current_user.nombre if current_user else '' }}" required>
+                </div>
+
+                <!-- Correo -->
+                <div class="form-group">
+                    <label for="correo">Correo</label>
+                    <input type="email" name="correo" id="correo" 
+                           value="{{ current_user.correo if current_user else '' }}" required>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="form-group">
+                    <label for="ubicacion">Ubicación</label>
+                    <input type="text" name="ubicacion" id="ubicacion" 
+                           value="{{ current_user.ubicacion if current_user else '' }}">
+                </div>
+
+                <!-- Botón -->
+                <div class="form-group">
+                    <button type="submit">💾 Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{ footer.footer() }}
+
+</body>
+</html>
