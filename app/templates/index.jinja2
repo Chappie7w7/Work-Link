@@ -19,7 +19,7 @@
         <div class="auth-links">
             <a href="{{ url_for('DesarrolladoresRoute.desarrolladores') }}" class="link-auth">Desarrolladores</a>
             <a href="{{ url_for('LoginRoute.login_form') }}" class="link-auth">Iniciar sesión</a>
-            
+
 
             <!-- Menú desplegable para crear cuenta -->
             <div class="dropdown">
@@ -32,16 +32,12 @@
         </div>
     </header>
 
-   <div class="hero">
-    <iframe class="hero-video" 
-        src="https://www.youtube.com/embed/vDMyIZ2nsS0?autoplay=1&mute=1&loop=1&playlist=vDMyIZ2nsS0"
-
-        title="Video de búsqueda de empleo" 
-        frameborder="0" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen>
-            </iframe>
-            <div class="hero-content">
+    <div class="hero">
+        <iframe class="hero-video"
+            src="https://www.youtube.com/embed/vDMyIZ2nsS0?autoplay=1&mute=1&loop=1&playlist=vDMyIZ2nsS0"
+            title="Video de búsqueda de empleo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+        </iframe>
+        <div class="hero-content">
             <h2>Encuentra tu próximo trabajo</h2>
             <p>Oportunidades laborales cerca de ti, rápido y fácil</p>
         </div>
@@ -49,17 +45,70 @@
 
     <!-- LISTA DE TRABAJOS -->
     <div class="jobs-section">
-        <h3 class="jobs-title">Ofertas destacadas</h3>
+        <h2 class="jobs-title">Ofertas destacadas</h2>
         <div class="jobs-grid">
-            {% for job in jobs %}
-            <div class="job-card">
-                <h4 class="job-title">{{ job.title }}</h4>
-                <p class="job-company">{{ job.company }}</p>
-                <p class="job-location">{{ job.location }}</p>
+            {% if jobs %}
+            {% for v in jobs %}
+            <div class="vacante-card">
+                <h3>{{ v.titulo }}</h3>
+                <p class="job-company"><strong>Empresa:</strong> {{ v.empresa.nombre_empresa if v.empresa else "No
+                    especificada" }}</p>
+                <p><strong>Ubicación:</strong> {{ v.ubicacion or "No especificada" }}</p>
+                <p><strong>Modalidad:</strong> {{ v.modalidad }}</p>
+                <p><strong>Estado:</strong> {{ v.estado }}</p>
+                {% if v.salario_aprox %}
+                <p><strong>Salario aprox:</strong> ${{ "%.2f"|format(v.salario_aprox) }}</p>
+                {% endif %}
+                <p>{{ v.descripcion[:150] }}...</p>
+
+                <!-- Botón que abre el modal -->
+                <button class="card-btn" onclick="openModal(this)" data-titulo="{{ v.titulo }}"
+                    data-empresa="{{ v.empresa.nombre_empresa if v.empresa else 'No especificada' }}"
+                    data-descripcion="{{ v.descripcion }}">
+                    Ver más
+                </button>
             </div>
             {% endfor %}
+            {% else %}
+            <p>No hay vacantes destacadas aún.</p>
+            {% endif %}
         </div>
     </div>
+
+    <!-- Modal flotante -->
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p><strong>Empresa:</strong> <span id="modalEmpresa"></span></p>
+            <p id="modalDesc"></p>
+        </div>
+    </div>
+
+    <script>
+        function openModal(button) {
+            const title = button.getAttribute("data-titulo");
+            const desc = button.getAttribute("data-descripcion");
+            const empresa = button.getAttribute("data-empresa");
+
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalDesc").innerText = desc;
+            document.getElementById("modalEmpresa").innerText = empresa;
+            document.getElementById("jobModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("jobModal").style.display = "none";
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function (event) {
+            const modal = document.getElementById("jobModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 
     <!-- FOOTER -->
     <footer>
@@ -88,16 +137,19 @@
             <div class="footer-social">
                 <h4>Síguenos</h4>
                 <div class="footer-social">
-                <a href="https://www.facebook.com/tu_pagina" target="_blank">
-                    <img src="{{ url_for('static', filename='img/2023_Facebook_icon.svg') }}" alt="Facebook" class="social-icon">
-                </a>
-                <a href="https://www.linkedin.com/tu_pagina" target="_blank">
-                    <img src="{{ url_for('static', filename='img/LinkedIn_icon.svg') }}" alt="LinkedIn" class="social-icon">
-                </a>
-                <a href="https://twitter.com/tu_pagina" target="_blank">
-                    <img src="{{ url_for('static', filename='img/Logo_of_Twitter.svg') }}" alt="Twitter" class="social-icon">
-                </a>
-            </div>
+                    <a href="https://www.facebook.com/tu_pagina" target="_blank">
+                        <img src="{{ url_for('static', filename='img/2023_Facebook_icon.svg') }}" alt="Facebook"
+                            class="social-icon">
+                    </a>
+                    <a href="https://www.linkedin.com/tu_pagina" target="_blank">
+                        <img src="{{ url_for('static', filename='img/LinkedIn_icon.svg') }}" alt="LinkedIn"
+                            class="social-icon">
+                    </a>
+                    <a href="https://twitter.com/tu_pagina" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Logo_of_Twitter.svg') }}" alt="Twitter"
+                            class="social-icon">
+                    </a>
+                </div>
 
             </div>
 
@@ -109,7 +161,8 @@
                         <img src="{{ url_for('static', filename='img/Visa.svg') }}" alt="Visa">
                         <img src="{{ url_for('static', filename='img/Mastercard-logo.svg') }}" alt="MasterCard">
                         <img src="{{ url_for('static', filename='img/Paypal.svg') }}" alt="PayPal">
-                        <img src="{{ url_for('static', filename='img/American_Express_logo.svg') }}" alt="American Express">
+                        <img src="{{ url_for('static', filename='img/American_Express_logo.svg') }}"
+                            alt="American Express">
                     </div>
                 </div>
 
@@ -121,7 +174,7 @@
             <p>© 2025 WorkLink. Todos los derechos reservados.</p>
         </div>
     </footer>
-    
+
 
 </body>
 
