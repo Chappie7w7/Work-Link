@@ -10,6 +10,15 @@
                     <span>🏠</span><br><span>Inicio</span>
                 </a>
             </div>
+            
+            <!-- 🔹 Botón Editar Perfil al lado de Inicio -->
+            <div class="icon-item">
+                <a href="{{ url_for('PerfilRoute.editar') }}" style="text-decoration: none; color: inherit;">
+                    <span>✏️</span><br><span>Perfil</span>
+                </a>
+            </div>
+            <!-- 🔹 Fin botón Editar Perfil -->
+
             <div class="icon-item">
                 <a href="{{ url_for('EmpleosRoute.empleos') }}" style="text-decoration: none; color: inherit;">
                     <span>👥</span><br><span>Empleos</span>
@@ -39,14 +48,7 @@
             </div>
         </div>
 
-        {% if current_user %}
-        <details class="usuario-dropdown">
-            <summary>{{ current_user.correo }}</summary>
-            <ul>
-                <li><a href="{{ url_for('IndexRoute.logout') }}">Cerrar Sesión</a></li>
-            </ul>
-        </details>
-        {% endif %}
+    
 
     </nav>
 </header>
