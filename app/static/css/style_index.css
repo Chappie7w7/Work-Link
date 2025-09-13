@@ -1,20 +1,19 @@
-/* -------------------- RESET & BASE -------------------- */
-html, body {
+/* ===== RESET Y BASE ===== */
+body {
     margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden; /* elimina scroll horizontal */
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+    color: #0f172a;
 }
 
-/* -------------------- HEADER -------------------- */
+/* ===== HEADER ===== */
 header {
     background-color: #11304F;
-    padding: 20px;
+    padding: 20px 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 4px solid #0ea5e9;
 }
 
 header .logo {
@@ -43,22 +42,23 @@ header h1 {
     text-decoration: none;
     font-weight: 500;
     cursor: pointer;
+    padding: 8px 15px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
 .link-auth:hover {
-    text-decoration: underline;
+    background-color: #0ea5e9;
+    border-color: #ffffff;
+    color: #fff;
 }
 
 /* Dropdown */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
+.dropdown { position: relative; display: inline-block; }
 .dropdown-content {
     display: none;
-    position: absolute;
-    right: 0;
+    position: absolute; right: 0; top: 100%;
     background-color: #fff;
     min-width: 160px;
     border: 1px solid #ddd;
@@ -66,191 +66,109 @@ header h1 {
     box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
     z-index: 10;
 }
-
 .dropdown-content a {
-    color: #333;
-    padding: 10px 15px;
-    text-decoration: none;
-    display: block;
-    font-size: 14px;
+    color: #333; padding: 10px 15px; text-decoration: none; display: block; font-size: 14px;
 }
+.dropdown-content a:hover { background-color: #f5f5f5; }
+.dropdown:hover .dropdown-content { display: block; }
 
-.dropdown-content a:hover {
-    background-color: #f5f5f5;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* -------------------- HERO -------------------- */
+/* HERO */
 .hero {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-}
-
-.hero-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 177.78vh; /* ancho para cubrir altura 100vh con ratio 16:9 */
-    height: 100vh;
-    transform: translate(-50%, -50%);
-    object-fit: cover;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.hero-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    text-align: center;
+    justify-content: space-between;
+    padding: 60px 40px;
+    background: #11304F;
     color: white;
-    background: rgba(0,0,0,0.35);
-    padding: 20px;
+    min-height: 60vh;
+}
+.hero-text { flex:1; max-width:50%; padding-right:20px; }
+.hero-text h2 { font-size:3rem; margin-bottom:20px; font-weight:bold; }
+.hero-text p { font-size:1.2rem; }
+.hero-video-container { flex:1; max-width:45%; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+.hero-video-container video { width:100%; height:100%; object-fit:cover; display:block; border-radius:20px; }
+
+/* ===== TÍTULO DE VACANTES ===== */
+.vacantes-section {
+    max-width: 1200px;
+    margin: 40px auto 20px auto;
+    padding: 0 20px;
+}
+.vacantes-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 20px;
+    border-left: 6px solid #0ea5e9;
+    padding-left: 12px;
 }
 
-.hero-content h2 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.hero-content p {
-    font-size: 1.2em;
-}
-
-/* -------------------- JOBS -------------------- */
-.vacantes-container,
-.jobs-grid {
+/* ===== GRID DE CARDS ===== */
+.vacantes-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
-    margin: 30px auto;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 25px;
+    margin: 0 auto;
+    padding: 20px 0;
     max-width: 1200px;
 }
 
-.jobs-title {
-    text-align: center;
-}
-
-.vacante-card,
-.job-card {
+/* CARD */
+.vacante-card {
     background: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
     border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
 }
-
-.vacante-card:hover,
-.job-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    border-color: #0ea5e9;
+.vacante-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    border-color: #3b82f6;
 }
+.avatar { width:55px; height:55px; border-radius:50%; object-fit:cover; margin-bottom:15px; border:2px solid #e5e7eb; }
+.card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.vacante-card h3 { font-size:1.25rem; font-weight:600; margin-bottom:8px; color:#0f172a; }
+.vacante-card p { font-size:0.95rem; color:#475569; margin:5px 0; }
 
-/* Títulos */
-.vacante-card h3,
-.job-card h4 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #0f172a;
-    margin-bottom: 8px;
-}
+/* INFO ROW */
+.info-row { display:flex; align-items:center; gap:6px; margin:4px 0; }
+.info-label { font-weight:700; color:#0f172a; font-size:1rem; }
+.info-text { font-weight:400; color:#475569; }
 
-/* Texto */
-.vacante-card p,
-.job-card p {
-    font-size: 0.95rem;
-    color: #374151;
-    margin: 4px 0;
-}
+/* ETIQUETAS */
+.tags-row { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+.tag-modalidad { background: #e0f2fe; color: #0369a1; border-radius:999px; padding:8px 16px; font-weight:600; }
+.tag-estado { background: #ede9fe; color: #6d28d9; border-radius:999px; padding:8px 16px; font-weight:600; }
+.tag-salary { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; font-weight:700; padding:8px 16px; border-radius:999px; }
 
-/* Nombre empresa destacado */
-.job-company,
-.vacante-card strong {
-    font-weight: 600;
-    color: #0ea5e9;
-}
-
-/* Salario con estilo */
-.vacante-card p strong,
-.job-card p strong {
-    color: #1e293b;
-}
-
-/* Botón "Ver más" */
+/* BOTÓN */
 .card-btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 16px;
-    background: #0ea5e9;
-    color: #fff;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background 0.3s ease;
+    display:inline-block; padding:12px 25px;
+    background:linear-gradient(135deg,#2563eb,#1e40af);
+    color:#fff; border-radius:999px; font-size:1rem; font-weight:700; text-decoration:none; text-align:center;
+    box-shadow:0 5px 15px rgba(37,99,235,0.35); margin-top:10px; transition:all 0.3s ease;
 }
+.card-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow:0 8px 20px rgba(37,99,235,0.45); }
 
-.card-btn:hover {
-    background: #0284c7;
-}
+/* MODAL */
+.modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); }
+.modal-content { background:#fff; margin:5% auto; border-radius:25px; width:90%; max-width:600px; box-shadow:0 20px 50px rgba(0,0,0,0.3); overflow:hidden; border:1px solid #e5e7eb; position:relative; }
+.modal-header { background:linear-gradient(135deg,#25c7eb,#1eaf90a5); padding:20px 25px; color:#fff; font-size:1.5rem; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+.modal-company-row { display:flex; align-items:center; gap:10px; margin-bottom:15px; }
+.modal-company-row img { width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #e5e7eb; }
+.modal-description-box { border:1px solid #e5e7eb; padding:15px; border-radius:15px; background:#f1f5f9; }
+.modal-footer { display:flex; justify-content:flex-end; margin-top:15px; }
+.modal-btn { padding:12px 25px; background:linear-gradient(135deg,#10b981,#047857); color:#fff; border-radius:999px; font-weight:600; text-decoration:none; box-shadow:0 6px 18px rgba(16,185,129,0.35);}
+.modal-btn:hover { transform:translateY(-2px) scale(1.05); box-shadow:0 10px 22px rgba(16,185,129,0.45);}
+.close { font-size:28px; font-weight:bold; cursor:pointer; transition:all 0.2s ease; }
+.close:hover { color:#f87171; transform:scale(1.2); }
 
-/* Estilo para el modal */
-/* Fondo oscuro detrás del modal */
-.modal {
-  display: none; /* Oculto por defecto */
-  position: fixed;
-  z-index: 1000; /* Encima de todo */
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto; /* Scroll si el contenido es largo */
-  background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro */
-}
-
-/* Caja del modal */
-.modal-content {
-  background-color: #fff;
-  margin: 10% auto; /* Centrado vertical */
-  padding: 20px;
-  border-radius: 10px;
-  width: 80%;
-  max-width: 600px; /* No más ancho de 600px */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.3s ease;
-}
-
-/* Botón de cerrar */
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.close:hover {
-  color: #000;
-}
-
-/* Animación suave */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+/* RESPONSIVE HERO */
+@media screen and (max-width:900px){
+    .hero{ flex-direction:column; padding:20px; height:auto;}
+    .hero-text,.hero-video-container{ max-width:100%; margin-bottom:20px;}
 }
