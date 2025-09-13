@@ -1,116 +1,141 @@
 {% import 'components/footer.jinja2' as footer %}
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>WorkLink</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}">
 </head>
-
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <div class="logo"></div>
-        <h1>WorkLink</h1>
+<!-- HEADER CON NAVBAR -->
+<header>
+    <div class="logo"></div>
+    <h1>WorkLink</h1>
 
-        <!-- Botones de acceso -->
-        <div class="auth-links">
-            <a href="{{ url_for('DesarrolladoresRoute.desarrolladores') }}" class="link-auth">Desarrolladores</a>
-            <a href="{{ url_for('LoginRoute.login_form') }}" class="link-auth">Iniciar sesión</a>
-            
+    <div class="auth-links">
+        <a href="{{ url_for('DesarrolladoresRoute.desarrolladores') }}" class="link-auth">Desarrolladores</a>
+        <a href="{{ url_for('LoginRoute.login_form') }}" class="link-auth">Iniciar sesión</a>
 
-            <!-- Menú desplegable para crear cuenta -->
-            <div class="dropdown">
-                <span class="link-auth">Crear cuenta</span>
-                <div class="dropdown-content">
-                    <a href="{{ url_for('RegistroRoute.registro') }}">Soy usuario</a>
-                    <a href="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}">Soy empresa</a>
-                </div>
+        <div class="dropdown">
+            <span class="link-auth">Crear cuenta</span>
+            <div class="dropdown-content">
+                <a href="{{ url_for('RegistroRoute.registro') }}">Soy usuario</a>
+                <a href="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}">Soy empresa</a>
             </div>
-        </div>
-    </header>
-
-
-
-    <!-- LISTA DE TRABAJOS -->
-    <div class="jobs-section">
-        <h3 class="jobs-title">Ofertas destacadas</h3>
-        <div class="jobs-grid">
-            {% for job in jobs %}
-            <div class="job-card">
-                <h4 class="job-title">{{ job.title }}</h4>
-                <p class="job-company">{{ job.company }}</p>
-                <p class="job-location">{{ job.location }}</p>
-            </div>
-            {% endfor %}
         </div>
     </div>
+</header>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-about">
-                <h4>WorkLink</h4>
-                <p>Conectando talento con oportunidades laborales de forma rápida y sencilla.</p>
-            </div>
+<!-- HERO SPLIT: TEXTO + VIDEO -->
+<section class="hero">
+    <div class="hero-text">
+        <h2>Bienvenido a WorkLink</h2>
+        <p>Conectamos talento con oportunidades laborales de forma rápida y sencilla.</p>
+    </div>
+    <div class="hero-video-container">
+        <video autoplay muted loop>
+            <source src="{{ url_for('static', filename='videos/presentacion.mp4') }}" type="video/mp4">
+            Tu navegador no soporta videos HTML5.
+        </video>
+    </div>
+</section>
 
-            <div class="footer-links">
-                <h4>Enlaces</h4>
-                <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Ofertas</a></li>
-                    <li><a href="#">Empresas</a></li>
-                    <li><a href="#">Contacto</a></li>
-                </ul>
-            </div>
+<!-- TÍTULO DE OFERTAS -->
+<section class="vacantes-section">
+    <h2 class="vacantes-title">Ofertas de Empresas</h2>
 
-            <div class="footer-contact">
-                <h4>Contacto</h4>
-                <p>Email: contacto@worklink.com</p>
-                <p>Tel: +52 55 1234 5678</p>
-            </div>
-
-            <div class="footer-social">
-                <h4>Síguenos</h4>
-                <div class="footer-social">
-                <a href="https://www.facebook.com/tu_pagina" target="_blank">
-                    <img src="{{ url_for('static', filename='img/2023_Facebook_icon.svg') }}" alt="Facebook" class="social-icon">
-                </a>
-                <a href="https://www.linkedin.com/tu_pagina" target="_blank">
-                    <img src="{{ url_for('static', filename='img/LinkedIn_icon.svg') }}" alt="LinkedIn" class="social-icon">
-                </a>
-                <a href="https://twitter.com/tu_pagina" target="_blank">
-                    <img src="{{ url_for('static', filename='img/Logo_of_Twitter.svg') }}" alt="Twitter" class="social-icon">
-                </a>
-            </div>
-
-            </div>
-
-            <!-- Métodos de pago -->
-            <div class="footer-payments">
-                <h4>Métodos de pago</h4>
-                <div class="footer-payments">
-                    <div class="payment-icons">
-                        <img src="{{ url_for('static', filename='img/Visa.svg') }}" alt="Visa">
-                        <img src="{{ url_for('static', filename='img/Mastercard-logo.svg') }}" alt="MasterCard">
-                        <img src="{{ url_for('static', filename='img/Paypal.svg') }}" alt="PayPal">
-                        <img src="{{ url_for('static', filename='img/American_Express_logo.svg') }}" alt="American Express">
-                    </div>
+    <!-- LISTA DE VACANTES (cards estilo empleados) -->
+    <div class="vacantes-container">
+        {% if jobs %}
+            {% for v in jobs %}
+            <div class="vacante-card">
+                <div class="card-header">
+                    <img src="{{ v.empresa.logo_url if v.empresa and v.empresa.logo_url else url_for('static', filename='img/default-company.png') }}"
+                         alt="Logo empresa" class="avatar">
                 </div>
 
+                <h3>{{ v.titulo }}</h3>
 
+                <div class="info-row">
+                    <span class="info-label">Empresa:</span>
+                    <span class="info-text">{{ v.empresa.nombre_empresa if v.empresa else "No especificada" }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Ubicación:</span>
+                    <span class="info-text">{{ v.ubicacion or "No especificada" }}</span>
+                </div>
+
+                <div class="tags-row">
+                    {% if v.modalidad %}<span class="tag-modalidad">{{ v.modalidad }}</span>{% endif %}
+                    {% if v.estado %}<span class="tag-estado">{{ v.estado }}</span>{% endif %}
+                    {% if v.salario_aprox %}<span class="tag-salary">💰 ${{ "%.2f"|format(v.salario_aprox) }}</span>{% endif %}
+                </div>
+
+                <p>{{ v.descripcion[:100] }}...</p>
+
+                <a href="#" class="card-btn"
+                   onclick="openModal('{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Sin empresa')|escape }}', '{{ v.empresa.logo_url|default(url_for('static', filename='img/default-company.png')) }}', '')">
+                   Ver más
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align:center; font-size:1.2rem;">No hay vacantes destacadas aún.</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- MODAL -->
+<div id="jobModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="modalTitle">Vacante</span>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+
+        <div class="modal-body">
+            <div class="modal-company-row">
+                <div class="modal-company">
+                    <img id="modalEmpresaLogo" src="{{ url_for('static', filename='img/default-company.png') }}" alt="Logo empresa">
+                    <span id="modalEmpresaName">Empresa</span>
+                </div>
+            </div>
+
+            <div class="modal-description-box">
+                <p id="modalDesc">Descripción de la vacante...</p>
+            </div>
+
+            <div class="modal-footer">
+                <a href="#" class="modal-btn">Postular</a>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="footer-bottom">
-            <p>© 2025 WorkLink. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-    
+<script>
+function openModal(title, desc, empresa, empresaLogo, userLogo) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalDesc").innerText = desc;
+    document.getElementById("modalEmpresaName").innerText = empresa;
+    document.getElementById("modalEmpresaLogo").src = empresaLogo;
+    document.getElementById("jobModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("jobModal").style.display = "none";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("jobModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
+{{ footer.footer() }}
 
 </body>
-
 </html>
