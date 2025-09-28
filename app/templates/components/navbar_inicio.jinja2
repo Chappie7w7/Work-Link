@@ -1,0 +1,24 @@
+{% macro navbar() %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_navbar.css') }}">
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo"><h1>WorkLink</h1></div>
+    <nav class="nav-links">
+        <a href="#informacion">Inicio</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#vacantes">Vacantes</a>
+        <a href="#empresas">Empresas</a>
+        <a href="#testimonios">Testimonios</a>
+        <a href="#contacto">Contacto</a>
+        <a href="{{ url_for('LoginRoute.login_form') }}" class="btn-login">Iniciar sesión</a>
+
+        <div class="dropdown">
+            <span class="btn-register">Crear cuenta</span>
+            <div class="dropdown-content">
+                <a href="{{ url_for('RegistroRoute.registro') }}">Soy usuario</a>
+                <a href="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}">Soy empresa</a>
+            </div>
+        </div>
+    </nav>
+</header>
+{% endmacro %}
