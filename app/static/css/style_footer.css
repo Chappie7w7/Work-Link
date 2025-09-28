@@ -1,23 +1,69 @@
-/*Estilos del Footer*/
-/* -------------------- FOOTER -------------------- */
+/* ===== FOOTER ESTILO COMPUTRABAJO ===== */
 footer {
-    background: #0d2a4d;
+    background: #0066cc;
     color: white;
-    padding: 40px 20px;
-    margin-top: 50px;
+    padding: 40px 20px 20px;
+    margin-top: 60px;
+    position: relative;
+    overflow: hidden;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #ff6b35;
+}
+
+footer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.01)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 .footer-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
     max-width: 1200px;
-    margin: auto;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
 }
 
 .footer-container h4 {
     margin-bottom: 15px;
-    font-size: 18px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.footer-container h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 25px;
+    height: 2px;
+    background: #ff6b35;
+    border-radius: 1px;
+}
+
+.footer-about p {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    font-size: 14px;
 }
 
 .footer-container ul {
@@ -27,66 +73,184 @@ footer {
 
 .footer-container ul li {
     margin: 8px 0;
+    position: relative;
+    padding-left: 15px;
+}
+
+.footer-container ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #ff6b35;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.footer-container ul li:hover::before {
+    transform: translateX(3px);
+    color: #ffffff;
 }
 
 .footer-container a {
-    color: #ddd;
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 14px;
 }
 
 .footer-container a:hover {
-    color: #fff;
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.footer-contact p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 6px 0;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-contact p::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #ff6b35;
+    border-radius: 50%;
+    flex-shrink: 0;
 }
 
 .footer-bottom {
     text-align: center;
-    margin-top: 20px;
-    border-top: 1px solid #444;
-    padding-top: 10px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
     font-size: 14px;
-    color: #bbb;
+    color: #a0aec0;
+    position: relative;
+    z-index: 2;
 }
 
-/* -------------------- MÉTODOS DE PAGO -------------------- */
+/* ===== MÉTODOS DE PAGO ===== */
 .payment-icons {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
-    flex-wrap: nowrap;
-    margin-top: 10px;
-    overflow-x: auto;
+    flex-wrap: wrap;
+    margin-top: 15px;
 }
 
 .payment-icons img {
-    width: 50px;
+    width: 45px;
     height: auto;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
 }
 
 .payment-icons img:hover {
-    transform: scale(1.1);
+    transform: scale(1.15) translateY(-3px);
+    background: rgba(255, 107, 53, 0.1);
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.2);
 }
 
-/* -------------------- REDES SOCIALES -------------------- */
+/* ===== REDES SOCIALES ===== */
 .footer-social {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .footer-social a {
-    display: inline-block;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-social a:hover {
-    transform: scale(1.2);
-    opacity: 0.9;
+    transform: translateY(-5px) scale(1.1);
+    background: rgba(255, 107, 53, 0.2);
+    border-color: #ff6b35;
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
 }
 
 .social-icon {
-    width: 30px;
+    width: 24px;
     height: auto;
-    display: block;
+    filter: brightness(0) invert(1);
+    transition: all 0.3s ease;
+}
+
+.footer-social a:hover .social-icon {
+    filter: brightness(0) saturate(100%) invert(60%) sepia(100%) saturate(2000%) hue-rotate(10deg);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    footer {
+        padding: 40px 15px 15px;
+    }
+    
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .footer-container h4::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .footer-container ul li {
+        padding-left: 0;
+    }
+    
+    .footer-container ul li::before {
+        display: none;
+    }
+    
+    .payment-icons {
+        justify-content: center;
+    }
+    
+    .footer-social {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-container h4 {
+        font-size: 18px;
+    }
+    
+    .footer-container a,
+    .footer-about p,
+    .footer-contact p {
+        font-size: 14px;
+    }
+    
+    .payment-icons img {
+        width: 40px;
+    }
+    
+    .footer-social a {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .social-icon {
+        width: 20px;
+    }
 }

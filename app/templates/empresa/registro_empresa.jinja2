@@ -1,8 +1,9 @@
+{% import 'components/footer.jinja2' as footer %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registro Empresa - WorkLink</title>
+  <title>Registro Empresa - WorkLink Ocosingo</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_registro.css') }}">
 </head>
 <body>
@@ -10,7 +11,7 @@
   <!-- HEADER -->
   <header>
     <div class="logo"></div>
-    <h1>WorkLink</h1>
+    <h1>WorkLink Ocosingo</h1>
   </header>
 
   <!-- FORMULARIO -->
@@ -53,6 +54,8 @@
       </div>
     </div>
   </div>
+
+  {{ footer.footer() }}
 
 </body>
 </html>

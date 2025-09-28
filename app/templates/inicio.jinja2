@@ -25,22 +25,117 @@
                     <p>📍 {{ current_user.ubicacion }}</p>
                     {% endif %}
                 </div>
-                <div class="box" style="height: 150px;"></div>
+                <div class="box empty-box"></div>
             </div>
 
             <!-- Columna central: presentación -->
             <div class="column center-column">
                 <div class="box" style="font-weight: bold;">
-                    Reduce tiempo y esfuerzo en la <br> búsqueda de trabajo y contratación
+                    🚀 Reduce tiempo y esfuerzo en la búsqueda de trabajo y contratación en Ocosingo
                 </div>
-                <div class="box" style="height: 100px;"></div>
-                <div class="box" style="height: 100px;"></div>
-                <div class="box" style="height: 100px;"></div>
+                <div class="box">
+                    <h4 class="section-title">📊 Estadísticas de la Plataforma</h4>
+                    <div class="stats-grid">
+                        <div class="stat-item blue">
+                            <div class="stat-number blue">50+</div>
+                            <div class="stat-label">Empresas</div>
+                        </div>
+                        <div class="stat-item green">
+                            <div class="stat-number green">200+</div>
+                            <div class="stat-label">Usuarios</div>
+                        </div>
+                        <div class="stat-item purple">
+                            <div class="stat-number purple">100+</div>
+                            <div class="stat-label">Vacantes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <h4 class="section-title">🎯 ¿Por qué elegir WorkLink Ocosingo?</h4>
+                    <div class="features-grid">
+                        <div class="feature-item blue">
+                            <div class="feature-title">🏢 Empresas Locales</div>
+                            <div class="feature-description">Conexión directa con empresas de Ocosingo</div>
+                        </div>
+                        <div class="feature-item green">
+                            <div class="feature-title">⚡ Proceso Ágil</div>
+                            <div class="feature-description">Contratación rápida y eficiente</div>
+                        </div>
+                        <div class="feature-item purple">
+                            <div class="feature-title">🌍 Región Completa</div>
+                            <div class="feature-description">Oportunidades en toda Chiapas</div>
+                        </div>
+                        <div class="feature-item orange">
+                            <div class="feature-title">🎯 Soporte Personal</div>
+                            <div class="feature-description">Atención personalizada y local</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <h4 class="section-title">🌟 Últimas Oportunidades</h4>
+                    <p class="opportunities-section">
+                        Descubre las nuevas vacantes disponibles en Ocosingo y alrededores. 
+                        ¡Tu próximo empleo te está esperando!
+                    </p>
+                    <div class="opportunities-buttons">
+                        <a href="{{ url_for('EmpleosRoute.empleos') }}" class="opportunity-btn blue">
+                            Ver Empleos
+                        </a>
+                        <a href="{{ url_for('PlanesRoute.planes') }}" class="opportunity-btn green">
+                            Ver Planes
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <!-- Columna derecha -->
             <div class="column right-column">
-                <div class="box" style="height: 400px;"></div>
+                <div class="box">
+                    <h4 class="activity-title">📈 Actividad Reciente</h4>
+                    <div class="activity-list">
+                        <div class="activity-item blue">
+                            <div class="activity-title-text">Nueva vacante publicada</div>
+                            <div class="activity-description">Desarrollador Web - Empresa Local</div>
+                            <div class="activity-time">Hace 2 horas</div>
+                        </div>
+                        <div class="activity-item green">
+                            <div class="activity-title-text">Usuario registrado</div>
+                            <div class="activity-description">María González se unió a la plataforma</div>
+                            <div class="activity-time">Hace 4 horas</div>
+                        </div>
+                        <div class="activity-item orange">
+                            <div class="activity-title-text">Contratación exitosa</div>
+                            <div class="activity-description">Carlos Ruiz fue contratado como Contador</div>
+                            <div class="activity-time">Ayer</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <h4 class="companies-title">🏆 Empresas Destacadas</h4>
+                    <div class="companies-list">
+                        <div class="company-item">
+                            <div class="company-avatar blue">A</div>
+                            <div class="company-info">
+                                <div class="company-name">Agroindustrias del Sur</div>
+                                <div class="company-vacancies">5 vacantes activas</div>
+                            </div>
+                        </div>
+                        <div class="company-item">
+                            <div class="company-avatar orange">B</div>
+                            <div class="company-info">
+                                <div class="company-name">Banco Regional</div>
+                                <div class="company-vacancies">3 vacantes activas</div>
+                            </div>
+                        </div>
+                        <div class="company-item">
+                            <div class="company-avatar green">C</div>
+                            <div class="company-info">
+                                <div class="company-name">Comercial del Sureste</div>
+                                <div class="company-vacancies">7 vacantes activas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         {{ footer.footer() }}
