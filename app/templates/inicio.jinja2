@@ -1,5 +1,5 @@
-{% import "components/navbar.jinja2" as components %}
-{% import 'components/footer.jinja2' as footer %}
+{% import "components/navbar.jinja2" as navbar %}
+{% import "components/footer.jinja2" as footer %}
 
 <!DOCTYPE html>
 <html lang="es">
@@ -7,13 +7,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Inicio - Worklink</title>
+    <!-- Importar los estilos para navbar, footer y la página de inicio -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_inicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
+    
 </head>
 
 <body>
     <section class="inicio-p">
-        {{ components.navbar("inicio", "inicio", current_user) }}
+        <!-- Llamar al componente navbar -->
+        {{ navbar.navbar('Inicio', 'inicio', current_user) }}      
 
+
+    
         <div class="main-content">
             <!-- Columna izquierda: perfil del usuario -->
             <div class="column left-column">
@@ -138,8 +146,13 @@
                 </div>
             </div>
         </div>
-        {{ footer.footer() }}
+        
+        <!-- Llamar al componente footer -->
+       
     </section>
+      <!-- Llamar al componente footer -->
+    {% import "components/footer.jinja2" as footer %}
+  {{ footer.footer() }}
 </body>
 
 </html>

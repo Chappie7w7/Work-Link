@@ -1,56 +1,34 @@
 {% macro navbar(titulo, pagina, current_user) %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_navbar.css') }}">
-<header>
-    <nav class="navbar">
-        <div class="logo-placeholder"></div>
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo"><h1>WorkLink</h1></div>
+    <nav class="nav-links">
+        <a href="#informacion">Inicio</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#vacantes">Vacantes</a>
+        <a href="#empresas">Empresas</a>
+        <a href="#testimonios">Testimonios</a>
+        <a href="#contacto">Contacto</a>
 
-        <div class="menu-icons">
-            <div class="icon-item">
-                <a href="{{ url_for('InicioRoute.inicio') }}" style="text-decoration: none; color: inherit;">
-                    <span>🏠</span><br><span>Inicio</span>
-                </a>
-            </div>
-            
-            <!-- 🔹 Botón Editar Perfil al lado de Inicio -->
-            <div class="icon-item">
-                <a href="{{ url_for('PerfilRoute.editar') }}" style="text-decoration: none; color: inherit;">
-                    <span>✏️</span><br><span>Perfil</span>
-                </a>
-            </div>
-            <!-- 🔹 Fin botón Editar Perfil -->
+        <!-- Si el usuario está logueado, mostramos estos enlaces -->
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('PerfilRoute.editar') }}" class="btn-login">Perfil</a>
+        <a href="{{ url_for('MensajesRoute.mensajes') }}" class="btn-login">Mensajes</a>
+        <a href="{{ url_for('NotificacionesRoute.notificaciones') }}" class="btn-login">Notificaciones</a>
+        <a href="{{ url_for('LoginRoute.logout') }}" class="btn-login">Salir</a>
+        {% else %}
+        <!-- Si el usuario no está logueado, mostramos estos enlaces -->
+        <a href="{{ url_for('LoginRoute.login_form') }}" class="btn-login">Iniciar sesión</a>
 
-            <div class="icon-item">
-                <a href="{{ url_for('EmpleosRoute.empleos') }}" style="text-decoration: none; color: inherit;">
-                    <span>👥</span><br><span>Empleos</span>
-                </a>
-            </div>
-            <div class="icon-item">
-                <a href="{{ url_for('MensajesRoute.mensajes') }}" style="text-decoration: none; color: inherit;">
-                    <span>💬</span><br><span>Mensajes</span>
-                </a>
-            </div>
-            <div class="icon-item">
-                <a href="{{ url_for('NotificacionesRoute.notificaciones') }}" style="text-decoration: none; color: inherit;">
-                    <span>🔔</span><br><span>Notificaciones</span>
-                </a>
-            </div>
-
-            <div class="icon-item">
-                <a href="{{ url_for('PlanesRoute.planes') }}" style="text-decoration: none; color: inherit;">
-                    <span>💼</span><br><span>Planes</span>
-                </a>
-            </div>
-
-            <div class="icon-item">
-                <a href="{{ url_for('LoginRoute.logout') }}" style="text-decoration: none; color: inherit;">
-                    <span>🚪</span><br><span>Salir</span>
-                </a>
+        <div class="dropdown">
+            <span class="btn-register">Crear cuenta</span>
+            <div class="dropdown-content">
+                <a href="{{ url_for('RegistroRoute.registro') }}">Soy usuario</a>
+                <a href="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}">Soy empresa</a>
             </div>
         </div>
-
-    
-
+        {% endif %}
     </nav>
 </header>
-
 {% endmacro %}

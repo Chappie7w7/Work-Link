@@ -1,69 +1,94 @@
 {% macro footer() %}
+<!-- Asegúrate de que el archivo CSS esté en la ruta correcta dentro de static/css/style_footer.css -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_footer.css') }}">
-<!-- FOOTER -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-about">
+<!-- FOOTER CON CONTACTO -->
+<footer class="footer">
+    <!-- Onda decorativa en la parte superior -->
+    <div class="footer-wave"></div>
+    
+    <div class="footer-content">
+        <!-- Sección de logo y redes sociales -->
+        <div class="footer-section" data-aos="fade-up" data-aos-delay="100">
+            <div class="footer-logo">
                 <h4>WorkLink Ocosingo</h4>
-                <p>Conectando el talento de Ocosingo, Chiapas con oportunidades laborales locales y regionales. Impulsando el desarrollo económico de nuestra comunidad.</p>
+                <p>Conectando talento local con las mejores oportunidades laborales de la región.</p>
             </div>
-
-            <div class="footer-links">
-                <h4>Enlaces</h4>
-                <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Ofertas</a></li>
-                    <li><a href="#">Empresas</a></li>
-                    <li><a href="#">Contacto</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-contact">
-                <h4>Contacto</h4>
-                <p>Email: contacto@worklinkocosingo.com</p>
-                <p>Tel: +52 919 123 4567</p>
-                <p>📍 Ocosingo, Chiapas, México</p>
-            </div>
-
-            <div class="footer-social">
-                <h4>Síguenos</h4>
-                <div class="footer-social">
-                    <a href="https://www.facebook.com/tu_pagina" target="_blank">
-                        <img src="{{ url_for('static', filename='img/2023_Facebook_icon.svg') }}" alt="Facebook"
-                            class="social-icon">
-                    </a>
-                    <a href="https://www.linkedin.com/tu_pagina" target="_blank">
-                        <img src="{{ url_for('static', filename='img/LinkedIn_icon.svg') }}" alt="LinkedIn"
-                            class="social-icon">
-                    </a>
-                    <a href="https://twitter.com/tu_pagina" target="_blank">
-                        <img src="{{ url_for('static', filename='img/Logo_of_Twitter.svg') }}" alt="Twitter"
-                            class="social-icon">
-                    </a>
-                </div>
-
-            </div>
-
-            <!-- Métodos de pago -->
-            <div class="footer-payments">
-                <h4>Métodos de pago</h4>
-                <div class="footer-payments">
-                    <div class="payment-icons">
-                        <img src="{{ url_for('static', filename='img/Visa.svg') }}" alt="Visa">
-                        <img src="{{ url_for('static', filename='img/Mastercard-logo.svg') }}" alt="MasterCard">
-                        <img src="{{ url_for('static', filename='img/Paypal.svg') }}" alt="PayPal">
-                        <img src="{{ url_for('static', filename='img/American_Express_logo.svg') }}"
-                            alt="American Express">
-                    </div>
-                </div>
-
-
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
 
-        <div class="footer-bottom">
-            <p>© 2025 WorkLink Ocosingo. Conectando talento en Chiapas. Todos los derechos reservados.</p>
+        <!-- Sección de enlaces rápidos -->
+        <div class="footer-section" data-aos="fade-up" data-aos-delay="200">
+            <h4>Enlaces Rápidos</h4>
+            <ul class="footer-links">
+                <li><a href="#servicios"><i class="fas fa-chevron-right"></i> Servicios</a></li>
+                <li><a href="#vacantes"><i class="fas fa-chevron-right"></i> Vacantes</a></li>
+                <li><a href="#empresas"><i class="fas fa-chevron-right"></i> Empresas</a></li>
+                <li><a href="#testimonios"><i class="fas fa-chevron-right"></i> Testimonios</a></li>
+                <li><a href="{{ url_for('LoginRoute.login_form') }}"><i class="fas fa-chevron-right"></i> Iniciar Sesión</a></li>
+            </ul>
         </div>
-    </footer>
+
+        <!-- Sección de contacto -->
+        <div class="footer-section" data-aos="fade-up" data-aos-delay="300">
+            <h4>Contacto</h4>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Ocosingo, Chiapas, México</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+52 919 123 4567</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>contacto@worklinkocosingo.com</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Lun - Vie: 8:00 - 18:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de formulario de contacto -->
+        <div class="footer-section footer-contact" data-aos="fade-up" data-aos-delay="400">
+            <h4>¿Necesitas ayuda?</h4>
+            <p>Escríbenos y te responderemos en menos de 24 horas.</p>
+            <form class="contact-form-footer">
+                <div class="form-group">
+                    <input type="text" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Tu correo" required>
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Tu mensaje" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn-main">
+                    <i class="fas fa-paper-plane"></i>
+                    Enviar mensaje
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pie de página -->
+    <div class="footer-bottom">
+        <div class="footer-bottom-content">
+            <p class="copy">© 2025 WorkLink Ocosingo. Todos los derechos reservados.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Política de Privacidad</a>
+                <a href="#">Términos y Condiciones</a>
+                <a href="#">Cookies</a>
+            </div>
+        </div>
+    </div>
+</footer>
 
 {% endmacro %}
