@@ -33,7 +33,7 @@ def login():
     elif user.tipo_usuario == Roles.EMPLEADO:
         return redirect(url_for("InicioRoute.inicio"))
     elif user.tipo_usuario == Roles.SUPERADMIN:  
-        return redirect(url_for("AdminRoute.dashboard"))
+        return redirect(url_for("InicioRoute.inicio"))
     else:
         return redirect(url_for("IndexRoute.index"))
 

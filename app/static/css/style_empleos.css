@@ -1,72 +1,114 @@
-/* ======== ESTILOS GENERALES ======== */
+/* ======== ESTILOS PROFESIONALES ======== */
 body {
     margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: #f9fafb;
-    color: #0f172a;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f8fafc 100%);
+    color: #1e293b;
+    line-height: 1.6;
+    min-height: 100vh;
 }
 
-/* ======== SECCIÓN DEL BUSCADOR CON FONDO ======== */
+/* ======== SECCIÓN DEL BUSCADOR PROFESIONAL ======== */
 .search-section {
-    position: relative;
-    background: url("../img/dev4.jpg") no-repeat center center/cover;
-    padding: 100px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+    padding: 60px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    position: relative;
+    overflow: hidden;
 }
 
 .search-section::before {
-    content: "";
+    content: '';
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(15, 23, 42, 0.55);
-    backdrop-filter: blur(3px);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(59,130,246,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 .search-container {
-    position: relative;
-    z-index: 2;
-    background: #ffffff;
-    padding: 30px 35px;
-    border-radius: 50px;
-    max-width: 1100px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 1200px;
     margin: auto;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
-    display: flex;
-    flex-wrap: wrap;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 20px;
     align-items: center;
-    justify-content: space-between;
-    transition: transform 0.3s ease;
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 2;
 }
 
 .search-container:hover {
-    transform: scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
+    transform: translateY(-2px);
 }
 
 /* ======== INPUT PRINCIPAL ======== */
 .search-container .search-bar {
-    flex-grow: 2;
-    min-width: 320px;
     display: flex;
     align-items: center;
-    background: #f8fafc;
-    padding: 16px 22px;
-    border-radius: 999px;
-    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    border-radius: 15px;
+    padding: 12px 20px;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.search-container .search-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.search-container .search-bar:hover::before {
+    left: 100%;
 }
 
 .search-container .search-bar:hover {
     border-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+}
+
+.search-container .search-bar:focus-within {
+    border-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
 }
 
 .search-container .search-bar .icon {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     color: #3b82f6;
     margin-right: 12px;
+    transition: all 0.3s ease;
+}
+
+.search-container .search-bar:hover .icon {
+    transform: scale(1.1);
+    color: #1e40af;
 }
 
 .search-container .search-bar input {
@@ -74,65 +116,120 @@ body {
     outline: none;
     background: transparent;
     width: 100%;
-    font-size: 1.1rem;
-    color: #0f172a;
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
 }
 
-/* ======== FILTROS ======== */
+.search-container .search-bar input::placeholder {
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* ======== FILTROS MEJORADOS ======== */
+.search-container .filter-dropdown {
+    position: relative;
+}
+
 .search-container .filter-dropdown select,
 .search-container .filter-dropdown input[type="date"],
 .search-container .filter-dropdown input[type="text"] {
-    padding: 14px 20px;
-    border-radius: 999px;
-    border: 1px solid #e2e8f0;
-    background-color: #f8fafc;
-    min-width: 160px;
-    font-size: 1rem;
-    color: #0f172a;
-    font-weight: 500;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    font-size: 0.95rem;
+    color: #1e293b;
+    font-weight: 600;
     transition: all 0.3s ease;
     cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%233b82f6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+    position: relative;
+    overflow: hidden;
 }
 
 .search-container .filter-dropdown select:hover,
 .search-container .filter-dropdown input:hover {
-    border-color: #2563eb;
+    border-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
 }
 
 .search-container .filter-dropdown select:focus,
 .search-container .filter-dropdown input:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
+    border-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
 }
 
-/* ======== GRID DE CARDS ======== */
+.search-container .filter-dropdown input[type="date"] {
+    background-image: none;
+    padding-right: 20px;
+}
+
+.search-container .filter-dropdown input[type="text"] {
+    background-image: none;
+    padding-right: 20px;
+}
+
+/* ======== GRID DE CARDS PROFESIONAL ======== */
 .vacantes-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 25px;
-    margin: 40px auto;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 30px;
+    margin: 60px auto;
+    padding: 40px 20px;
     max-width: 1200px;
 }
 
-/* ======== CARD ======== */
+/* ======== CARD PROFESIONAL ======== */
 .vacante-card {
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
     border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-    border: 1px solid #e5e7eb;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     flex-direction: column;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
+}
+
+.vacante-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.vacante-card:hover::before {
+    transform: scaleX(1);
 }
 
 .vacante-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
-    border-color: #3b82f6;
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
 }
 
 .avatar {
@@ -231,21 +328,40 @@ body {
 .card-btn {
     display: inline-block;
     padding: 12px 25px;
-    background: linear-gradient(135deg, #2563eb, #1e40af);
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
     color: #fff;
-    border-radius: 999px;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 700;
     text-align: center;
     text-decoration: none;
-    box-shadow: 0 5px 15px rgba(37,99,235,0.35);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
     transition: all 0.3s ease;
-    margin-top: 10px;
+    margin-top: 15px;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.card-btn:hover::before {
+    left: 100%;
 }
 
 .card-btn:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(37,99,235,0.45);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+    background: linear-gradient(135deg, #1e40af, #1e3a8a);
 }
 
 /* ======== MODAL ======== */
@@ -456,4 +572,69 @@ footer {
     width: 30px;
     height: auto;
     display: block;
+}
+
+/* ======== RESPONSIVE DESIGN ======== */
+@media (max-width: 1024px) {
+    .search-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .search-container .search-bar {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-section {
+        padding: 40px 15px;
+    }
+    
+    .search-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 20px;
+    }
+    
+    .search-container .search-bar {
+        grid-column: 1;
+    }
+    
+    .vacantes-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 15px;
+    }
+    
+    .vacante-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-container {
+        padding: 15px;
+    }
+    
+    .search-container .search-bar,
+    .search-container .filter-dropdown select,
+    .search-container .filter-dropdown input {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .vacante-card {
+        padding: 15px;
+        border-radius: 15px;
+    }
+    
+    .vacante-card h3 {
+        font-size: 1.1rem;
+    }
+    
+    .card-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
 }

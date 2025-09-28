@@ -11,6 +11,58 @@
 
     {{ components.navbar("planes", "planes", current_user) }}
 
+    <div class="main-content">
+        <h1 class="planes-title">Planes de Suscripción</h1>
+        <p class="planes-subtitle">Elige el plan que mejor se adapte a tus necesidades profesionales</p>
+        
+        <div class="planes-grid">
+            <div class="plan-card">
+                <div class="plan-icon">👤</div>
+                <h3 class="plan-name">Básico</h3>
+                <div class="plan-price">0</div>
+                <div class="plan-period">Gratis para siempre</div>
+                <ul class="plan-features">
+                    <li>Perfil básico</li>
+                    <li>Búsqueda de empleos</li>
+                    <li>3 postulaciones por mes</li>
+                    <li>Soporte por email</li>
+                </ul>
+                <a href="#" class="plan-btn">Comenzar Gratis</a>
+            </div>
+            
+            <div class="plan-card featured">
+                <div class="plan-icon">⭐</div>
+                <h3 class="plan-name">Profesional</h3>
+                <div class="plan-price">29</div>
+                <div class="plan-period">Por mes</div>
+                <ul class="plan-features">
+                    <li>Todo del plan Básico</li>
+                    <li>Postulaciones ilimitadas</li>
+                    <li>Perfil destacado</li>
+                    <li>Acceso a estadísticas</li>
+                    <li>Soporte prioritario</li>
+                    <li>Certificaciones</li>
+                </ul>
+                <a href="#" class="plan-btn">Elegir Profesional</a>
+            </div>
+            
+            <div class="plan-card">
+                <div class="plan-icon">🏢</div>
+                <h3 class="plan-name">Empresarial</h3>
+                <div class="plan-price">99</div>
+                <div class="plan-period">Por mes</div>
+                <ul class="plan-features">
+                    <li>Todo del plan Profesional</li>
+                    <li>Publicación de vacantes</li>
+                    <li>Búsqueda avanzada de candidatos</li>
+                    <li>Herramientas de reclutamiento</li>
+                    <li>Soporte dedicado</li>
+                    <li>Analytics avanzados</li>
+                </ul>
+                <a href="#" class="plan-btn">Elegir Empresarial</a>
+            </div>
+        </div>
+    </div>
 
     {{ footer.footer() }}
 </body>

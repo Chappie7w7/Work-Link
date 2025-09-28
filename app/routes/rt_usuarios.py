@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from app.models.md_usuarios import UsuarioModel
 from app.db.sql import db
-from app.utils import login_rol_required, Roles  
+from app.utils.decorators import login_role_required
+from app.utils.roles import Roles  
 from werkzeug.security import generate_password_hash
 
 usuarios_bp = Blueprint('UsuariosRoute', __name__, url_prefix='/usuarios')
@@ -13,20 +14,20 @@ class UsuariosRoute:
 
 
 @usuarios_bp.get('/')
-@login_rol_required([Roles.SUPERADMIN])
+@login_role_required(Roles.SUPERADMIN)
 def index(current_user):
     usuarios = UsuarioModel.query.all()
     return render_template('usuarios/index.jinja2', usuarios=usuarios, current_user=current_user)
 
 
 @usuarios_bp.get("/crear")
-@login_rol_required([Roles.SUPERADMIN])
+@login_role_required(Roles.SUPERADMIN)
 def get_crear(current_user):
     return render_template("usuarios/formulario.jinja2", current_user=current_user)
 
 
 @usuarios_bp.post("/crear")
-@login_rol_required([Roles.SUPERADMIN])
+@login_role_required(Roles.SUPERADMIN)
 def post_crear(current_user):
     data = request.form
     nombre = data.get("nombre")

@@ -13,6 +13,108 @@
 
     {{ components.navbar("mensajes", "mensajes", current_user) }}
 
+    <div class="messages-container">
+        <!-- Sidebar de conversaciones -->
+        <div class="conversations-sidebar">
+            <div class="conversations-header">
+                <h2>💬 Mensajes</h2>
+                <button class="new-message-btn">+ Nuevo</button>
+            </div>
+            
+            <div class="conversation-list">
+                <div class="conversation-item active">
+                    <div class="conversation-header">
+                        <div class="conversation-avatar">A</div>
+                        <div class="conversation-info">
+                            <h4>Agroindustrias del Sur</h4>
+                        </div>
+                    </div>
+                    <div class="conversation-preview">
+                        Hola, nos interesa tu perfil para la vacante de...
+                    </div>
+                    <div class="conversation-meta">
+                        <span class="conversation-time">Hace 2 horas</span>
+                        <div class="unread-badge">2</div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item">
+                    <div class="conversation-header">
+                        <div class="conversation-avatar">B</div>
+                        <div class="conversation-info">
+                            <h4>Banco Regional</h4>
+                        </div>
+                    </div>
+                    <div class="conversation-preview">
+                        Gracias por tu interés en nuestra oferta...
+                    </div>
+                    <div class="conversation-meta">
+                        <span class="conversation-time">Ayer</span>
+                    </div>
+                </div>
+                
+                <div class="conversation-item">
+                    <div class="conversation-header">
+                        <div class="conversation-avatar">C</div>
+                        <div class="conversation-info">
+                            <h4>Comercial del Sureste</h4>
+                        </div>
+                    </div>
+                    <div class="conversation-preview">
+                        ¿Podrías enviarnos tu CV actualizado?
+                    </div>
+                    <div class="conversation-meta">
+                        <span class="conversation-time">Hace 3 días</span>
+                        <div class="unread-badge">1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Área de chat -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="chat-avatar">A</div>
+                <div class="chat-info">
+                    <h3>Agroindustrias del Sur</h3>
+                    <div class="chat-status">En línea</div>
+                </div>
+            </div>
+            
+            <div class="chat-messages">
+                <div class="message">
+                    <div class="message-avatar">A</div>
+                    <div class="message-content">
+                        <div class="message-text">Hola, nos interesa tu perfil para la vacante de Desarrollador Web. ¿Te gustaría agendar una entrevista?</div>
+                        <div class="message-time">10:30 AM</div>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-avatar">{{ current_user.nombre[0] if current_user else 'U' }}</div>
+                    <div class="message-content">
+                        <div class="message-text">¡Hola! Sí, me interesa mucho la oportunidad. ¿Qué horarios tienen disponibles?</div>
+                        <div class="message-time">10:35 AM</div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-avatar">A</div>
+                    <div class="message-content">
+                        <div class="message-text">Perfecto. Tenemos disponibilidad mañana a las 2:00 PM o el viernes a las 10:00 AM. ¿Cuál te conviene más?</div>
+                        <div class="message-time">10:37 AM</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <div class="input-container">
+                    <input type="text" class="message-input" placeholder="Escribe tu mensaje...">
+                    <button class="send-btn">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {{ footer.footer() }}
 </body>
