@@ -5,6 +5,26 @@
       padding: 0;
     }
 
+    /* ===== ESTILOS PARA MENSAJES FLASH ===== */
+    .mensajes p {
+        padding: 10px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-weight: 500;
+    }
+
+    .mensajes p[style*="color: red"] {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #dc2626 !important;
+    }
+
+    .mensajes p[style*="color: green"] {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #059669 !important;
+    }
+
     header {
       background-color: #11304F;
       padding: 20px;
