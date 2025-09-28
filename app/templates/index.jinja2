@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+{% import "components/navbar.jinja2" as navbar %}<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -13,26 +14,7 @@
 <body>
 
 <!-- NAVBAR -->
-<header class="navbar">
-    <div class="logo"><h1>WorkLink</h1></div>
-    <nav class="nav-links">
-        <a href="#informacion">Inicio</a>
-        <a href="#servicios">Servicios</a>
-        <a href="#vacantes">Vacantes</a>
-        <a href="#empresas">Empresas</a>
-        <a href="#testimonios">Testimonios</a>
-        <a href="#contacto">Contacto</a>
-        <a href="{{ url_for('LoginRoute.login_form') }}" class="btn-login">Iniciar sesión</a>
-
-        <div class="dropdown">
-            <span class="btn-register">Crear cuenta</span>
-            <div class="dropdown-content">
-                <a href="{{ url_for('RegistroRoute.registro') }}">Soy usuario</a>
-                <a href="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}">Soy empresa</a>
-            </div>
-        </div>
-    </nav>
-</header>
+{{ navbar.navbar('Inicio', 'inicio', current_user) }}
 
 <!-- HERO -->
 <section class="hero">

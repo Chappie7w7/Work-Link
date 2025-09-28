@@ -24,12 +24,14 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(15, 14, 14, 0.95);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+    border-bottom: 1px solid rgb(227, 229, 233);
     z-index: 1000;
-    padding: 15px 0;
-    transition: all 0.3s ease;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .navbar .logo h1 {
@@ -48,8 +50,16 @@ body {
     gap: 30px;
 }
 
+.actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .nav-links a {
-    color: #64748b;
+    margin-left: auto;
+    color: #eff0f3;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -57,11 +67,13 @@ body {
 }
 
 .nav-links a:hover {
-    color: #1e40af;
+    margin-left: auto;
+    color: #f0f0f0;
     transform: translateY(-2px);
 }
 
 .nav-links a::after {
+    margin-left: auto;
     content: '';
     position: absolute;
     bottom: -5px;
@@ -77,6 +89,7 @@ body {
 }
 
 .btn-login {
+    margin-left: auto;
     background: linear-gradient(135deg, #3b82f6, #1e40af);
     color: white !important;
     padding: 12px 25px;
@@ -93,19 +106,20 @@ body {
 
 /* ===== DROPDOWN Y BOTÓN DE REGISTRO ===== */
 .dropdown {
+    margin-left: auto;
     position: relative;
     display: inline-block;
 }
 
 .btn-register {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #10b98100, #05966800);
     color: white;
     padding: 12px 25px;
     border-radius: 25px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0);
     display: inline-block;
     text-decoration: none;
     border: none;
@@ -114,8 +128,8 @@ body {
 
 .btn-register:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-    background: linear-gradient(135deg, #059669, #047857);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0);
+    background: linear-gradient(135deg, #2d302f00, #04785700);
 }
 
 .dropdown-content {
@@ -176,14 +190,14 @@ body {
 
 /* ===== HERO SECTION ===== */
 .hero {
+    margin-top: 120px; /* Ajusta según el alto real del navbar */
     min-height: 100vh;
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
+    background: linear-gradient(135deg, #10204e00 0%, #10204e00 50%, #10204e00 100%);
 }
+
 
 .hero-overlay {
     position: absolute;
@@ -191,7 +205,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(252, 224, 224, 0);
     z-index: 1;
 }
 
@@ -208,7 +222,7 @@ body {
     position: absolute;
     width: 4px;
     height: 4px;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(13, 63, 43, 0.671);
     border-radius: 50%;
     animation: float 3s ease-in-out infinite;
 }
@@ -220,7 +234,7 @@ body {
 
 .hero-content {
     text-align: center;
-    color: white;
+    color: rgb(12, 11, 11);
     z-index: 2;
     position: relative;
     max-width: 800px;
@@ -231,11 +245,11 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(212 222 222 / 21%);
     backdrop-filter: blur(10px);
     padding: 10px 20px;
     border-radius: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgb(214 202 202);
     margin-bottom: 30px;
     font-weight: 500;
 }
@@ -248,7 +262,7 @@ body {
 }
 
 .hero-title .highlight {
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    background: linear-gradient(135deg, #020202, #020202);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -276,7 +290,7 @@ body {
     display: block;
     font-size: 2.5rem;
     font-weight: 800;
-    color: #fbbf24;
+    color: #131211;
     margin-bottom: 5px;
 }
 
@@ -297,7 +311,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    background: linear-gradient(135deg, #1e40af, #1e40af);
     color: white;
     padding: 15px 30px;
     border-radius: 25px;
@@ -318,9 +332,9 @@ body {
     align-items: center;
     gap: 10px;
     background: transparent;
-    color: white;
+    color: rgb(7, 6, 6);
     padding: 15px 30px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.733);
     border-radius: 25px;
     text-decoration: none;
     font-weight: 600;
@@ -362,7 +376,7 @@ body {
 /* ===== SERVICIOS SECTION ===== */
 .servicios-section {
     padding: 100px 0;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+    background: linear-gradient(135deg, #f8fafc00 0%, #e2e8f000 50%, #f1f5f900 100%);
 }
 
 .section-header {
@@ -493,7 +507,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+    background: linear-gradient(90deg, #3b82f6, #60a5fa00, #3b82f6);
     transform: scaleX(0);
     transition: transform 0.3s ease;
 }
@@ -608,7 +622,7 @@ body {
 /* ===== EMPRESAS SECTION ===== */
 .empresas-section {
     padding: 100px 0;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+    background: linear-gradient(135deg, #f8fafc00 0%, #e2e8f000 50%, #f1f5f900 100%);
 }
 
 .empresas-showcase {
@@ -730,13 +744,13 @@ body {
 .stat-number {
     font-size: 2.5rem;
     font-weight: 800;
-    color: #1e40af;
+    color: #0c0d0f;
     margin-bottom: 10px;
     display: block;
 }
 
 .stat-label {
-    color: #64748b;
+    color: #08090a;
     font-weight: 600;
     font-size: 1rem;
 }
@@ -918,8 +932,8 @@ body {
 
 /* ===== FOOTER ===== */
 .footer {
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
-    color: white;
+    background: linear-gradient(135deg, #1e3b8a00 0%);
+    color: rgb(7, 5, 5);
     position: relative;
     overflow: hidden;
 }
@@ -930,7 +944,7 @@ body {
     left: 0;
     right: 0;
     height: 100px;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+    background: linear-gradient(135deg, #dde1e600 0%);
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 80%);
 }
 
@@ -947,14 +961,14 @@ body {
     font-size: 1.3rem;
     font-weight: 700;
     margin-bottom: 20px;
-    background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    background: linear-gradient(135deg, #050505, #010202);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .footer-logo p {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(12, 7, 7, 0.8);
     line-height: 1.6;
     margin-bottom: 20px;
 }
@@ -972,7 +986,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: rgb(10, 9, 9);
     text-decoration: none;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
@@ -994,7 +1008,7 @@ body {
 }
 
 .footer-links a {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(8, 4, 4, 0.8);
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -1003,7 +1017,7 @@ body {
 }
 
 .footer-links a:hover {
-    color: white;
+    color: rgb(2, 2, 2);
     transform: translateX(5px);
 }
 
@@ -1017,12 +1031,12 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(8, 3, 3);
 }
 
 .contact-item i {
     width: 20px;
-    color: #fbbf24;
+    color: #0834ad;
 }
 
 .contact-form-footer {
@@ -1035,10 +1049,10 @@ body {
 .form-group textarea {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgb(4, 8, 8);
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: rgba(122, 102, 102, 0);
+    color: rgb(3, 3, 3);
     font-size: 1rem;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
@@ -1046,18 +1060,18 @@ body {
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(0, 0, 0, 0.966);
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: #fbbf24;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgb(255, 255, 255);
 }
 
 .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.712);
     padding: 20px 0;
     position: relative;
     z-index: 2;
@@ -1075,7 +1089,7 @@ body {
 }
 
 .copy {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(17, 14, 14);
 }
 
 .footer-bottom-links {
@@ -1084,7 +1098,7 @@ body {
 }
 
 .footer-bottom-links a {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(12, 11, 11, 0.8);
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -1189,10 +1203,10 @@ body {
 }
 
 .modal-description-box {
-    background: #f8fafc;
+    background: #0c0d0e;
     padding: 20px;
     border-radius: 15px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #000000;
     margin-bottom: 25px;
 }
 
