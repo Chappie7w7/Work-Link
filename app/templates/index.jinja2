@@ -1,5 +1,5 @@
 
-{% import "components/navbar.jinja2" as navbar %}<!DOCTYPE html>
+{% import "components/navbar_inicio.jinja2" as navbar_inicio %}<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@
 <body>
 
 <!-- NAVBAR -->
-{{ navbar.navbar('Inicio', 'inicio', current_user) }}
+{{ navbar_inicio.navbar() }}
 
 <!-- HERO -->
 <section class="hero">
