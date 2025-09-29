@@ -1,4 +1,4 @@
-/*Estilos del NavBar*/
+/* ===== NAVBAR ===== */
 .navbar {
     position: fixed;
     top: 0;
@@ -14,78 +14,72 @@
     justify-content: space-between;
 }
 
-.logo-placeholder {
-    width: 50px;
-    height: 50px;
-    background-color: #ddd;
-    border-radius: 10px;
+.navbar .logo h1 {
+    color: #1e40af;
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.search-bar {
-    flex: 1;
+.nav-links {
     display: flex;
     align-items: center;
-    background-color: #e5e5e5;
-    border-radius: 20px;
-    padding: 5px 15px;
-    margin: 0 20px;
-    max-width: 400px;
+    gap: 30px;
 }
 
-.search-bar input {
-    border: none;
-    background: none;
-    width: 100%;
-    padding: 8px;
-    outline: none;
-}
-
-.menu-icons {
+.actions {
+    margin-left: auto;
     display: flex;
-    gap: 20px;
+    align-items: center;
+    gap: 15px;
 }
 
-.icon-item {
-    text-align: center;
-    font-size: 13px;
-}
-
-.usuario-dropdown {
-    margin-left: 15px;
-}
-
-.usuario-dropdown summary {
-    cursor: pointer;
-}
-
-.usuario-dropdown ul {
-    background: white;
-    list-style: none;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 0;
-}
-
-.usuario-dropdown ul li {
-    margin-top: 5px;
-}
-
-.icon-item {
-    text-align: center;
-    color: white; /* Texto blanco */
-    font-size: 0.8em;
-}
-
-.icon-item span:first-child {
-    font-size: 1.1em; /* Tamaño más grande para el icono */
-    display: block;
-}
-
-.icon-item a {
-    color: white; /* Asegura que los enlaces también sean blancos */
+.nav-links a {
+    margin-left: auto;
+    color: #eff0f3;
     text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
-.icon-item a:hover {
-    opacity: 0.8; /* Efecto al pasar el mouse */
+.nav-links a:hover {
+    margin-left: auto;
+    color: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+.nav-links a::after {
+    margin-left: auto;
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #1e40af);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.btn-login {
+    margin-left: auto;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white !important;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }

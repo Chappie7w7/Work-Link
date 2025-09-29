@@ -18,91 +18,6 @@ body {
     padding: 0 20px;
 }
 
-/* ===== NAVBAR ===== */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba(15, 14, 14, 0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgb(227, 229, 233);
-    z-index: 1000;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.navbar .logo h1 {
-    color: #1e40af;
-    font-size: 1.8rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #1e40af, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-.actions {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.nav-links a {
-    margin-left: auto;
-    color: #eff0f3;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.nav-links a:hover {
-    margin-left: auto;
-    color: #f0f0f0;
-    transform: translateY(-2px);
-}
-
-.nav-links a::after {
-    margin-left: auto;
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #3b82f6, #1e40af);
-    transition: width 0.3s ease;
-}
-
-.nav-links a:hover::after {
-    width: 100%;
-}
-
-.btn-login {
-    margin-left: auto;
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
-    color: white !important;
-    padding: 12px 25px;
-    border-radius: 25px;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-    transition: all 0.3s ease;
-}
-
-.btn-login:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-}
 
 /* ===== DROPDOWN Y BOTÓN DE REGISTRO ===== */
 .dropdown {
@@ -190,7 +105,7 @@ body {
 
 /* ===== HERO SECTION ===== */
 .hero {
-    margin-top: 120px; /* Ajusta según el alto real del navbar */
+    margin-top: 5px; /* Ajusta según el alto real del navbar */
     min-height: 100vh;
     display: flex;
     align-items: center;

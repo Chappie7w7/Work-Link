@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 50%, #1a1a1a 100%);
     color: #1a202c;
     line-height: 1.6;
@@ -46,70 +46,6 @@ body::before {
     opacity: 0.3;
     pointer-events: none;
     z-index: 1;
-}
-
-header {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
-    padding: 20px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 3px solid #ff6b35;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    position: relative;
-    z-index: 10;
-}
-
-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #ff6b35, #3b82f6, #ff6b35);
-    animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-}
-
-header .logo {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
-    border-radius: 12px;
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 20px;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-    transition: all 0.3s ease;
-}
-
-header .logo:hover {
-    transform: scale(1.05) rotate(5deg);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-}
-
-header .logo::before {
-    content: 'WL';
-}
-
-header h1 {
-    color: white;
-    font-size: 36px;
-    font-weight: 800;
-    margin: 0;
-    background: linear-gradient(135deg, #ffffff, #e2e8f0);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 .container {

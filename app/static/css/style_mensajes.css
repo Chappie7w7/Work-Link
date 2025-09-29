@@ -6,8 +6,7 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f8fafc 100%);
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #1e293b;
     line-height: 1.6;
     min-height: 100vh;
@@ -15,7 +14,7 @@ body {
 
 .messages-container {
     max-width: 1200px;
-    margin: 60px auto;
+    margin: 130px auto;
     padding: 0 20px;
     display: grid;
     grid-template-columns: 1fr 2fr;

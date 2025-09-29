@@ -1,19 +1,26 @@
-{% macro navbar(titulo, pagina, current_user) %}
+{% macro navbar(current_user) %}
+<!-- Fuentes -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- AOS Animaciones -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- Tus estilos -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_navbar.css') }}">
+
 <!-- NAVBAR -->
 <header class="navbar">
-    <div class="logo"><h1>WorkLink</h1></div>
+    <div class="logo">
+        <h1>WorkLink</h1>
+    </div>
     <nav class="nav-links">
-        <!--a href="#informacion">Inicio</a>
-        <a href="#servicios">Servicios</a>
-        <a href="#vacantes">Vacantes</a>
-        <a href="#empresas">Empresas</a>
-        <a href="#testimonios">Testimonios</a>
-        <a href="#contacto">Contacto</a-->
-        <a href="#">Planes</a>
+        <a href="{{ url_for('InicioRoute.inicio') }}">Inicio</a>
         <a href="#">Empleos</a>
         <a href="{{ url_for('MensajesRoute.mensajes') }}">Mensajes</a>
         <a href="{{ url_for('NotificacionesRoute.notificaciones') }}">Notificaciones</a>
+        <a href="#">Planes</a>
         <a href="{{ url_for('PerfilRoute.editar') }}">Perfil</a>
         <a href="{{ url_for('LoginRoute.logout') }}" class="btn-login">Salir</a>
 

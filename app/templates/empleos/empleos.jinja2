@@ -2,11 +2,14 @@
 {% import 'components/footer.jinja2' as footer %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Empleos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empleos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
 </head>
+
 <body>
 
     {{ components.navbar("empleos", "empleos", current_user) }}
@@ -47,61 +50,62 @@
     <!-- ===== LISTA DE VACANTES ===== -->
     <div class="vacantes-container">
         {% if vacantes %}
-            {% for v in vacantes %}
-            <div class="vacante-card">
-                <div class="card-header">
-                    <img src="{{ v.avatar_url if v.avatar_url else url_for('static', filename='img/default-user.png') }}"
-                         alt="Avatar vacante" class="avatar">
-                    {% if v.rating %}
-                    <div class="rating-star">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#f59e0b" width="16" height="16">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.18c.969 0 
+        {% for v in vacantes %}
+        <div class="vacante-card">
+            <div class="card-header">
+                <img src="{{ v.avatar_url if v.avatar_url else url_for('static', filename='img/default-user.png') }}"
+                    alt="Avatar vacante" class="avatar">
+                {% if v.rating %}
+                <div class="rating-star">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#f59e0b" width="16" height="16">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.18c.969 0 
                             1.371 1.24.588 1.81l-3.387 2.46a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 
                             1.688-1.54 1.118l-3.387-2.459a1 1 0 00-1.175 0l-3.387 2.459c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 
                             0 00-.364-1.118L2.045 9.394c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 
-                            00.95-.69l1.286-3.967z"/>
-                        </svg>
-                        {{ "%.1f"|format(v.rating) }}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <h3>{{ v.titulo }}</h3>
-
-                <div class="info-row">
-                    <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 21V3h18v18H3zm2-2h14V5H5v14z"/>
+                            00.95-.69l1.286-3.967z" />
                     </svg>
-                    <span class="info-label">Empresa:</span>
-                    <span class="info-text">{{ v.empresa.nombre_empresa if v.empresa else "Sin empresa" }}</span>
+                    {{ "%.1f"|format(v.rating) }}
                 </div>
-
-                <div class="info-row">
-                    <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 
-                                 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 
-                                 11.5 12 11.5z"/>
-                    </svg>
-                    <span class="info-label">Ubicación:</span>
-                    <span class="info-text">{{ v.ubicacion or "No especificada" }}</span>
-                </div>
-
-                <div class="tags-row">
-                    {% if v.modalidad %}<span class="tag">{{ v.modalidad }}</span>{% endif %}
-                    {% if v.estado %}<span class="tag-estado">{{ v.estado }}</span>{% endif %}
-                    {% if v.salario_aprox %}<span class="tag-salary">💰 ${{ "%.2f"|format(v.salario_aprox) }}</span>{% endif %}
-                </div>
-
-                <p>{{ v.descripcion[:100] }}...</p>
-
-                <a href="#" class="card-btn"
-                   onclick="openModal('{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Sin empresa')|escape }}', '{{ v.empresa.logo_url|default(url_for('static', filename='img/default-company.png')) }}', '{{ v.avatar_url|default(url_for('static', filename='img/default-user.png')) }}')">
-                   Ver más
-                </a>
+                {% endif %}
             </div>
-            {% endfor %}
+
+            <h3>{{ v.titulo }}</h3>
+
+            <div class="info-row">
+                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 21V3h18v18H3zm2-2h14V5H5v14z" />
+                </svg>
+                <span class="info-label">Empresa:</span>
+                <span class="info-text">{{ v.empresa.nombre_empresa if v.empresa else "Sin empresa" }}</span>
+            </div>
+
+            <div class="info-row">
+                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 
+                                 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 
+                                 11.5 12 11.5z" />
+                </svg>
+                <span class="info-label">Ubicación:</span>
+                <span class="info-text">{{ v.ubicacion or "No especificada" }}</span>
+            </div>
+
+            <div class="tags-row">
+                {% if v.modalidad %}<span class="tag">{{ v.modalidad }}</span>{% endif %}
+                {% if v.estado %}<span class="tag-estado">{{ v.estado }}</span>{% endif %}
+                {% if v.salario_aprox %}<span class="tag-salary">💰 ${{ "%.2f"|format(v.salario_aprox) }}</span>{% endif
+                %}
+            </div>
+
+            <p>{{ v.descripcion[:100] }}...</p>
+
+            <a href="#" class="card-btn"
+                onclick="openModal('{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Sin empresa')|escape }}', '{{ v.empresa.logo_url|default(url_for('static', filename='img/default-company.png')) }}', '{{ v.avatar_url|default(url_for('static', filename='img/default-user.png')) }}')">
+                Ver más
+            </a>
+        </div>
+        {% endfor %}
         {% else %}
-            <p>No hay vacantes registradas aún.</p>
+        <p>No hay vacantes registradas aún.</p>
         {% endif %}
     </div>
 
@@ -116,11 +120,13 @@
             <div class="modal-body">
                 <div class="modal-company-row">
                     <div class="modal-company">
-                        <img id="modalEmpresaLogo" src="{{ url_for('static', filename='img/default-company.png') }}" alt="Logo empresa">
+                        <img id="modalEmpresaLogo" src="{{ url_for('static', filename='img/default-company.png') }}"
+                            alt="Logo empresa">
                         <span id="modalEmpresaName">Empresa</span>
                     </div>
                     <div class="modal-company">
-                        <img id="modalUserLogo" src="{{ url_for('static', filename='img/default-user.png') }}" alt="Avatar vacante">
+                        <img id="modalUserLogo" src="{{ url_for('static', filename='img/default-user.png') }}"
+                            alt="Avatar vacante">
                         <span>Candidato</span>
                     </div>
                 </div>
@@ -136,7 +142,12 @@
         </div>
     </div>
 
+    <!-- Llamar al componente footer -->
     {{ footer.footer() }}
+    <!-- Inicializar AOS -->
+    <script>
+        AOS.init();
+    </script>
 
     <script>
         function openModal(title, desc, empresa, empresaLogo, userLogo) {
@@ -152,7 +163,7 @@
             document.getElementById("jobModal").style.display = "none";
         }
 
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const modal = document.getElementById("jobModal");
             if (event.target == modal) {
                 modal.style.display = "none";
@@ -161,4 +172,5 @@
     </script>
 
 </body>
+
 </html>

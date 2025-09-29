@@ -11,7 +11,7 @@
 
 <body>
 
-    {{ components.navbar("mensajes", "mensajes", current_user) }}
+    {{ components.navbar(current_user) }}
 
     <div class="messages-container">
         <!-- Sidebar de conversaciones -->
@@ -20,7 +20,7 @@
                 <h2>💬 Mensajes</h2>
                 <button class="new-message-btn">+ Nuevo</button>
             </div>
-            
+
             <div class="conversation-list">
                 <div class="conversation-item active">
                     <div class="conversation-header">
@@ -37,7 +37,7 @@
                         <div class="unread-badge">2</div>
                     </div>
                 </div>
-                
+
                 <div class="conversation-item">
                     <div class="conversation-header">
                         <div class="conversation-avatar">B</div>
@@ -52,7 +52,7 @@
                         <span class="conversation-time">Ayer</span>
                     </div>
                 </div>
-                
+
                 <div class="conversation-item">
                     <div class="conversation-header">
                         <div class="conversation-avatar">C</div>
@@ -70,7 +70,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Área de chat -->
         <div class="chat-area">
             <div class="chat-header">
@@ -80,33 +80,36 @@
                     <div class="chat-status">En línea</div>
                 </div>
             </div>
-            
+
             <div class="chat-messages">
                 <div class="message">
                     <div class="message-avatar">A</div>
                     <div class="message-content">
-                        <div class="message-text">Hola, nos interesa tu perfil para la vacante de Desarrollador Web. ¿Te gustaría agendar una entrevista?</div>
+                        <div class="message-text">Hola, nos interesa tu perfil para la vacante de Desarrollador Web. ¿Te
+                            gustaría agendar una entrevista?</div>
                         <div class="message-time">10:30 AM</div>
                     </div>
                 </div>
-                
+
                 <div class="message sent">
                     <div class="message-avatar">{{ current_user.nombre[0] if current_user else 'U' }}</div>
                     <div class="message-content">
-                        <div class="message-text">¡Hola! Sí, me interesa mucho la oportunidad. ¿Qué horarios tienen disponibles?</div>
+                        <div class="message-text">¡Hola! Sí, me interesa mucho la oportunidad. ¿Qué horarios tienen
+                            disponibles?</div>
                         <div class="message-time">10:35 AM</div>
                     </div>
                 </div>
-                
+
                 <div class="message">
                     <div class="message-avatar">A</div>
                     <div class="message-content">
-                        <div class="message-text">Perfecto. Tenemos disponibilidad mañana a las 2:00 PM o el viernes a las 10:00 AM. ¿Cuál te conviene más?</div>
+                        <div class="message-text">Perfecto. Tenemos disponibilidad mañana a las 2:00 PM o el viernes a
+                            las 10:00 AM. ¿Cuál te conviene más?</div>
                         <div class="message-time">10:37 AM</div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="chat-input">
                 <div class="input-container">
                     <input type="text" class="message-input" placeholder="Escribe tu mensaje...">
@@ -116,7 +119,12 @@
         </div>
     </div>
 
+    <!-- Llamar al componente footer -->
     {{ footer.footer() }}
+    <!-- Inicializar AOS -->
+    <script>
+        AOS.init();
+    </script>
 </body>
 
 </html>
