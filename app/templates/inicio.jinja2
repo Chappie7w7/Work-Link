@@ -7,21 +7,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Inicio - Worklink</title>
-    <!-- Importar los estilos para navbar, footer y la página de inicio -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_navbar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_inicio.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
-    
 </head>
 
 <body>
+{{ navbar.navbar(current_user) }}
+
     <section class="inicio-p">
-        <!-- Llamar al componente navbar -->
-        {{ navbar.navbar('Inicio', 'inicio', current_user) }}      
-
-
-    
         <div class="main-content">
             <!-- Columna izquierda: perfil del usuario -->
             <div class="column left-column">
@@ -82,7 +74,7 @@
                 <div class="box">
                     <h4 class="section-title">🌟 Últimas Oportunidades</h4>
                     <p class="opportunities-section">
-                        Descubre las nuevas vacantes disponibles en Ocosingo y alrededores. 
+                        Descubre las nuevas vacantes disponibles en Ocosingo y alrededores.
                         ¡Tu próximo empleo te está esperando!
                     </p>
                     <div class="opportunities-buttons">
@@ -146,12 +138,16 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Llamar al componente footer -->
-       
+
     </section>
     <!-- Llamar al componente footer -->
     {{ footer.footer() }}
+    <!-- Inicializar AOS -->
+    <script>
+        AOS.init();
+    </script>
 </body>
 
 </html>

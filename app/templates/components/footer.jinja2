@@ -1,13 +1,19 @@
 {% macro footer() %}
-<!-- Asegúrate de que el archivo CSS esté en la ruta correcta dentro de static/css/style_footer.css -->
+<!-- Fuentes -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- AOS Animaciones -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- Tus estilos -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_footer.css') }}">
+
 <!-- FOOTER CON CONTACTO -->
 <footer class="footer">
-    <!-- Onda decorativa en la parte superior -->
     <div class="footer-wave"></div>
-    
     <div class="footer-content">
-        <!-- Sección de logo y redes sociales -->
         <div class="footer-section" data-aos="fade-up" data-aos-delay="100">
             <div class="footer-logo">
                 <h4>WorkLink Ocosingo</h4>
@@ -20,8 +26,6 @@
                 <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
-
-        <!-- Sección de enlaces rápidos -->
         <div class="footer-section" data-aos="fade-up" data-aos-delay="200">
             <h4>Enlaces Rápidos</h4>
             <ul class="footer-links">
@@ -29,11 +33,10 @@
                 <li><a href="#vacantes"><i class="fas fa-chevron-right"></i> Vacantes</a></li>
                 <li><a href="#empresas"><i class="fas fa-chevron-right"></i> Empresas</a></li>
                 <li><a href="#testimonios"><i class="fas fa-chevron-right"></i> Testimonios</a></li>
-                <li><a href="{{ url_for('LoginRoute.login_form') }}"><i class="fas fa-chevron-right"></i> Iniciar Sesión</a></li>
+                <li><a href="{{ url_for('LoginRoute.login_form') }}"><i class="fas fa-chevron-right"></i> Iniciar
+                        Sesión</a></li>
             </ul>
         </div>
-
-        <!-- Sección de contacto -->
         <div class="footer-section" data-aos="fade-up" data-aos-delay="300">
             <h4>Contacto</h4>
             <div class="contact-info">
@@ -55,8 +58,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Sección de formulario de contacto -->
         <div class="footer-section footer-contact" data-aos="fade-up" data-aos-delay="400">
             <h4>¿Necesitas ayuda?</h4>
             <p>Escríbenos y te responderemos en menos de 24 horas.</p>
@@ -77,8 +78,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Pie de página -->
     <div class="footer-bottom">
         <div class="footer-bottom-content">
             <p class="copy">© 2025 WorkLink Ocosingo. Todos los derechos reservados.</p>

@@ -1,4 +1,3 @@
-
 /* ===== FOOTER ===== */
 .footer {
     background: linear-gradient(135deg, #1e3b8a00 0%);
@@ -176,295 +175,54 @@
     color: white;
 }
 
-/* ===== MODAL ===== */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-}
-
-.modal-content {
-    background: white;
-    margin: 5% auto;
-    padding: 0;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    animation: modalSlideIn 0.3s ease;
-}
-
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.modal-header {
-    background: linear-gradient(135deg, #1e40af, #3b82f6);
-    color: white;
-    padding: 20px 30px;
-    border-radius: 20px 20px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.close {
-    font-size: 2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.close:hover {
-    transform: scale(1.1);
-    opacity: 0.8;
-}
-
-.modal-body {
-    padding: 30px;
-}
-
-.modal-company-row {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.modal-company {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.modal-company img {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    object-fit: cover;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.modal-company span {
-    font-weight: 600;
-    color: #1e293b;
-    font-size: 1.1rem;
-}
-
-.modal-description-box {
-    background: #0c0d0e;
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid #000000;
-    margin-bottom: 25px;
-}
-
-.modal-description-box p {
-    color: #64748b;
-    line-height: 1.6;
-    font-size: 1rem;
-}
-
-.modal-footer {
-    text-align: center;
-}
-
-.modal-btn {
+.btn-main {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    background: linear-gradient(135deg, #1e40af, #1e40af);
     color: white;
     padding: 15px 30px;
     border-radius: 25px;
     text-decoration: none;
     font-weight: 600;
     font-size: 1.1rem;
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
     transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
-.modal-btn:hover {
+.btn-main:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 8px 25px rgba(251, 191, 36, 0.5);
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: rgb(7, 6, 6);
+    padding: 15px 30px;
+    border: 2px solid rgba(255, 255, 255, 0.733);
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
-    .navbar {
-        padding: 10px 0;
-    }
-    
-    .nav-links {
-        gap: 20px;
-    }
-    
-    .nav-links a {
-        font-size: 0.9rem;
-    }
-    
-    .btn-login {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-    
-    .btn-register {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-    
-    .dropdown-content {
-        min-width: 180px;
-        right: -10px;
-    }
-    
-    .dropdown-content a {
-        padding: 12px 15px;
-        font-size: 0.9rem;
-    }
-    
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.1rem;
-    }
-    
-    .hero-stats {
-        gap: 20px;
-    }
-    
-    .stat-number {
-        font-size: 2rem;
-    }
-    
-    .hero-buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-    
     .btn-main,
     .btn-outline {
         width: 100%;
         max-width: 300px;
         justify-content: center;
-    }
-    
-    .section-header h2 {
-        font-size: 2rem;
-    }
-    
-    .section-header p {
-        font-size: 1rem;
-    }
-    
-    .servicios-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .card {
-        padding: 30px 20px;
-    }
-    
-    .card-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 1.5rem;
-    }
-    
-    .vacantes-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .vacante-card {
-        padding: 20px;
-    }
-    
-    .empresa-featured {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 20px;
-    }
-    
-    .empresa-info h3 {
-        font-size: 1.5rem;
-    }
-    
-    .empresa-stats {
-        justify-content: center;
-        gap: 20px;
-    }
-    
-    .empresa-logo img {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .empresas-logos {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 20px;
-    }
-    
-    .logo-item {
-        padding: 20px;
-    }
-    
-    .logo-item img {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .empresas-stats {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .testimonio-featured {
-        padding: 30px;
-    }
-    
-    .testimonio-featured blockquote {
-        font-size: 1.1rem;
-    }
-    
-    .testimonios-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .testimonio-item {
-        padding: 20px;
-    }
-    
-    .testimonios-cta {
-        padding: 30px;
-    }
-    
-    .cta-content h3 {
-        font-size: 1.5rem;
     }
     
     .footer-content {
@@ -481,129 +239,5 @@
     
     .footer-bottom-links {
         justify-content: center;
-    }
-    
-    .modal-content {
-        width: 95%;
-        margin: 10% auto;
-    }
-    
-    .modal-header {
-        padding: 15px 20px;
-    }
-    
-    .modal-body {
-        padding: 20px;
-    }
-    
-    .modal-company {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-title {
-        font-size: 2rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1rem;
-    }
-    
-    .hero-stats {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .stat-number {
-        font-size: 1.8rem;
-    }
-    
-    .section-header h2 {
-        font-size: 1.8rem;
-    }
-    
-    .card {
-        padding: 25px 15px;
-    }
-    
-    .card-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
-    }
-    
-    .card h3 {
-        font-size: 1.3rem;
-    }
-    
-    .vacante-card {
-        padding: 15px;
-    }
-    
-    .vacante-card h3 {
-        font-size: 1.1rem;
-    }
-    
-    .vacante-details {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .empresa-info h3 {
-        font-size: 1.3rem;
-    }
-    
-    .empresa-stats {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .logo-item {
-        padding: 15px;
-    }
-    
-    .logo-item img {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .testimonio-featured {
-        padding: 20px;
-    }
-    
-    .testimonio-featured blockquote {
-        font-size: 1rem;
-    }
-    
-    .testimonio-item {
-        padding: 15px;
-    }
-    
-    .testimonios-cta {
-        padding: 20px;
-    }
-    
-    .cta-content h3 {
-        font-size: 1.3rem;
-    }
-    
-    .footer-content {
-        padding: 40px 15px 20px;
-    }
-    
-    .modal-content {
-        width: 98%;
-        margin: 15% auto;
-    }
-    
-    .modal-header {
-        padding: 12px 15px;
-    }
-    
-    .modal-body {
-        padding: 15px;
     }
 }

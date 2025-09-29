@@ -2,14 +2,16 @@
 {% import "components/footer.jinja2" as footer %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Editar Perfil</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_perfil.css') }}">
-</head>
-<body>
 
-    {{ components.navbar("perfil", "perfil", current_user) }}
+</head>
+
+<body>
+    {{ components.navbar(current_user) }}
 
     <div class="main-content">
         <div class="form-container">
@@ -19,22 +21,22 @@
                 <!-- Nombre -->
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" 
-                           value="{{ current_user.nombre if current_user else '' }}" required>
+                    <input type="text" name="nombre" id="nombre"
+                        value="{{ current_user.nombre if current_user else '' }}" required>
                 </div>
 
                 <!-- Correo -->
                 <div class="form-group">
                     <label for="correo">Correo</label>
-                    <input type="email" name="correo" id="correo" 
-                           value="{{ current_user.correo if current_user else '' }}" required>
+                    <input type="email" name="correo" id="correo"
+                        value="{{ current_user.correo if current_user else '' }}" required>
                 </div>
 
                 <!-- Ubicación -->
                 <div class="form-group">
                     <label for="ubicacion">Ubicación</label>
-                    <input type="text" name="ubicacion" id="ubicacion" 
-                           value="{{ current_user.ubicacion if current_user else '' }}">
+                    <input type="text" name="ubicacion" id="ubicacion"
+                        value="{{ current_user.ubicacion if current_user else '' }}">
                 </div>
 
                 <!-- Botón -->
@@ -45,7 +47,13 @@
         </div>
     </div>
 
+    <!-- Llamar al componente footer -->
     {{ footer.footer() }}
+    <!-- Inicializar AOS -->
+    <script>
+        AOS.init();
+    </script>
 
 </body>
+
 </html>

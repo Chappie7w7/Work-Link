@@ -1,4 +1,13 @@
 {% macro navbar() %}
+<!-- Fuentes -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- AOS Animaciones -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- Tus estilos -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_navbar.css') }}">
 <!-- NAVBAR -->
 <header class="navbar">
@@ -11,7 +20,6 @@
         <a href="#testimonios">Testimonios</a>
         <a href="#contacto">Contacto</a>
         <a href="{{ url_for('LoginRoute.login_form') }}" class="btn-login">Iniciar sesión</a>
-
         <div class="dropdown">
             <span class="btn-register">Crear cuenta</span>
             <div class="dropdown-content">
@@ -21,4 +29,7 @@
         </div>
     </nav>
 </header>
+
+<script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+
 {% endmacro %}
