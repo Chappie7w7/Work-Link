@@ -8,10 +8,30 @@
     backdrop-filter: blur(20px);
     border-bottom: 1px solid rgb(227, 229, 233);
     z-index: 1000;
+    /*padding: 15px 20px;*/
     padding: 15px 20px;
+    transition: all 1s ease;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+/* Navbar reducido al hacer scroll */
+.navbar.shrink {
+    margin: 15px auto;
+    width: 90%;
+    padding: 15px 20px;
+    border-radius: 50px;
+    background: rgba(15, 14, 14, 0.95);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Ocultar navbar cuando hace scroll hacia abajo */
+.navbar.hidden {
+    transform: translateY(-120%);
+    transition: transform 1s ease;
 }
 
 .navbar .logo h1 {
@@ -44,6 +64,7 @@
     font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
+    overflow: visible;
 }
 
 .nav-links a:hover {
@@ -53,19 +74,28 @@
 }
 
 .nav-links a::after {
-    margin-left: auto;
+    /*margin-left: auto;*/
     content: '';
     position: absolute;
     bottom: -5px;
     left: 0;
-    width: 0;
+    width: 100%;
     height: 2px;
     background: linear-gradient(90deg, #3b82f6, #1e40af);
-    transition: width 0.3s ease;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease, transform-origin 0s;
 }
 
-.nav-links a:hover::after {
-    width: 100%;
+.nav-links a:hover::after,
+.nav-links a:focus::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.nav-links a:not(:hover)::after {
+    transform: scaleX(0);
+    transform-origin: right;
 }
 
 .btn-login {
@@ -82,4 +112,104 @@
 .btn-login:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-logout {
+    margin-left: auto;
+    background: linear-gradient(135deg, #f63b3b, #af1e1e);
+    color: white !important;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(246, 59, 59, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(246, 59, 59, 0.4);
+}
+
+/* ===== DROPDOWN Y BOTÓN DE REGISTRO ===== */
+.dropdown {
+    margin-left: auto;
+    position: relative;
+    display: inline-block;
+}
+
+.btn-register {
+    background: linear-gradient(135deg, #10b98100, #05966800);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0);
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-register:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0);
+    background: linear-gradient(135deg, #2d302f00, #04785700);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 1001;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    overflow: hidden;
+    animation: dropdownFadeIn 0.3s ease;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-content a {
+    color: #64748b;
+    padding: 15px 20px;
+    text-decoration: none;
+    display: block;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-content a:hover {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    transform: translateX(5px);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .btn-register {
+    background: linear-gradient(135deg, #059669, #047857);
 }

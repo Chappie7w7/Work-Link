@@ -22,8 +22,11 @@
         <a href="{{ url_for('NotificacionesRoute.notificaciones') }}">Notificaciones</a>
         <a href="#">Planes</a>
         <a href="{{ url_for('PerfilRoute.editar') }}">Perfil</a>
-        <a href="{{ url_for('LoginRoute.logout') }}" class="btn-login">Salir</a>
+        <a href="{{ url_for('LoginRoute.logout') }}" class="btn-logout">Salir</a>
 
     </nav>
 </header>
+
+<script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+
 {% endmacro %}
