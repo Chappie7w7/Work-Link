@@ -22,42 +22,35 @@ def registro_empresa():
     # Validar campos obligatorios
     if not nombre_empresa or not rfc or not sector or not descripcion or not direccion or not telefono or not correo or not password:
         flash("Todos los campos son obligatorios", "error")
-        return render_template("login.jinja2", tab="empresa", 
-                               nombre_empresa=nombre_empresa,
-                               rfc=rfc,
-                               sector=sector,
-                               descripcion=descripcion,
-                               direccion=direccion,
-                               telefono=telefono,
-                               correo=correo)
+        return render_template("login.jinja2", tab="empresa", **request.form)
 
-    # Validar nombre de empresa solo letras y espacios
+    # Nombre de empresa
     if not re.fullmatch(r"[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,100}", nombre_empresa):
         flash("El nombre de la empresa solo puede contener letras y espacios", "error")
         return render_template("login.jinja2", tab="empresa", **request.form)
 
-    # RFC: solo letras y números, exactamente 13 caracteres
+    # RFC: solo letras y números, 13 caracteres
     if not re.fullmatch(r"[A-Za-z0-9]{13}", rfc):
         flash("El RFC debe contener solo letras y números (13 caracteres)", "error")
         return render_template("login.jinja2", tab="empresa", **request.form)
 
-    # Teléfono: primero validar que sean solo números
+    # Teléfono: solo números
     if not telefono.isdigit():
         flash("El teléfono solo puede contener números", "error")
         return render_template("login.jinja2", tab="empresa", **request.form)
 
-# Teléfono: validar que tenga 10 dígitos
+    # Teléfono: exactamente 10 dígitos
     if len(telefono) != 10:
         flash("El teléfono debe tener exactamente 10 dígitos", "error")
         return render_template("login.jinja2", tab="empresa", **request.form)
 
-    # Validar correo
+    # Correo
     correo_regex = r"^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.(com|org|net|edu|gov|io|co|info)$"
     if not re.fullmatch(correo_regex, correo):
         flash("Correo no tiene formato válido", "error")
         return render_template("login.jinja2", tab="empresa", **request.form)
 
-    # Validar contraseña
+    # Contraseña
     if len(password) < 6:
         flash("La contraseña debe tener al menos 6 caracteres", "error")
         return render_template("login.jinja2", tab="empresa", **request.form)
@@ -67,7 +60,7 @@ def registro_empresa():
         flash("El correo ya está registrado", "error")
         return render_template("login.jinja2", tab="empresa", **request.form)
 
-    # Crear usuario base
+    # Crear usuario
     nuevo_usuario = UsuarioModel(
         nombre=nombre_empresa,
         correo=correo,
