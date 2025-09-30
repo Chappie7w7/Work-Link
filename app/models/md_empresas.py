@@ -6,12 +6,12 @@ class EmpresaModel(db.Model):
     __tablename__ = 'empresas'
 
     id = Column(Integer, ForeignKey('usuarios.id'), primary_key=True)
-    nombre_empresa = Column(String(150), nullable=True)
-    rfc = Column(String(20), nullable=True)
+    nombre_empresa = Column(String(100), nullable=True)
+    rfc = Column(String(13), nullable=True)
     sector = Column(String(100), nullable=True)
     descripcion = Column(Text, nullable=True)
-    direccion = Column(String(255), nullable=True)
-    telefono = Column(String(20), nullable=True)
+    direccion = Column(String(100), nullable=True)
+    telefono = Column(String(10), nullable=True)
 
     # Relación uno 
     usuario = relationship('UsuarioModel', backref='empresa', uselist=False)
