@@ -110,7 +110,7 @@ def reset_password(token):
         db.session.commit()
 
         flash("Tu contraseña ha sido restablecida con éxito.", "success")
-        return redirect(url_for("LoginRoute.login"))
+        return redirect(url_for("LoginRoute.recuperar"))
 
     return render_template("reset_password.jinja2", token=token)
 
