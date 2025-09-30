@@ -26,10 +26,11 @@ def registro_empresa():
             return redirect(url_for('RegistroEmpresaRoute.registro_empresa'))
 
         # Crear usuario base
+        from werkzeug.security import generate_password_hash
         nuevo_usuario = UsuarioModel(
             nombre=nombre_empresa,  
             correo=correo,
-            contraseña=password,
+            contraseña=generate_password_hash(password),
             tipo_usuario="empresa"
         )
         db.session.add(nuevo_usuario)

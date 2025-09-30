@@ -20,6 +20,10 @@ class UsuarioModel(db.Model):
     plan_id = Column(Integer, ForeignKey('planes.id'), nullable=True)
     ubicacion = Column(String(100), nullable=True)
     ultimo_login = Column(DateTime, nullable=True)
+    
+    # Campos para recuperación de contraseña
+    reset_token = Column(String(64), nullable=True, unique=True)
+    reset_token_expiration = Column(DateTime, nullable=True)
 
     # Relación con el modelo PlanModel (si lo tienes)
     #plan = relationship("PlanModel", backref="usuarios")
