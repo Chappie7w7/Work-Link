@@ -8,3 +8,5 @@ cryptography
 requests
 flask-mail 
 itsdangerous
+bleach
+email-validator

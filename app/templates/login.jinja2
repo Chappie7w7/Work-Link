@@ -179,9 +179,11 @@
                     </div>
                     <div>
                         <label>
-                            <i class='bx bx-barcode'></i>
-                            <input type="text" placeholder="RFC" name="rfc" required />
-                        </label>
+    <i class='bx bx-barcode'></i>
+    <input type="text" placeholder="RFC" name="rfc" required
+           pattern="[A-Za-z0-9]{13}" maxlength="13"
+           title="El RFC debe tener 13 caracteres, solo letras y números" />
+</label>
                     </div>
                     <div>
                         <label>
@@ -202,10 +204,13 @@
                         </label>
                     </div>
                     <div>
-                        <label>
-                            <i class='bx bx-phone'></i>
-                            <input type="text" placeholder="Teléfono" name="telefono" required />
-                        </label>
+                      <label>
+    <i class='bx bx-phone'></i>
+    <input type="text" placeholder="Teléfono" name="telefono" required
+           pattern="[0-9]{10}" maxlength="10"
+           title="El teléfono debe tener 10 dígitos, solo números" />
+</label>
+
                     </div>
                     <div>
                         <label>
