@@ -24,7 +24,7 @@
         <input type="text" name="nombre_empresa" id="nombre_empresa" required>
 
         <label for="rfc">RFC</label>
-        <input type="text" name="rfc" id="rfc">
+        <input type="text" name="rfc" id="rfc" pattern="[A-Za-z0-9]{13}" maxlength="13" required title="El RFC debe tener exactamente 13 caracteres alfanuméricos">
 
         <label for="sector">Sector</label>
         <input type="text" name="sector" id="sector">
@@ -36,7 +36,7 @@
         <input type="text" name="direccion" id="direccion">
 
         <label for="telefono">Teléfono</label>
-        <input type="text" name="telefono" id="telefono">
+        <input type="text" name="telefono" id="telefono" pattern="\d{10}" maxlength="10" required title="El teléfono debe tener exactamente 10 dígitos">
 
         <label for="email">Correo electrónico</label>
         <input type="email" name="email" id="email" required>
