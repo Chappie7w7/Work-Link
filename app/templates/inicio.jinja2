@@ -1,5 +1,5 @@
-{% import "components/navbar.jinja2" as components %}
-{% import 'components/footer.jinja2' as footer %}
+{% import "components/navbar.jinja2" as navbar %}
+{% import "components/footer.jinja2" as footer %}
 
 <!DOCTYPE html>
 <html lang="es">
@@ -11,9 +11,9 @@
 </head>
 
 <body>
-    <section class="inicio-p">
-        {{ components.navbar("inicio", "inicio", current_user) }}
+{{ navbar.navbar(current_user) }}
 
+    <section class="inicio-p">
         <div class="main-content">
             <!-- Columna izquierda: perfil del usuario -->
             <div class="column left-column">
@@ -74,7 +74,7 @@
                 <div class="box">
                     <h4 class="section-title">🌟 Últimas Oportunidades</h4>
                     <p class="opportunities-section">
-                        Descubre las nuevas vacantes disponibles en Ocosingo y alrededores. 
+                        Descubre las nuevas vacantes disponibles en Ocosingo y alrededores.
                         ¡Tu próximo empleo te está esperando!
                     </p>
                     <div class="opportunities-buttons">
@@ -138,8 +138,16 @@
                 </div>
             </div>
         </div>
-        {{ footer.footer() }}
+
+        <!-- Llamar al componente footer -->
+
     </section>
+    <!-- Llamar al componente footer -->
+    {{ footer.footer() }}
+    <!-- Inicializar AOS -->
+    <script>
+        AOS.init();
+    </script>
 </body>
 
 </html>

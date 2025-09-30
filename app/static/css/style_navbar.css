@@ -1,285 +1,215 @@
-/* ===== NAVBAR PROFESIONAL Y MODERNO ===== */
+/* ===== NAVBAR ===== */
 .navbar {
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1d4ed8 100%);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px 30px;
-    flex-wrap: wrap;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    border-bottom: 3px solid #3b82f6;
-    position: relative;
-    z-index: 1000;
-}
-
-.navbar::before {
-    content: '';
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
-    animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-}
-
-.logo-placeholder {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #ffffff, #f8fafc);
-    border-radius: 12px;
+    background: rgba(15, 14, 14, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgb(227, 229, 233);
+    z-index: 1000;
+    /*padding: 15px 20px;*/
+    padding: 15px 20px;
+    transition: all 1s ease;
+    border-radius: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+}
+
+/* Navbar reducido al hacer scroll */
+.navbar.shrink {
+    margin: 15px auto;
+    width: 90%;
+    padding: 15px 20px;
+    border-radius: 50px;
+    background: rgba(15, 14, 14, 0.95);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Ocultar navbar cuando hace scroll hacia abajo */
+.navbar.hidden {
+    transform: translateY(-120%);
+    transition: transform 1s ease;
+}
+
+.navbar .logo h1 {
     color: #1e40af;
-    font-weight: bold;
-    font-size: 18px;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.logo-placeholder:hover {
-    transform: scale(1.05) rotate(2deg);
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
-}
-
-.logo-placeholder::before {
-    content: 'WL';
-}
-
-.search-bar {
-    flex: 1;
+.nav-links {
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 25px;
-    padding: 10px 20px;
-    margin: 0 30px;
-    max-width: 400px;
-    transition: all 0.3s ease;
+    gap: 30px;
 }
 
-.search-bar:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-.search-bar input {
-    border: none;
-    background: none;
-    width: 100%;
-    padding: 8px 12px;
-    outline: none;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.search-bar input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.menu-icons {
+.actions {
+    margin-left: auto;
     display: flex;
-    gap: 25px;
     align-items: center;
+    gap: 15px;
 }
 
-.icon-item {
-    text-align: center;
-    font-size: 11px;
-    color: white;
-    transition: all 0.3s ease;
-    position: relative;
-    padding: 8px 12px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.icon-item:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.icon-item.active {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-}
-
-.icon-item span:first-child {
-    font-size: 18px;
-    display: block;
-    margin-bottom: 4px;
-    transition: all 0.3s ease;
-}
-
-.icon-item:hover span:first-child {
-    transform: scale(1.1);
-}
-
-.icon-item a {
-    color: white;
+.nav-links a {
+    margin-left: auto;
+    color: #eff0f3;
     text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
+    font-weight: 500;
     transition: all 0.3s ease;
-}
-
-.icon-item a:hover {
-    color: white;
-}
-
-/* Dropdown de usuario mejorado */
-.usuario-dropdown {
-    margin-left: 15px;
     position: relative;
+    overflow: visible;
 }
 
-.usuario-dropdown summary {
-    cursor: pointer;
-    color: white;
-    font-weight: 600;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-}
-
-.usuario-dropdown summary:hover {
-    background: rgba(255, 255, 255, 0.2);
+.nav-links a:hover {
+    margin-left: auto;
+    color: #f0f0f0;
     transform: translateY(-2px);
 }
 
-.usuario-dropdown ul {
+.nav-links a::after {
+    /*margin-left: auto;*/
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #1e40af);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease, transform-origin 0s;
+}
+
+.nav-links a:hover::after,
+.nav-links a:focus::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.nav-links a:not(:hover)::after {
+    transform: scaleX(0);
+    transform-origin: right;
+}
+
+.btn-login {
+    margin-left: auto;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white !important;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-logout {
+    margin-left: auto;
+    background: linear-gradient(135deg, #f63b3b, #af1e1e);
+    color: white !important;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(246, 59, 59, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(246, 59, 59, 0.4);
+}
+
+/* ===== DROPDOWN Y BOTÓN DE REGISTRO ===== */
+.dropdown {
+    margin-left: auto;
+    position: relative;
+    display: inline-block;
+}
+
+.btn-register {
+    background: linear-gradient(135deg, #10b98100, #05966800);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0);
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-register:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0);
+    background: linear-gradient(135deg, #2d302f00, #04785700);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
-    list-style: none;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    padding: 15px;
-    margin: 8px 0 0 0;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    min-width: 180px;
-    position: absolute;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 1001;
+    top: 100%;
     right: 0;
-    z-index: 1000;
+    margin-top: 10px;
+    overflow: hidden;
+    animation: dropdownFadeIn 0.3s ease;
 }
 
-.usuario-dropdown ul li {
-    margin: 8px 0;
-    transition: all 0.3s ease;
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.usuario-dropdown ul li a {
-    color: #374151;
+.dropdown-content a {
+    color: #64748b;
+    padding: 15px 20px;
     text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 8px;
     display: block;
-    font-weight: 500;
     transition: all 0.3s ease;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
 }
 
-.usuario-dropdown ul li a:hover {
-    background: rgba(59, 130, 246, 0.1);
-    color: #1e40af;
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-content a:hover {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
     transform: translateX(5px);
 }
 
-/* Animación sutil para notificaciones */
-.icon-item:nth-child(4) {
-    position: relative;
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
-.icon-item:nth-child(4)::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    right: -2px;
-    width: 8px;
-    height: 8px;
-    background: #ef4444;
-    border-radius: 50%;
-    border: 2px solid white;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.7; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .navbar {
-        padding: 12px 20px;
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .search-bar {
-        margin: 0;
-        max-width: 100%;
-        order: 2;
-    }
-    
-    .menu-icons {
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-        order: 3;
-    }
-
-.icon-item {
-        font-size: 10px;
-        padding: 6px 10px;
-}
-
-.icon-item span:first-child {
-        font-size: 16px;
-    }
-    
-    .usuario-dropdown ul {
-        right: -50px;
-        min-width: 160px;
-    }
-}
-
-@media (max-width: 480px) {
-    .navbar {
-        padding: 10px 15px;
-    }
-    
-    .menu-icons {
-        gap: 10px;
-    }
-    
-    .icon-item {
-        padding: 5px 8px;
-        font-size: 9px;
-    }
-    
-    .icon-item span:first-child {
-        font-size: 14px;
-    }
+.dropdown:hover .btn-register {
+    background: linear-gradient(135deg, #059669, #047857);
 }

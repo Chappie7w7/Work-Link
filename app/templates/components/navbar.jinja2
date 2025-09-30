@@ -1,56 +1,32 @@
-{% macro navbar(titulo, pagina, current_user) %}
+{% macro navbar(current_user) %}
+<!-- Fuentes -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- AOS Animaciones -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- Tus estilos -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_navbar.css') }}">
-<header>
-    <nav class="navbar">
-        <div class="logo-placeholder"></div>
 
-        <div class="menu-icons">
-            <div class="icon-item">
-                <a href="{{ url_for('InicioRoute.inicio') }}" style="text-decoration: none; color: inherit;">
-                    <span>🏠</span><br><span>Inicio</span>
-                </a>
-            </div>
-            
-            <!-- 🔹 Botón Editar Perfil al lado de Inicio -->
-            <div class="icon-item">
-                <a href="{{ url_for('PerfilRoute.editar') }}" style="text-decoration: none; color: inherit;">
-                    <span>✏️</span><br><span>Perfil</span>
-                </a>
-            </div>
-            <!-- 🔹 Fin botón Editar Perfil -->
-
-            <div class="icon-item">
-                <a href="{{ url_for('EmpleosRoute.empleos') }}" style="text-decoration: none; color: inherit;">
-                    <span>👥</span><br><span>Empleos</span>
-                </a>
-            </div>
-            <div class="icon-item">
-                <a href="{{ url_for('MensajesRoute.mensajes') }}" style="text-decoration: none; color: inherit;">
-                    <span>💬</span><br><span>Mensajes</span>
-                </a>
-            </div>
-            <div class="icon-item">
-                <a href="{{ url_for('NotificacionesRoute.notificaciones') }}" style="text-decoration: none; color: inherit;">
-                    <span>🔔</span><br><span>Notificaciones</span>
-                </a>
-            </div>
-
-            <div class="icon-item">
-                <a href="{{ url_for('PlanesRoute.planes') }}" style="text-decoration: none; color: inherit;">
-                    <span>💼</span><br><span>Planes</span>
-                </a>
-            </div>
-
-            <div class="icon-item">
-                <a href="{{ url_for('LoginRoute.logout') }}" style="text-decoration: none; color: inherit;">
-                    <span>🚪</span><br><span>Salir</span>
-                </a>
-            </div>
-        </div>
-
-    
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo">
+        <h1>WorkLink</h1>
+    </div>
+    <nav class="nav-links">
+        <a href="{{ url_for('InicioRoute.inicio') }}">Inicio</a>
+        <a href="#">Empleos</a>
+        <a href="{{ url_for('MensajesRoute.mensajes') }}">Mensajes</a>
+        <a href="{{ url_for('NotificacionesRoute.notificaciones') }}">Notificaciones</a>
+        <a href="#">Planes</a>
+        <a href="{{ url_for('PerfilRoute.editar') }}">Perfil</a>
+        <a href="{{ url_for('LoginRoute.logout') }}" class="btn-logout">Salir</a>
 
     </nav>
 </header>
+
+<script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
 
 {% endmacro %}

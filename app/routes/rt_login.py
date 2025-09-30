@@ -41,4 +41,4 @@ def login():
 @rt_login.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("LoginRoute.login_form"))
+    return redirect(url_for("IndexRoute.index"))

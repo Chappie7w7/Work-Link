@@ -1,38 +1,28 @@
-{% import 'components/footer.jinja2' as footer %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <title>Inicio de sesión</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}">
 </head>
+
 <body>
-
-    <header>
-        <div class="logo"></div>
-        <h1>WorkLink Ocosingo</h1>
-    <!-- Botón para regresar al index -->
-    <div class="nav-right">
-        <a href="{{ url_for('IndexRoute.index') }}" class="btn-regresar">Regresar al inicio</a>
-    </div>
-
-    </header>
-
     <div class="container">
         <div class="login-box">
             <h2>Iniciar Sesión en WorkLink Ocosingo</h2>
 
             {# Mostrar mensajes flash #}
             <div class="mensajes">
-            {% with mensajes = get_flashed_messages(with_categories=true) %}
+                {% with mensajes = get_flashed_messages(with_categories=true) %}
                 {% if mensajes %}
-                    {% for categoria, mensaje in mensajes %}
-                        <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
-                            {{ mensaje }}
-                        </p>
-                    {% endfor %}
+                {% for categoria, mensaje in mensajes %}
+                <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
+                    {{ mensaje }}
+                </p>
+                {% endfor %}
                 {% endif %}
-            {% endwith %}
+                {% endwith %}
             </div>
 
             <form method="post" action="">
@@ -52,8 +42,12 @@
             <form method="get" action="">
                 <button type="submit" class="btn-recuperar">¿Olvidaste tu contraseña?</button>
             </form>
+            <!-- Botón para regresar al index -->
+            <form method="get" action="{{ url_for('IndexRoute.index') }}">
+                <button type="submit" class="">Volver al inicio</button>
+            </form>
         </div>
     </div>
-{{ footer.footer() }}
 </body>
+
 </html>

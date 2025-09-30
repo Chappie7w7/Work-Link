@@ -8,9 +8,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_notificaciones.css') }}">
 </head>
 <body>
+{{ components.navbar(current_user) }}
 
-    {{ components.navbar("notificaciones", "notificaciones", current_user) }}
-
+<!-- Llamar al componente footer -->
 {{ footer.footer() }}
+<!-- Inicializar AOS -->
+    <script>
+        AOS.init();
+    </script>
 </body>
 </html>
