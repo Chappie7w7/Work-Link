@@ -2,7 +2,6 @@ from flask import session, flash
 from datetime import datetime
 from app.models.md_usuarios import UsuarioModel
 from app.db.sql import db
-from werkzeug.security import check_password_hash
 
 def login_user(correo, password):
     usuario = UsuarioModel.query.filter_by(correo=correo).first()
@@ -10,6 +9,7 @@ def login_user(correo, password):
     if not usuario:
         return None, "Usuario no encontrado"
 
+    from werkzeug.security import check_password_hash
     if not check_password_hash(usuario.contraseña, password):  
         return None, "Contraseña incorrecta"
 

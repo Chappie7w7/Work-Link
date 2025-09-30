@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "titulo": "backend",
+    "descripcion": "holaa",
+    "ubicacion": "alkala",
+    "modalidad": "presencial",
+    "estado": "publicada",
+    "salario_aprox": 4500.0,
+    "empresa": "worklink"
+  }
+]

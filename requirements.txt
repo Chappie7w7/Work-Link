@@ -6,4 +6,5 @@ pymysql
 flask-login
 cryptography
 requests
-
+flask-mail 
+itsdangerous

@@ -76,11 +76,14 @@ def recuperar():
         except Exception as e:
             flash(f"Hubo un problema al enviar el correo: {e}", "danger")
 
-        return redirect(url_for("LoginRoute.login_form"))
+        return redirect(url_for("LoginRoute.login"))
 
     return render_template("recuperar.jinja2")
 
-# Ruta para restablecer contraseña
+
+# -------------------------------
+# RESETEAR CONTRASEÑA
+# -------------------------------
 @rt_login.route("/reset/<token>", methods=["GET", "POST"])
 def reset_password(token):
     usuario = UsuarioModel.query.filter_by(reset_token=token).first()
@@ -107,7 +110,7 @@ def reset_password(token):
         db.session.commit()
 
         flash("Tu contraseña ha sido restablecida con éxito.", "success")
-        return redirect(url_for("LoginRoute.login_form"))
+        return redirect(url_for("LoginRoute.login"))
 
     return render_template("reset_password.jinja2", token=token)
 

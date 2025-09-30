@@ -270,3 +270,17 @@ body {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+/* Estilos para el enlace "¿Olvidaste tu contraseña?" */
+
+.link-recuperar {
+    display: inline-block;
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.link-recuperar:hover {
+    text-decoration: underline;
+}
