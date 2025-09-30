@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}" />
     <title>Formulario de Login y Registro</title>
@@ -24,12 +25,15 @@
 
                 <!-- Dropdown con las opciones "Soy usuario" y "Soy empresa" -->
                 <div class="dropdown">
-                    <input type="button" value="Registrarse" id="sign-up">
+                    <button id="sign-up">
+                        Registrarse <span class="arrow">▼</span>
+                    </button>
                     <div class="dropdown-content">
                         <a href="#" id="usuario">Soy usuario</a>
                         <a href="#" id="empresa">Soy empresa</a>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -41,13 +45,13 @@
                 <!-- Mostrar mensajes flash -->
                 <div class="mensajes">
                     {% with mensajes = get_flashed_messages(with_categories=true) %}
-                        {% if mensajes %}
-                            {% for categoria, mensaje in mensajes %}
-                                <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
-                                    {{ mensaje }}
-                                </p>
-                            {% endfor %}
-                        {% endif %}
+                    {% if mensajes %}
+                    {% for categoria, mensaje in mensajes %}
+                    <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
+                        {{ mensaje }}
+                    </p>
+                    {% endfor %}
+                    {% endif %}
                     {% endwith %}
                 </div>
 
@@ -92,18 +96,19 @@
                 <!-- Mostrar mensajes flash -->
                 <div class="mensajes">
                     {% with mensajes = get_flashed_messages(with_categories=true) %}
-                        {% if mensajes %}
-                            {% for categoria, mensaje in mensajes %}
-                                <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
-                                    {{ mensaje }}
-                                </p>
-                            {% endfor %}
-                        {% endif %}
+                    {% if mensajes %}
+                    {% for categoria, mensaje in mensajes %}
+                    <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
+                        {{ mensaje }}
+                    </p>
+                    {% endfor %}
+                    {% endif %}
                     {% endwith %}
                 </div>
 
                 <!-- Formulario de registro usuario -->
-                <form method="post" action="{{ url_for('RegistroRoute.registro') }}" class="form form-register" novalidate>
+                <form method="post" action="{{ url_for('RegistroRoute.registro') }}" class="form form-register"
+                    novalidate>
                     <div>
                         <label>
                             <i class='bx bx-user'></i>
@@ -152,18 +157,19 @@
                 <!-- Mostrar mensajes flash -->
                 <div class="mensajes">
                     {% with mensajes = get_flashed_messages(with_categories=true) %}
-                        {% if mensajes %}
-                            {% for categoria, mensaje in mensajes %}
-                                <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
-                                    {{ mensaje }}
-                                </p>
-                            {% endfor %}
-                        {% endif %}
+                    {% if mensajes %}
+                    {% for categoria, mensaje in mensajes %}
+                    <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
+                        {{ mensaje }}
+                    </p>
+                    {% endfor %}
+                    {% endif %}
                     {% endwith %}
                 </div>
 
                 <!-- Formulario de registro empresa con el mismo estilo que el formulario de usuario -->
-                <form method="POST" action="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}" class="form form-register" novalidate>
+                <form method="POST" action="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}"
+                    class="form form-register" novalidate>
                     <div>
                         <label>
                             <i class='bx bx-building-house'></i>
