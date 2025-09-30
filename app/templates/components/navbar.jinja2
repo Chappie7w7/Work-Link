@@ -17,10 +17,12 @@
     </div>
     <nav class="nav-links">
         <a href="{{ url_for('InicioRoute.inicio') }}">Inicio</a>
-        <a href="#">Empleos</a>
+        <a href="{{ url_for('EmpleosRoute.empleos') }}">Empleos</a>
+
         <a href="{{ url_for('MensajesRoute.mensajes') }}">Mensajes</a>
         <a href="{{ url_for('NotificacionesRoute.notificaciones') }}">Notificaciones</a>
-        <a href="#">Planes</a>
+        <a href="{{ url_for('PlanesRoute.planes') }}">Planes</a>
+
         <a href="{{ url_for('PerfilRoute.editar') }}">Perfil</a>
         <a href="{{ url_for('LoginRoute.logout') }}" class="btn-logout">Salir</a>
 

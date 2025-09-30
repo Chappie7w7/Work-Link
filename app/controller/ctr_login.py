@@ -9,7 +9,8 @@ def login_user(correo, password):
     if not usuario:
         return None, "Usuario no encontrado"
 
-    if usuario.contraseña != password:  
+    from werkzeug.security import check_password_hash
+    if not check_password_hash(usuario.contraseña, password):  
         return None, "Contraseña incorrecta"
 
     # Guardar último login
@@ -23,3 +24,4 @@ def login_user(correo, password):
 def logout_user():
     session.clear()
     return True
+
