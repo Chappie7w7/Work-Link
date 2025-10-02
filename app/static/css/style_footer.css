@@ -186,13 +186,13 @@
     text-decoration: none;
     font-weight: 600;
     font-size: 1.1rem;
-    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
     transition: all 0.3s ease;
 }
 
 .btn-main:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(251, 191, 36, 0.5);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
 .btn-outline {
