@@ -6,4 +6,10 @@ pymysql
 flask-login
 cryptography
 requests
-
+<<<<<<<<< Temporary merge branch 1
+flask-mail 
+itsdangerous
+=========
+bleach
+email-validator
+>>>>>>>>> Temporary merge branch 2
