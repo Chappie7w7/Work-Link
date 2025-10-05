@@ -22,7 +22,7 @@ def registro_empresa():
     # Validar campos obligatorios
     if not nombre_empresa or not rfc or not sector or not descripcion or not direccion or not telefono or not correo or not password:
         flash("Todos los campos son obligatorios", "error")
-        return render_template("registro_empresa.jinja2", tab="empresa", 
+        return render_template("empresa/registro_empresa.jinja2", tab="empresa", 
                                nombre_empresa=nombre_empresa,
                                rfc=rfc,
                                sector=sector,
