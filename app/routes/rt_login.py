@@ -15,6 +15,14 @@ rt_login = Blueprint("LoginRoute", __name__)
 def login_form():
     return render_template("login.jinja2")
 
+@rt_login.route("/form-registro-empleado", methods=["GET"])
+def form_usuario():
+    return render_template("registro.jinja2")
+
+@rt_login.route("/form-registro-empresa", methods=["GET"])
+def form_empresa():
+    return render_template("empresa/registro_empresa.jinja2")
+
 @rt_login.route("/login", methods=["POST"])
 def login():
     correo = request.form.get("correo", "").strip()
