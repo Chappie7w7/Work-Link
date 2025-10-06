@@ -33,7 +33,7 @@
                 <h2>Crear una Cuenta de Empresa</h2>
 
                 <!-- Mostrar mensajes flash -->
-                <div class="mensajes">
+                <div class="mensajes" id="mensajeArea">
                     {% with mensajes = get_flashed_messages(with_categories=true) %}
                     {% if mensajes %}
                     {% for categoria, mensaje in mensajes %}
@@ -47,65 +47,76 @@
 
                 <!-- Formulario de registro empresa con el mismo estilo que el formulario de usuario -->
                 <form method="POST" action="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}"
-                    class="form form-register" novalidate>
+                    class="form form-register">
                     <div>
                         <label>
                             <i class='bx bx-building-house'></i>
-                            <input type="text" placeholder="Nombre de la empresa" name="nombre_empresa" required />
+                            <input type="text" placeholder="Nombre de la empresa" name="nombre_empresa"
+                                pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ,.-]{2,60}"
+                                title="El nombre solo puede contener letras y espacios (2-60 caracteres)" required />
                         </label>
                     </div>
                     <div>
                         <label>
                             <i class='bx bx-barcode'></i>
-                            <input type="text" placeholder="RFC" name="rfc" required pattern="[A-Za-z0-9]{13}"
-                                maxlength="13" title="El RFC debe tener 13 caracteres, solo letras y números" />
+                            <input type="text" placeholder="RFC" name="rfc" pattern="[A-Za-z0-9]{13}" maxlength="13"
+                                title="El RFC debe tener 13 caracteres, solo letras y números" required />
                         </label>
                     </div>
                     <div>
                         <label>
                             <i class='bx bx-briefcase'></i>
-                            <input type="text" placeholder="Sector" name="sector" required />
+                            <input type="text" placeholder="Sector" name="sector" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,50}"
+                                title="El sector solo debe contener letras y espacios (2-50 caracteres)" required />
                         </label>
                     </div>
                     <div>
                         <label>
                             <i class='bx bx-info-circle'></i>
-                            <input type="text" placeholder="Descripción" name="descripcion" required />
+                            <input type="text" placeholder="Descripción" name="descripcion"
+                                pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ,.]{2,100}"
+                                title="La descripción solo debe contener letras y espacios (2-100 caracteres)"
+                                required />
                         </label>
                     </div>
                     <div>
                         <label>
                             <i class='bx bx-location-plus'></i>
-                            <input type="text" placeholder="Dirección" name="direccion" required />
+                            <input type="text" placeholder="Dirección" name="direccion"
+                                pattern="[A-Za-z0-9ÁÉÍÓÚáéíóúÑñ ,.\\-#]{5,80}"
+                                title="La dirección debe contener letras y números (5-80 caracteres)" required />
                         </label>
                     </div>
                     <div>
                         <label>
                             <i class='bx bx-phone'></i>
-                            <input type="text" placeholder="Teléfono" name="telefono" required pattern="[0-9]{10}"
-                                maxlength="10" title="El teléfono debe tener 10 dígitos, solo números" />
+                            <input type="text" placeholder="Teléfono" name="telefono" pattern="[0-9]{10}" maxlength="10"
+                                title="El teléfono debe tener 10 dígitos, solo números" required />
                         </label>
-
                     </div>
                     <div>
                         <label>
                             <i class='bx bx-envelope'></i>
-                            <input type="email" placeholder="Correo Electrónico" name="email" required />
+                            <input type="email" placeholder="Correo Electrónico" name="email"
+                                pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.(com|org|net|edu|gov|io|co|info)$"
+                                title="Ingresa un correo electrónico válido (ej. usuario@dominio.com)" required />
                         </label>
                     </div>
                     <div>
                         <label>
                             <i class='bx bx-lock-alt'></i>
-                            <input type="password" placeholder="Contraseña" name="password" required />
+                            <input type="password" placeholder="Contraseña" name="password" minlength="6"
+                                title="La contraseña debe tener al menos 6 caracteres" required />
                         </label>
                     </div>
                     <input type="submit" value="Registrar empresa" />
-                    <div class="alerta-error">Todos los campos son obligatorios</div>
-                    <div class="alerta-exito">Te registraste correctamente</div>
                 </form>
             </div>
         </div>
     </div>
+
+<script src="{{ url_for('static', filename='js/registro_empresa.js') }}"></script>
+
 </body>
 
 </html>
