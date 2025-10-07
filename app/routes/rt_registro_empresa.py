@@ -30,8 +30,6 @@ def registro_empresa():
                                direccion=direccion,
                                telefono=telefono,
                                correo=correo)
-
-<<<<<<<<< Temporary merge branch 1
         # Crear usuario base
         from werkzeug.security import generate_password_hash
         nuevo_usuario = UsuarioModel(
@@ -42,7 +40,7 @@ def registro_empresa():
         )
         db.session.add(nuevo_usuario)
         db.session.commit()
-=========
+
     # Validar nombre de empresa solo letras y espacios
     if not re.fullmatch(r"[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,100}", nombre_empresa):
         flash("El nombre de la empresa solo puede contener letras y espacios", "error")
