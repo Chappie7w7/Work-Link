@@ -14,36 +14,6 @@ def registro():
     password = request.form.get('password', '').strip()
     confirmar = request.form.get('confirmar', '').strip()
 
-    # Validar campos
-    if not nombre or not correo or not password or not confirmar:
-        flash("Todos los campos son obligatorios", "error")
-        return render_template("login.jinja2", tab="empleado", nombre=nombre, correo=correo)
-    
-    # Validar nombre
-    if not re.fullmatch(r"[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,50}", nombre):
-        flash("El nombre solo puede contener letras y espacios", "error")
-        return render_template("login.jinja2", tab="empleado", nombre=nombre, correo=correo)
-
-    # Validar correo
-    correo_regex = r"^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.(com|org|net|edu|gov|io|co|info)$"
-    if not re.fullmatch(correo_regex, correo):
-        flash("Correo no tiene formato válido", "error")
-        return render_template("login.jinja2", tab="empleado", nombre=nombre, correo=correo)
-
-    # Validar contraseña
-    if len(password) < 6:
-        flash("La contraseña debe tener al menos 6 caracteres", "error")
-        return render_template("login.jinja2", tab="empleado", nombre=nombre, correo=correo)
-
-    if password != confirmar:
-        flash("Las contraseñas no coinciden", "error")
-        return render_template("login.jinja2", tab="empleado", nombre=nombre, correo=correo)
-
-    # Validar existencia de correo
-    if UsuarioModel.query.filter_by(correo=correo).first():
-        flash("El correo ya está registrado", "error")
-        return render_template("login.jinja2", tab="empleado", nombre=nombre, correo=correo)
-
     # Crear usuario
     nuevo_usuario = UsuarioModel(
         nombre=nombre,
@@ -57,4 +27,10 @@ def registro():
     db.session.commit()
 
     flash("Cuenta creada con éxito", "success")
-    return render_template("login.jinja2", tab="empleado")
+    return render_template("registro.jinja2", tab="empleado")
+
+@rt_registro.route("/verificar_correo", methods=["POST"])
+def verificar_correo():
+    correo = request.json.get("correo", "").strip()
+    existe = UsuarioModel.query.filter_by(correo=correo).first() is not None
+    return {"existe": existe}

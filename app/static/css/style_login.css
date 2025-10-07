@@ -16,13 +16,35 @@ body {
 }
 
 .container-form {
+    position: relative;
     display: flex;
     border-radius: 20px;
-    box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
     height: 500px;
     max-width: 900px;
     transition: all 1s ease;
     margin: 10px;
+    box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+}
+
+.btn-back {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: transparent;
+    outline: none;
+    border: solid 2px #ffffff;
+    border-radius: 50px;
+    padding: 5px 6px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-back:hover {
+    background-color: #ffffff;
+    border: solid 2px #ffffff;
+    color: #000000;
 }
 
 .information {
@@ -30,7 +52,7 @@ body {
     display: flex;
     align-items: center;
     text-align: center;
-    background-color: #c7eef3;
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
 }
@@ -42,30 +64,88 @@ body {
 
 .info-childs h2 {
     font-size: 2.5rem;
-    color: #333;
+    color: #ffffff;
 }
 
 .info-childs p {
     margin: 15px 0;
-    color: #555;
+    color: #000000;
 }
 
-.info-childs input {
+/* Botón del dropdown */
+.dropdown button {
     background-color: transparent;
     outline: none;
-    border: solid 2px #9191bd;
+    border: solid 2px #f59e0b;
     border-radius: 20px;
     padding: 10px 20px;
-    color: #9191bd;
+    color: #f59e0b;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.info-childs input:hover {
-    background-color: #9191bd;
-    border: none;
+.dropdown button:hover {
+    background-color: #f59e0b;
+    border: solid 2px #f59e0b;
     color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+}
+
+/* Flechita */
+.dropdown .arrow {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+/* Animación: gira la flecha al hacer hover */
+.dropdown:hover .arrow {
+    transform: rotate(180deg);
+}
+
+/* Centrar el dropdown respecto al botón */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* ===== Contenido del Dropdown ===== */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 103%;
+    left:50%;
+    transform: translateX(-50%);
+    background-color: #f59e0b;
+    min-width: 160px;
+    z-index: 1;
+    border-radius: 10px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Links dentro del menú */
+.dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    color: #fff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-weight: 500;
+}
+
+.dropdown-content a:hover {
+    background-color: #d97706;
+    color: #000000;
+}
+
+/* Mostrar menú al hacer hover */
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 .form-information {
@@ -90,26 +170,6 @@ body {
 
 .form-information-childs p {
     color: #555;
-}
-
-.icons {
-    margin: 15px 0;
-}
-
-.icons i {
-    border-radius: 50%;
-    padding: 15px;
-    cursor: pointer;
-    margin: 0 10px;
-    color: #9191bd;
-    border: solid thin #9191bd;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
-}
-
-.icons i:hover {
-    background-color: #c7c7f3;
-    color: #fff;
 }
 
 .form {
@@ -141,23 +201,18 @@ body {
 }
 
 .form input[type="submit"] {
-    background-color: #9191bd;
-    color: #fff;
+    background: #f59e0b;
+    color: #000000;
     border-radius: 20px;
     border: none;
     padding: 10px 15px;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
 }
 
 .form input[type="submit"]:hover {
-    background-color: #7a7a9a;
-}
-
-.hide {
-    position: absolute;
-    transform: translateY(-300%);
+    background-color: #d97706;
 }
 
 .form div .alerta {
@@ -195,90 +250,14 @@ body {
     outline: solid 2px #9d2222;
 }
 
-/* Botón del dropdown */
-.dropdown button {
-    background-color: transparent;
-    outline: none;
-    border: solid 2px #9191bd;
-    border-radius: 20px;
-    padding: 10px 20px;
-    color: #9191bd;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.dropdown button:hover {
-    background-color: #9191bd;
-    border: none;
-    color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
-}
-
-/* Flechita */
-.dropdown .arrow {
-    font-size: 0.8rem;
-    transition: transform 0.3s ease;
-}
-
-/* Animación: gira la flecha al hacer hover */
-.dropdown:hover .arrow {
-    transform: rotate(180deg);
-}
-
-/* Centrar el dropdown respecto al botón */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* ===== Contenido del Dropdown ===== */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left:50%;
-    transform: translateX(-50%);
-    background-color: #fff;
-    min-width: 180px;
-    z-index: 1;
-    border-radius: 10px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-}
-
-/* Links dentro del menú */
-.dropdown-content a {
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    color: #333;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    font-weight: 500;
-}
-
-.dropdown-content a:hover {
-    background-color: #9191bd;
-    color: #fff;
-}
-
-/* Mostrar menú al hacer hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
 /* Estilos para el enlace "¿Olvidaste tu contraseña?" */
-
 .link-recuperar {
     display: inline-block;
     color: #2563eb;
     text-decoration: none;
     font-size: 14px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 .link-recuperar:hover {
