@@ -10,9 +10,9 @@ class UsuarioModel(db.Model):
     __tablename__ = "usuarios"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    nombre = Column(String(100), nullable=False)
+    nombre = Column(String(50), nullable=False)
     correo = Column(String(100), unique=True, nullable=False)
-    contraseña = Column(String(1000), nullable=False)
+    contraseña = Column(String(255), nullable=False)
     tipo_usuario = Column(String(50), nullable=False)
     foto_perfil = Column(String(255), nullable=True)
     fecha_registro = Column(DateTime, default=datetime.utcnow)

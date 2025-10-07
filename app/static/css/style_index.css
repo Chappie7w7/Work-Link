@@ -318,8 +318,8 @@ body {
 }
 
 .vacante-badge {
-    padding: 6px 15px;
-    border-radius: 20px;
+    padding: 3px 10px;
+    border-radius: 5px;
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;

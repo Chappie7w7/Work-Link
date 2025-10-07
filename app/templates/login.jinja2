@@ -3,21 +3,24 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>Formulario de Login</title>
+
+    <!-- Fuentes y estilos externos -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <!-- Tu archivo CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}" />
-    <title>Formulario de Login y Registro</title>
 </head>
 
 <body>
-
     <!-- Formulario de Login -->
     <div class="container-form login" id="loginForm">
+        <button class="btn-back" onclick="window.location.href='{{ url_for('IndexRoute.index') }}'">
+            ←
+        </button>
         <div class="information">
             <div class="info-childs">
                 <h2>Bienvenido nuevamente</h2>
@@ -29,8 +32,8 @@
                         Registrarse <span class="arrow">▼</span>
                     </button>
                     <div class="dropdown-content">
-                        <a href="#" id="usuario">Soy usuario</a>
-                        <a href="#" id="empresa">Soy empresa</a>
+                        <a href="{{ url_for('LoginRoute.form_usuario') }}" id="usuario">Soy usuario</a>
+                        <a href="{{ url_for('LoginRoute.form_empresa') }}" id="empresa">Soy empresa</a>
                     </div>
                 </div>
 
@@ -73,197 +76,16 @@
                 </form>
 
                 <!-- Enlace para "Olvidaste tu contraseña" -->
-                <form method="get" action="/recuperar">
-                    <a href="/recuperar" class="link-recuperar">¿Olvidaste tu contraseña?</a>
+                <form method="get" action="">
+                    <a href="{{ url_for('LoginRoute.recuperar') }}" class="link-recuperar">¿Olvidaste tu contraseña?</a>
                 </form>
 
             </div>
         </div>
     </div>
 
-    <!-- Formulario de Registro usuario (oculto por defecto) -->
-    <div class="container-form register hide" id="registroUsuario">
-        <div class="information">
-            <div class="info-childs">
-                <h2>Bienvenido</h2>
-                <p>Para unirte a nuestra comunidad, por favor regístrate con tus datos</p>
-                <input type="button" value="Iniciar Sesión" id="sign-in">
-            </div>
-        </div>
-        <div class="form-information">
-            <div class="form-information-childs">
-                <h2>Crear una Cuenta</h2>
-
-                <!-- Mostrar mensajes flash -->
-                <div class="mensajes">
-                    {% with mensajes = get_flashed_messages(with_categories=true) %}
-                    {% if mensajes %}
-                    {% for categoria, mensaje in mensajes %}
-                    <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
-                        {{ mensaje }}
-                    </p>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
-                </div>
-
-                <!-- Formulario de registro usuario -->
-                <form method="post" action="{{ url_for('RegistroRoute.registro') }}" class="form form-register"
-                    novalidate>
-                    <div>
-                        <label>
-                            <i class='bx bx-user'></i>
-                            <input type="text" placeholder="Nombre Usuario" name="nombre" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-envelope'></i>
-                            <input type="email" placeholder="Correo Electrónico" name="correo" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-lock-alt'></i>
-                            <input type="password" placeholder="Contraseña" name="password" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-lock-alt'></i>
-                            <input type="password" placeholder="Confirmar Contraseña" name="confirmar" required />
-                        </label>
-                    </div>
-                    <input type="submit" value="Registrarse" />
-                    <div class="alerta-error">Todos los campos son obligatorios</div>
-                    <div class="alerta-exito">Te registraste correctamente</div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Formulario de Registro empresa (oculto por defecto) -->
-    <div class="container-form register hide" id="registroEmpresa">
-        <div class="information">
-            <div class="info-childs">
-                <h2>Bienvenido</h2>
-                <p>Para unirte a nuestra comunidad, por favor regístrate como empresa</p>
-                <input type="button" value="Iniciar Sesión" id="sign-in">
-            </div>
-        </div>
-        <div class="form-information">
-            <div class="form-information-childs">
-                <h2>Crear una Cuenta de Empresa</h2>
-
-                <!-- Mostrar mensajes flash -->
-                <div class="mensajes">
-                    {% with mensajes = get_flashed_messages(with_categories=true) %}
-                    {% if mensajes %}
-                    {% for categoria, mensaje in mensajes %}
-                    <p style="color: {% if categoria == 'error' %}red{% else %}green{% endif %};">
-                        {{ mensaje }}
-                    </p>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
-                </div>
-
-                <!-- Formulario de registro empresa con el mismo estilo que el formulario de usuario -->
-                <form method="POST" action="{{ url_for('RegistroEmpresaRoute.registro_empresa') }}"
-                    class="form form-register" novalidate>
-                    <div>
-                        <label>
-                            <i class='bx bx-building-house'></i>
-                            <input type="text" placeholder="Nombre de la empresa" name="nombre_empresa" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-barcode'></i>
-                            <input type="text" placeholder="RFC" name="rfc" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-briefcase'></i>
-                            <input type="text" placeholder="Sector" name="sector" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-info-circle'></i>
-                            <textarea placeholder="Descripción" name="descripcion" rows="3"></textarea>
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-location-plus'></i>
-                            <input type="text" placeholder="Dirección" name="direccion" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-phone'></i>
-                            <input type="text" placeholder="Teléfono" name="telefono" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-envelope'></i>
-                            <input type="email" placeholder="Correo Electrónico" name="email" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <i class='bx bx-lock-alt'></i>
-                            <input type="password" placeholder="Contraseña" name="password" required />
-                        </label>
-                    </div>
-                    <input type="submit" value="Registrar empresa" />
-                    <div class="alerta-error">Todos los campos son obligatorios</div>
-                    <div class="alerta-exito">Te registraste correctamente</div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Agregar el script para alternar entre formularios -->
-    <script>
-        const btnSignIn = document.getElementById("sign-in"),
-            btnSignUp = document.getElementById("sign-up"),
-            containerFormRegister = document.querySelector(".register"),
-            containerFormLogin = document.querySelector(".login");
-
-        // Alternar al formulario de registro
-        btnSignIn.addEventListener("click", e => {
-            containerFormRegister.classList.add("hide");
-            containerFormLogin.classList.remove("hide");
-        });
-
-        // Alternar al formulario de login
-        btnSignUp.addEventListener("click", e => {
-            containerFormLogin.classList.add("hide");
-            containerFormRegister.classList.remove("hide");
-        });
-
-        // Alternar entre usuario y empresa en el registro
-        const usuario = document.getElementById("usuario");
-        const empresa = document.getElementById("empresa");
-        const registroUsuario = document.getElementById("registroUsuario");
-        const registroEmpresa = document.getElementById("registroEmpresa");
-
-        usuario.addEventListener("click", () => {
-            registroUsuario.classList.remove("hide");
-            registroEmpresa.classList.add("hide");
-            containerFormLogin.classList.add("hide");
-        });
-
-        empresa.addEventListener("click", () => {
-            registroEmpresa.classList.remove("hide");
-            registroUsuario.classList.add("hide");
-            containerFormLogin.classList.add("hide");
-        });
-    </script>
+    <!-- Tu archivo JS -->
+    <!--script src="{{ url_for('static', filename='js/login.js') }}"></script-->
 </body>
 
 </html>

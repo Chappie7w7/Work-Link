@@ -1,55 +1,54 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, flash
 from datetime import datetime
 from app.db.sql import db
 from app.models.md_usuarios import UsuarioModel
-
 from app.models.md_empresas import EmpresaModel
+from werkzeug.security import generate_password_hash
+import re
 
 rt_registro_empresa = Blueprint('RegistroEmpresaRoute', __name__)
 
-@rt_registro_empresa.route("/registro/empresa", methods=["GET", "POST"])
+@rt_registro_empresa.route("/registro/empresa", methods=["POST"])
 def registro_empresa():
-    if request.method == "POST":
-        nombre_empresa = request.form['nombre_empresa']
-        rfc = request.form['rfc']
-        sector = request.form['sector']
-        descripcion = request.form['descripcion']
-        direccion = request.form['direccion']
-        telefono = request.form['telefono']
-        correo = request.form['email']
-        password = request.form['password']
+    nombre_empresa = request.form.get('nombre_empresa', '').strip()
+    rfc = request.form.get('rfc', '').strip()
+    sector = request.form.get('sector', '').strip()
+    descripcion = request.form.get('descripcion', '').strip()
+    direccion = request.form.get('direccion', '').strip()
+    telefono = request.form.get('telefono', '').strip()
+    correo = request.form.get('email', '').strip()
+    password = request.form.get('password', '').strip()
 
-        # Validar que no exista usuario
-        existente = UsuarioModel.query.filter_by(correo=correo).first()
-        if existente:
-            flash("El correo ya está registrado", "error")
-            return redirect(url_for('RegistroEmpresaRoute.registro_empresa'))
+    # Crear usuario base
+    nuevo_usuario = UsuarioModel(
+        nombre=nombre_empresa,
+        correo=correo,
+        contraseña=generate_password_hash(password),
+        tipo_usuario="empresa",
+        fecha_registro=datetime.utcnow(),
+        ultimo_login=None
+    )
+    db.session.add(nuevo_usuario)
+    db.session.commit()
 
-        # Crear usuario base
-        from werkzeug.security import generate_password_hash
-        nuevo_usuario = UsuarioModel(
-            nombre=nombre_empresa,  
-            correo=correo,
-            contraseña=generate_password_hash(password),
-            tipo_usuario="empresa"
-        )
-        db.session.add(nuevo_usuario)
-        db.session.commit()
+    # Crear registro en tabla empresas
+    nueva_empresa = EmpresaModel(
+        id=nuevo_usuario.id,
+        nombre_empresa=nombre_empresa,
+        rfc=rfc,
+        sector=sector,
+        descripcion=descripcion,
+        direccion=direccion,
+        telefono=telefono
+    )
+    db.session.add(nueva_empresa)
+    db.session.commit()
 
-        # Crear registro en tabla empresas
-        nueva_empresa = EmpresaModel(
-            id=nuevo_usuario.id,
-            nombre_empresa=nombre_empresa,
-            rfc=rfc,
-            sector=sector,
-            descripcion=descripcion,
-            direccion=direccion,
-            telefono=telefono
-        )
-        db.session.add(nueva_empresa)
-        db.session.commit()
+    flash("Cuenta de empresa creada con éxito", "success")
+    return render_template("empresa/registro_empresa.jinja2", tab="empresa")
 
-        flash("Cuenta de empresa creada con éxito", "success")
-        return redirect(url_for('IndexRoute.index'))
-
-    return render_template("empresa/registro_empresa.jinja2")
+@rt_registro_empresa.route("/verificar_correo", methods=["POST"])
+def verificar_correo():
+    correo = request.json.get("email", "").strip()
+    existe = UsuarioModel.query.filter_by(correo=correo).first() is not None
+    return {"existe": existe}
