@@ -3,117 +3,128 @@
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorkLink Ocosingo | Encuentra tu empleo ideal en Ocosingo</title>
+    <title>WorkLink Ocosingo | Encuentra tus empleo ideal en Ocosingo</title>
     <!-- Tus estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#2563eb">
+
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-{{ navbar_inicio.navbar() }}
+    <!-- NAVBAR -->
+    {{ navbar_inicio.navbar() }}
 
-<!-- HERO -->
-<section id="informacion" class="hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-particles"></div>
-    <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
-        <div class="hero-badge" data-aos="fade-up" data-aos-delay="200">
-            <i class="fas fa-map-marker-alt"></i>
-            <span>Ocosingo, Chiapas</span>
-        </div>
-        <h1 class="hero-title" data-aos="fade-up" data-aos-delay="400">
-            Encuentra tu <span class="highlight">empleo ideal</span> en Ocosingo
-        </h1>
-        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="600">
-            Conectamos talento local con las mejores oportunidades laborales de la región. 
-            ¡Más de 500 empleos disponibles en Ocosingo!
-        </p>
-        <div class="hero-stats" data-aos="fade-up" data-aos-delay="800">
-            <div class="stat">
-                <span class="stat-number">500+</span>
-                <span class="stat-label">Empleos</span>
+    <!-- HERO -->
+    <section id="informacion" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-particles"></div>
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+            <div class="hero-badge" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Ocosingo, Chiapas</span>
             </div>
-            <div class="stat">
-                <span class="stat-number">150+</span>
-                <span class="stat-label">Empresas</span>
+            <h1 class="hero-title" data-aos="fade-up" data-aos-delay="400">
+                Encuentra tu <span class="highlight">empleo ideal</span> en Ocosingo
+            </h1>
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="600">
+                Conectamos talento local con las mejores oportunidades laborales de la región.
+                ¡Más de 500 empleos disponibles en Ocosingo!
+            </p>
+            <div class="hero-stats" data-aos="fade-up" data-aos-delay="800">
+                <div class="stat">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Empleos</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">150+</span>
+                    <span class="stat-label">Empresas</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">95%</span>
+                    <span class="stat-label">Éxito</span>
+                </div>
             </div>
-            <div class="stat">
-                <span class="stat-number">95%</span>
-                <span class="stat-label">Éxito</span>
+            <div class="hero-buttons" data-aos="fade-up" data-aos-delay="1000">
+                <a href="#vacantes" class="btn-main">
+                    <i class="fas fa-search"></i>
+                    Buscar Empleo
+                </a>
+                <a href="{{ url_for('LoginRoute.form_empresa') }}" class="btn-outline">
+                    <i class="fas fa-plus"></i>
+                    Publicar Vacante
+                </a>
             </div>
         </div>
-        <div class="hero-buttons" data-aos="fade-up" data-aos-delay="1000">
-            <a href="#vacantes" class="btn-main">
-                <i class="fas fa-search"></i>
-                Buscar Empleo
-            </a>
-            <a href="{{ url_for('LoginRoute.form_empresa') }}" class="btn-outline">
-                <i class="fas fa-plus"></i>
-                Publicar Vacante
-            </a>
+        <div class="scroll-indicator" data-aos="fade-up" data-aos-delay="1200">
+            <div class="scroll-arrow">
+                <i class="fas fa-chevron-down"></i>
+            </div>
         </div>
-    </div>
-    <div class="scroll-indicator" data-aos="fade-up" data-aos-delay="1200">
-        <div class="scroll-arrow">
-            <i class="fas fa-chevron-down"></i>
-    </div>
-    </div>
-</section>
+    </section>
 
-<!-- SERVICIOS -->
-<section id="servicios" class="container servicios-section">
-    <div class="section-header" data-aos="fade-up">
-        <h2>¿Por qué elegir WorkLink Ocosingo?</h2>
-        <p>Somos la plataforma líder en empleos de la región</p>
-    </div>
-    <div class="servicios-grid">
-        <div class="card" data-aos="fade-up" data-aos-delay="100">
-            <div class="card-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <h3>Empleos Locales</h3>
-            <p>Conectamos talento de Ocosingo con empresas de la región. Más de 500 oportunidades laborales disponibles.</p>
+    <!-- SERVICIOS -->
+    <section id="servicios" class="container servicios-section">
+        <div class="section-header" data-aos="fade-up">
+            <h2>¿Por qué elegir WorkLink Ocosingo?</h2>
+            <p>Somos la plataforma líder en empleos de la región</p>
         </div>
-        <div class="card" data-aos="fade-up" data-aos-delay="200">
-            <div class="card-icon">
-                <i class="fas fa-rocket"></i>
+        <div class="servicios-grid">
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Empleos Locales</h3>
+                <p>Conectamos talento de Ocosingo con empresas de la región. Más de 500 oportunidades laborales
+                    disponibles.</p>
             </div>
-            <h3>Proceso Rápido</h3>
-            <p>Encuentra empleo en menos de 48 horas. Nuestro sistema inteligente te conecta con las mejores oportunidades.</p>
-        </div>
-        <div class="card" data-aos="fade-up" data-aos-delay="300">
-            <div class="card-icon">
-                <i class="fas fa-shield-alt"></i>
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Proceso Rápido</h3>
+                <p>Encuentra empleo en menos de 48 horas. Nuestro sistema inteligente te conecta con las mejores
+                    oportunidades.</p>
             </div>
-            <h3>100% Confiable</h3>
-            <p>Todas las empresas están verificadas. Trabajamos solo con empresas serias y comprometidas con el desarrollo local.</p>
-        </div>
-        <div class="card" data-aos="fade-up" data-aos-delay="400">
-            <div class="card-icon">
-                <i class="fas fa-graduation-cap"></i>
+            <div class="card" data-aos="fade-up" data-aos-delay="300">
+                <div class="card-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>100% Confiable</h3>
+                <p>Todas las empresas están verificadas. Trabajamos solo con empresas serias y comprometidas con el
+                    desarrollo local.</p>
             </div>
-            <h3>Desarrollo Profesional</h3>
-            <p>Accede a cursos y capacitaciones para mejorar tus habilidades y crecer profesionalmente en Ocosingo.</p>
+            <div class="card" data-aos="fade-up" data-aos-delay="400">
+                <div class="card-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Desarrollo Profesional</h3>
+                <p>Accede a cursos y capacitaciones para mejorar tus habilidades y crecer profesionalmente en Ocosingo.
+                </p>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- VACANTES DESTACADAS -->
-<section id="vacantes" class="container vacantes-section">
-    <div class="section-header" data-aos="fade-up">
-        <h2>Empleos destacados en Ocosingo</h2>
-        <p>Las mejores oportunidades laborales de la región</p>
-    </div>
-    <div class="vacantes-grid">
-        {% if jobs %}
+    <!-- VACANTES DESTACADAS -->
+    <section id="vacantes" class="container vacantes-section">
+        <div class="section-header" data-aos="fade-up">
+            <h2>Empleos destacados en Ocosingo</h2>
+            <p>Las mejores oportunidades laborales de la región</p>
+        </div>
+        <div class="vacantes-grid">
+            {% if jobs %}
             {% for v in jobs %}
             <div class="vacante-card" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
                 <div class="vacante-header">
-                    <div class="vacante-badge {% if loop.index == 1 %}urgent{% elif loop.index == 2 %}new{% elif loop.index == 3 %}featured{% endif %}">
-                        {% if loop.index == 1 %}Urgente{% elif loop.index == 2 %}Nuevo{% elif loop.index == 3 %}Destacado{% else %}Disponible{% endif %}
+                    <div
+                        class="vacante-badge {% if loop.index == 1 %}urgent{% elif loop.index == 2 %}new{% elif loop.index == 3 %}featured{% endif %}">
+                        {% if loop.index == 1 %}Urgente{% elif loop.index == 2 %}Nuevo{% elif loop.index == 3
+                        %}Destacado{% else %}Disponible{% endif %}
                     </div>
                     <div class="vacante-location">
                         <i class="fas fa-map-marker-alt"></i>
@@ -129,13 +140,14 @@
                     {% endif %}
                     <span class="detail"><i class="fas fa-user"></i> {{ v.estado or "Sin experiencia" }}</span>
                 </div>
-                <a href="#" class="btn-small" onclick="openModal('{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Empresa Local')|escape }}', '{{ v.empresa.logo_url|default(url_for('static', filename='img/default-company.png')) }}', '')">
+                <a href="#" class="btn-small"
+                    onclick="openModal('{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Empresa Local')|escape }}', '{{ v.empresa.logo_url|default(url_for('static', filename='img/default-company.png')) }}', '')">
                     <i class="fas fa-eye"></i>
                     Ver detalles
                 </a>
             </div>
             {% endfor %}
-        {% else %}
+            {% else %}
             <div class="vacante-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="vacante-header">
                     <div class="vacante-badge urgent">Urgente</div>
@@ -216,261 +228,278 @@
                     Ver detalles
                 </a>
             </div>
-        {% endif %}
-    </div>
-    <div class="vacantes-cta" data-aos="fade-up" data-aos-delay="500">
-        <a href="{{ url_for('EmpleosRoute.empleos') }}" class="btn-main">
-            <i class="fas fa-search"></i>
-            Ver todas las vacantes
-        </a>
-    </div>
-</section>
-
-<!-- EMPRESAS -->
-<section id="empresas" class="empresas-section">
-    <div class="container">
-        <div class="section-header" data-aos="fade-up">
-            <h2>Empresas líderes en Ocosingo</h2>
-            <p>Más de 150 empresas confían en WorkLink para encontrar el mejor talento</p>
+            {% endif %}
         </div>
-        
-        <div class="empresas-showcase">
-            <div class="empresa-featured" data-aos="fade-right" data-aos-delay="200">
-                <div class="empresa-info">
-                    <h3>Construcciones del Sur</h3>
-                    <p>Empresa líder en construcción en la región de Ocosingo</p>
-                    <div class="empresa-stats">
-                        <span><i class="fas fa-users"></i> 50+ empleados</span>
-                        <span><i class="fas fa-calendar"></i> 15 años</span>
-                    </div>
-                </div>
-                <div class="empresa-logo">
-                    <img src="{{ url_for('static', filename='img/OIP.jpg') }}" alt="Construcciones del Sur">
-                </div>
+        <div class="vacantes-cta" data-aos="fade-up" data-aos-delay="500">
+            <a href="{{ url_for('EmpleosRoute.empleos') }}" class="btn-main">
+                <i class="fas fa-search"></i>
+                Ver todas las vacantes
+            </a>
+        </div>
+    </section>
+
+    <!-- EMPRESAS -->
+    <section id="empresas" class="empresas-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Empresas líderes en Ocosingo</h2>
+                <p>Más de 150 empresas confían en WorkLink para encontrar el mejor talento</p>
             </div>
-            
-            <div class="empresas-logos" data-aos="fade-up" data-aos-delay="400">
-                <div class="logo-item">
-                    <img src="{{ url_for('static', filename='img/pag13b.jpeg') }}" alt="Tech Solutions">
-                    <span>Tech Solutions</span>
-                </div>
-                <div class="logo-item">
-                    <img src="{{ url_for('static', filename='img/OIP.jpg') }}" alt="Creative Agency">
-                    <span>Creative Agency</span>
-                </div>
-                <div class="logo-item">
-                    <img src="{{ url_for('static', filename='img/OIP.jpg') }}" alt="Oficina Municipal">
-                    <span>Oficina Municipal</span>
-                </div>
-                <div class="logo-item">
-                    <img src="{{ url_for('static', filename='img/pag13b.jpeg') }}" alt="Comercial del Sur">
-                    <span>Comercial del Sur</span>
-                </div>
-                </div>
 
-            <div class="empresas-stats" data-aos="fade-up" data-aos-delay="600">
-                <div class="stat-item">
-                    <div class="stat-number">150+</div>
-                    <div class="stat-label">Empresas Activas</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-label">Empleos Publicados</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">95%</div>
-                    <div class="stat-label">Tasa de Éxito</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- TESTIMONIOS -->
-<section id="testimonios" class="testimonios-section">
-    <div class="container">
-        <div class="section-header" data-aos="fade-up">
-            <h2>Historias de éxito reales</h2>
-            <p>Conoce las experiencias de quienes han encontrado su empleo ideal en Ocosingo</p>
-        </div>
-        
-        <div class="testimonios-showcase">
-            <div class="testimonio-featured" data-aos="fade-left" data-aos-delay="200">
-                <div class="testimonio-content">
-                    <div class="quote-icon">
-                        <i class="fas fa-quote-left"></i>
-                    </div>
-                    <blockquote>
-                        "WorkLink me cambió la vida. Encontré mi trabajo ideal como desarrollador en Ocosingo en solo 3 días. 
-                        El proceso fue súper fácil y la empresa es excelente. ¡Recomiendo totalmente la plataforma!"
-                    </blockquote>
-                    <div class="testimonio-author">
-                        <div class="author-avatar">
-                            <img src="{{ url_for('static', filename='img/profile_picture.png') }}" alt="María González">
+            <div class="empresas-showcase">
+                <div class="empresa-featured" data-aos="fade-right" data-aos-delay="200">
+                    <div class="empresa-info">
+                        <h3>Construcciones del Sur</h3>
+                        <p>Empresa líder en construcción en la región de Ocosingo</p>
+                        <div class="empresa-stats">
+                            <span><i class="fas fa-users"></i> 50+ empleados</span>
+                            <span><i class="fas fa-calendar"></i> 15 años</span>
                         </div>
-                        <div class="author-info">
-                            <h4>María González</h4>
-                            <p>Desarrolladora Web - Tech Solutions Ocosingo</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                    </div>
+                    <div class="empresa-logo">
+                        <img src="{{ url_for('static', filename='img/OIP.jpg') }}" alt="Construcciones del Sur">
+                    </div>
+                </div>
+
+                <div class="empresas-logos" data-aos="fade-up" data-aos-delay="400">
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/pag13b.jpeg') }}" alt="Tech Solutions">
+                        <span>Tech Solutions</span>
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/OIP.jpg') }}" alt="Creative Agency">
+                        <span>Creative Agency</span>
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/OIP.jpg') }}" alt="Oficina Municipal">
+                        <span>Oficina Municipal</span>
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/pag13b.jpeg') }}" alt="Comercial del Sur">
+                        <span>Comercial del Sur</span>
+                    </div>
+                </div>
+
+                <div class="empresas-stats" data-aos="fade-up" data-aos-delay="600">
+                    <div class="stat-item">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">Empresas Activas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Empleos Publicados</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Tasa de Éxito</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIOS -->
+    <section id="testimonios" class="testimonios-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Historias de éxito reales</h2>
+                <p>Conoce las experiencias de quienes han encontrado su empleo ideal en Ocosingo</p>
+            </div>
+
+            <div class="testimonios-showcase">
+                <div class="testimonio-featured" data-aos="fade-left" data-aos-delay="200">
+                    <div class="testimonio-content">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <blockquote>
+                            "WorkLink me cambió la vida. Encontré mi trabajo ideal como desarrollador en Ocosingo en
+                            solo 3 días.
+                            El proceso fue súper fácil y la empresa es excelente. ¡Recomiendo totalmente la plataforma!"
+                        </blockquote>
+                        <div class="testimonio-author">
+                            <div class="author-avatar">
+                                <img src="{{ url_for('static', filename='img/profile_picture.png') }}"
+                                    alt="María González">
+                            </div>
+                            <div class="author-info">
+                                <h4>María González</h4>
+                                <p>Desarrolladora Web - Tech Solutions Ocosingo</p>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="testimonios-grid" data-aos="fade-up" data-aos-delay="400">
+                    <div class="testimonio-item">
+                        <div class="testimonio-text">
+                            <p>"Excelente plataforma. Como empresario, pude encontrar el candidato perfecto para mi
+                                empresa en menos de una semana."</p>
+                        </div>
+                        <div class="testimonio-meta">
+                            <div class="author-avatar-small">
+                                <img src="{{ url_for('static', filename='img/profile_picture.png') }}" alt="Juan Pérez">
+                            </div>
+                            <div class="author-details">
+                                <h5>Juan Pérez</h5>
+                                <span>CEO - Construcciones del Sur</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonio-item">
+                        <div class="testimonio-text">
+                            <p>"La mejor plataforma de empleos de Ocosingo. Interface súper fácil de usar y resultados
+                                garantizados."</p>
+                        </div>
+                        <div class="testimonio-meta">
+                            <div class="author-avatar-small">
+                                <img src="{{ url_for('static', filename='img/profile_picture.png') }}"
+                                    alt="Ana Martínez">
+                            </div>
+                            <div class="author-details">
+                                <h5>Ana Martínez</h5>
+                                <span>Diseñadora - Creative Agency</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonio-item">
+                        <div class="testimonio-text">
+                            <p>"WorkLink me ayudó a conseguir mi primer empleo. El soporte al cliente es excepcional."
+                            </p>
+                        </div>
+                        <div class="testimonio-meta">
+                            <div class="author-avatar-small">
+                                <img src="{{ url_for('static', filename='img/profile_picture.png') }}"
+                                    alt="Carlos Ruiz">
+                            </div>
+                            <div class="author-details">
+                                <h5>Carlos Ruiz</h5>
+                                <span>Asistente Administrativo</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-            <div class="testimonios-grid" data-aos="fade-up" data-aos-delay="400">
-                <div class="testimonio-item">
-                    <div class="testimonio-text">
-                        <p>"Excelente plataforma. Como empresario, pude encontrar el candidato perfecto para mi empresa en menos de una semana."</p>
-                    </div>
-                    <div class="testimonio-meta">
-                        <div class="author-avatar-small">
-                            <img src="{{ url_for('static', filename='img/profile_picture.png') }}" alt="Juan Pérez">
-                        </div>
-                        <div class="author-details">
-                            <h5>Juan Pérez</h5>
-                            <span>CEO - Construcciones del Sur</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonio-item">
-                    <div class="testimonio-text">
-                        <p>"La mejor plataforma de empleos de Ocosingo. Interface súper fácil de usar y resultados garantizados."</p>
-                    </div>
-                    <div class="testimonio-meta">
-                        <div class="author-avatar-small">
-                            <img src="{{ url_for('static', filename='img/profile_picture.png') }}" alt="Ana Martínez">
-                        </div>
-                        <div class="author-details">
-                            <h5>Ana Martínez</h5>
-                            <span>Diseñadora - Creative Agency</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonio-item">
-                    <div class="testimonio-text">
-                        <p>"WorkLink me ayudó a conseguir mi primer empleo. El soporte al cliente es excepcional."</p>
-                    </div>
-                    <div class="testimonio-meta">
-                        <div class="author-avatar-small">
-                            <img src="{{ url_for('static', filename='img/profile_picture.png') }}" alt="Carlos Ruiz">
-                        </div>
-                        <div class="author-details">
-                            <h5>Carlos Ruiz</h5>
-                            <span>Asistente Administrativo</span>
-                        </div>
+                <div class="testimonios-cta" data-aos="fade-up" data-aos-delay="600">
+                    <div class="cta-content">
+                        <h3>¿Listo para escribir tu historia de éxito?</h3>
+                        <p>Únete a miles de profesionales que ya encontraron su empleo ideal</p>
+                        <a href="{{ url_for('LoginRoute.form_usuario') }}" class="btn-main">
+                            <i class="fas fa-user-plus"></i>
+                            Crear mi perfil
+                        </a>
                     </div>
                 </div>
             </div>
-            
-            <div class="testimonios-cta" data-aos="fade-up" data-aos-delay="600">
-                <div class="cta-content">
-                    <h3>¿Listo para escribir tu historia de éxito?</h3>
-                    <p>Únete a miles de profesionales que ya encontraron su empleo ideal</p>
-                    <a href="{{ url_for('LoginRoute.form_usuario') }}" class="btn-main">
-                        <i class="fas fa-user-plus"></i>
-                        Crear mi perfil
-                </a>
+        </div>
+    </section>
+
+    {{ footer.footer() }}
+
+    <!-- MODAL -->
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modalTitle">Vacante</span>
+                <span class="close" onclick="closeModal()">&times;</span>
             </div>
+
+            <div class="modal-body">
+                <div class="modal-company-row">
+                    <div class="modal-company">
+                        <img id="modalEmpresaLogo" src="{{ url_for('static', filename='img/default-company.png') }}"
+                            alt="Logo empresa">
+                        <span id="modalEmpresaName">Empresa</span>
+                    </div>
+                </div>
+
+                <div class="modal-description-box">
+                    <p id="modalDesc">Descripción de la vacante...</p>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="modal-btn">Postular</a>
+                </div>
             </div>
         </div>
     </div>
-</section>
 
-{{ footer.footer() }}
-
-<!-- MODAL -->
-<div id="jobModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <span id="modalTitle">Vacante</span>
-            <span class="close" onclick="closeModal()">&times;</span>
-        </div>
-
-        <div class="modal-body">
-            <div class="modal-company-row">
-                <div class="modal-company">
-                    <img id="modalEmpresaLogo" src="{{ url_for('static', filename='img/default-company.png') }}" alt="Logo empresa">
-                    <span id="modalEmpresaName">Empresa</span>
-                </div>
-            </div>
-
-            <div class="modal-description-box">
-                <p id="modalDesc">Descripción de la vacante...</p>
-            </div>
-
-            <div class="modal-footer">
-                <a href="#" class="modal-btn">Postular</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Inicializar AOS
-    AOS.init({
-        duration: 1000,
-        once: true,
-        offset: 100
-    });
-
-    // Smooth scroll para enlaces internos
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+    <script>
+        // Inicializar AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
         });
-    });
 
-    // Animación de partículas en el hero
-    function createParticles() {
-        const particlesContainer = document.querySelector('.hero-particles');
-        for (let i = 0; i < 50; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 3 + 's';
-            particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            particlesContainer.appendChild(particle);
+        // Smooth scroll para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animación de partículas en el hero
+        function createParticles() {
+            const particlesContainer = document.querySelector('.hero-particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                particlesContainer.appendChild(particle);
+            }
         }
-    }
 
-    // Crear partículas cuando se carga la página
-    document.addEventListener('DOMContentLoaded', createParticles);
+        // Crear partículas cuando se carga la página
+        document.addEventListener('DOMContentLoaded', createParticles);
 
-    // Funciones del modal
-function openModal(title, desc, empresa, empresaLogo, userLogo) {
-    document.getElementById("modalTitle").innerText = title;
-    document.getElementById("modalDesc").innerText = desc;
-    document.getElementById("modalEmpresaName").innerText = empresa;
-    document.getElementById("modalEmpresaLogo").src = empresaLogo;
-    document.getElementById("jobModal").style.display = "block";
-}
+        // Funciones del modal
+        function openModal(title, desc, empresa, empresaLogo, userLogo) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalDesc").innerText = desc;
+            document.getElementById("modalEmpresaName").innerText = empresa;
+            document.getElementById("modalEmpresaLogo").src = empresaLogo;
+            document.getElementById("jobModal").style.display = "block";
+        }
 
-function closeModal() {
-    document.getElementById("jobModal").style.display = "none";
-}
+        function closeModal() {
+            document.getElementById("jobModal").style.display = "none";
+        }
 
-window.onclick = function(event) {
-    const modal = document.getElementById("jobModal");
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-</script>
+        window.onclick = function (event) {
+            const modal = document.getElementById("jobModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
+                .then(() => console.log("✅ Service Worker registrado"))
+                .catch(err => console.log("❌ Error registrando SW:", err));
+        }
+    </script>
 
 </body>
+
 </html>
