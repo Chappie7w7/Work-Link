@@ -9,7 +9,42 @@
   "icons": [
     {
       "src": "/static/icons/car.jpg",
+      "sizes": "72x72",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/static/icons/car.jpg",
+      "sizes": "96x96",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/static/icons/car.jpg",
+      "sizes": "128x128",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/static/icons/car.jpg",
+      "sizes": "144x144",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/static/icons/car.jpg",
+      "sizes": "152x152",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/static/icons/car.jpg",
       "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/static/icons/profile_picture.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/profile_picture.png",
+      "sizes": "384x384",
       "type": "image/png"
     },
     {
@@ -19,3 +54,4 @@
     }
   ]
 }
+
