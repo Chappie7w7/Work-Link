@@ -2,6 +2,7 @@ from app.db.sql import db
 from sqlalchemy import Column, Integer, String, Text, Enum, Boolean, DateTime, Numeric, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from app.utils.timezone_helper import get_mexico_time
 
 class VacanteModel(db.Model):
     __tablename__ = 'vacantes'
@@ -28,7 +29,7 @@ class VacanteModel(db.Model):
         self.titulo = titulo
         self.descripcion = descripcion
         self.requisitos = requisitos
-        self.fecha_publicacion = fecha_publicacion or datetime.utcnow()
+        self.fecha_publicacion = fecha_publicacion or get_mexico_time()
         self.ubicacion = ubicacion
         self.estado = estado
         self.destacada = destacada
