@@ -1,112 +1,152 @@
 # Work-Link
-Proyecto final de tarea integradora
 
-## Instalar proyecto
+Proyecto final de Tarea Integradora
 
-Clonar el repositorio
+---
 
-```sh
+## 🚀 Instalación del proyecto
+
+### 1️⃣ Clonar el repositorio
+
+```bash
 git clone "https://github.com/Chappie7w7/Work-Link.git"
-```
-
-Entrar a la carpeta
-
-```sh
 cd Work-Link
 ```
 
-Crear el entorno virtual de python
+### 2️⃣ Crear entorno virtual
 
-```sh
+```bash
 python -m venv .venv
 ```
 
-Instalar los requerimientos
+### 3️⃣ Activar entorno virtual
 
-```sh
+```bash
+# En Windows
+.\.venv\Scripts\activate
+# En Linux/Mac
+source .venv/bin/activate
+```
+
+### 4️⃣ Actualizar pip e instalar dependencias
+
+```bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Configuración de las variables de entorno
+---
 
-A continuación un breve descripción para cada variable de entorno
+## ⚙️ Configuración de variables de entorno
 
-**Variable para la configuración de flask**
+### 🔹 Configuración de Flask
 
-- `FLASK_APP`: archivo de entrada de la aplicación para flask
-- `FLASK_ENV`: modo de ejecución de la aplicación, esta variable acepta dos valores las cuales son **production**, **development**
-- `FLASK_DEBUG`: se configura si el proyecto se ejecutara en modo debug o no, solo acepta dos valors 0 y 1
+* `FLASK_APP`: archivo principal de la aplicación.
+* `FLASK_ENV`: entorno de ejecución (**production** o **development**).
+* `FLASK_DEBUG`: activa el modo debug (0 o 1).
 
-**Llaves secretas**
+### 🔹 Llaves secretas
 
-- `SECRET_KEY`: Llave secreta para la aplicación
-- `JWT_SECRET_KEY`: Llave secreta para las rutas protegidas con JWT
+* `SECRET_KEY`: llave secreta de Flask.
+* `JWT_SECRET_KEY`: llave para rutas protegidas por JWT.
 
-**Configuración para la bd sql**
+### 🔹 Base de datos SQL
 
-- `SQLALCHEMY_DATABASE_URI`: Url de conexión para la base de datos, en este proyecto la url debe tener la siguiente manera `mysql+pymysql://user:password@host:port/database`
-- `SQLALCHEMY_TRACK_MODIFICATIONS`: Boleando para activar o desactivar las notificaciones de SQLALCHEMY
+* `SQLALCHEMY_DATABASE_URI`: conexión, por ejemplo
+  `mysql+pymysql://usuario:contraseña@host:puerto/base_datos`
+* `SQLALCHEMY_TRACK_MODIFICATIONS`: booleano (True o False).
 
-## Ejecutar el proyecto
+---
 
-```sh
-#Para activar el entorno virtual
-.\.venv\Scripts\activate 
-# o
-source .venv/Scripts/Activate
+## ▶️ Ejecutar el proyecto
 
-#Para ejecutar el proyecto
+### Ejecución estándar (HTTP)
+
+```bash
 flask --app main.py run -h '0.0.0.0'
 # o
 flask run --debug -h '0.0.0.0'
 ```
 
-## Estructura del proyecto
+### Ejecución directa (para usar debug=True)
 
-- Carpeta `app`: Todo el código de la aplicación se encuentra aquí.
+```bash
+python main.py
+```
 
-- Carpeta `apis`: Aquí se crearán todas las APIs necesarias para el funcionamiento de la aplicación.
+---
 
-- Carpeta `routes`: En esta carpeta se crearán todas las rutas web que utilizará el cliente desde un navegador.
+## 🗂️ Estructura del proyecto
 
-- Carpeta `db`: En esta carpeta se encontrará la conexión a la base de datos
+* **app/** → código principal de la aplicación.
+* **routes/** → rutas web del cliente.
+* **db/** → conexión a la base de datos.
+* **controller/** → controladores por módulo.
+* **models/** → modelos SQLAlchemy.
+* **static/** → archivos estáticos (CSS, JS, imágenes).
+* **templates/** → plantillas Jinja2.
+* **utils/** → utilidades (decoradores, seguridad, helpers).
 
-- Carpeta `controller`: En esta carpeta contendrá todos los archivos por cada modulo que controlara las acciones con la base de datos
+---
 
-- Carpeta `models`: Modelos de las tablas para la base de datos
+## 🧩 Migraciones de base de datos
 
-- Carpeta `static`: archivos disponibles como recursos para las pagina web
+### Inicializar migraciones
 
-- Carpeta `templates`: Contendrá los archivos jinja2 para las paginas web
-
-- Carpeta `Utils`: Utilidades para la pagina web, las cuales son los decoradores las rutas protegidas
-
-## Migraciones para la BD SQL
-
-Cuando se inicie el proyecto por primera ves la bd se creara automáticamente, pero si surge una modificación no se puede actualizar, para eso se usa los siguientes comandos
-
-Si aun no existe la carpeta migrations ejecutar el siguiente comando
-
-```sh
+```bash
 flask db init
 ```
 
-Si se aplico cambio en los modelos se ejecuta el siguiente comando para actualizar
+### Detectar cambios en modelos
 
-```sh
-flask db migrate -m "Mensaje del cambio aplicado"
+```bash
+flask db migrate -m "Descripción del cambio"
 ```
 
-Para aplicar los cambios y subirlos a la base de datos, ejecutar los siguiente comando
+### Aplicar cambios a la BD
 
-```sh
+```bash
 flask db upgrade
 ```
 
-Todos los comandos deben de tener un resultado exitoso y ver los cambios en la bd
+---
 
+## 🔒 HTTPS local (opcional para desarrollo)
 
-Ejecuta tu app con:
-python main.py 
-para que debug=True funcione directamente.
+Si deseas ejecutar Flask con **HTTPS local**, sigue estos pasos:
+
+1. Genera un certificado autofirmado:
+
+   ```bash
+   openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+   ```
+
+   Esto creará dos archivos:
+
+   * `cert.pem`
+   * `key.pem`
+
+2. Modifica `main.py`:
+
+   ```python
+   from app import create_app
+   app = create_app()
+
+   if __name__ == '__main__':
+       app.run(debug=True, ssl_context=('cert.pem', 'key.pem'))
+   ```
+
+3. Ejecuta con:
+
+   ```bash
+   python main.py
+   ```
+
+La app estará disponible en:
+👉 [https://127.0.0.1:5000/](https://127.0.0.1:5000/)
+
+---
+
+📘 **Nota:**
+El certificado es **temporal y solo para desarrollo**.
+En producción se usará un certificado real (por ejemplo, con **NGINX + Let’s Encrypt**).
