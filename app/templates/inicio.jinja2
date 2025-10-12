@@ -27,25 +27,24 @@
                 </div>
                 <div class="box empty-box"></div>
             </div>
-
             <!-- Columna central: presentación -->
             <div class="column center-column">
                 <div class="box" style="font-weight: bold;">
-                    🚀 Reduce tiempo y esfuerzo en la búsqueda de trabajo y contratación en Ocosingo
+                    🚀 Reduce tiempo y esfuerzo en la búsqueda de Trabajo y contratación en Ocosingo
                 </div>
                 <div class="box">
                     <h4 class="section-title">📊 Estadísticas de la Plataforma</h4>
                     <div class="stats-grid">
                         <div class="stat-item blue">
-                            <div class="stat-number blue">50+</div>
+                            <div class="stat-number blue">{{ total_empresas if total_empresas else 0 }}+</div>
                             <div class="stat-label">Empresas</div>
                         </div>
                         <div class="stat-item green">
-                            <div class="stat-number green">200+</div>
+                            <div class="stat-number green">{{ total_usuarios if total_usuarios else 0 }}+</div>
                             <div class="stat-label">Usuarios</div>
                         </div>
                         <div class="stat-item purple">
-                            <div class="stat-number purple">100+</div>
+                            <div class="stat-number purple">{{ total_vacantes if total_vacantes else 0 }}+</div>
                             <div class="stat-label">Vacantes</div>
                         </div>
                     </div>
@@ -93,47 +92,46 @@
                 <div class="box">
                     <h4 class="activity-title">📈 Actividad Reciente</h4>
                     <div class="activity-list">
-                        <div class="activity-item blue">
-                            <div class="activity-title-text">Nueva vacante publicada</div>
-                            <div class="activity-description">Desarrollador Web - Empresa Local</div>
-                            <div class="activity-time">Hace 2 horas</div>
-                        </div>
-                        <div class="activity-item green">
-                            <div class="activity-title-text">Usuario registrado</div>
-                            <div class="activity-description">María González se unió a la plataforma</div>
-                            <div class="activity-time">Hace 4 horas</div>
-                        </div>
-                        <div class="activity-item orange">
-                            <div class="activity-title-text">Contratación exitosa</div>
-                            <div class="activity-description">Carlos Ruiz fue contratado como Contador</div>
-                            <div class="activity-time">Ayer</div>
-                        </div>
+                        {% if actividades %}
+                            {% for act in actividades %}
+                            <div class="activity-item {{ act.color }}">
+                                <div class="activity-title-text">{{ act.titulo }}</div>
+                                <div class="activity-description">{{ act.descripcion }}</div>
+                                <div class="activity-time">{{ act.tiempo }}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="activity-item blue">
+                                <div class="activity-title-text">Sin actividad reciente</div>
+                                <div class="activity-description">Aún no hay actividades registradas</div>
+                                <div class="activity-time">Ahora</div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="box">
                     <h4 class="companies-title">🏆 Empresas Destacadas</h4>
                     <div class="companies-list">
-                        <div class="company-item">
-                            <div class="company-avatar blue">A</div>
-                            <div class="company-info">
-                                <div class="company-name">Agroindustrias del Sur</div>
-                                <div class="company-vacancies">5 vacantes activas</div>
+                        {% if empresas_destacadas %}
+                            {% set colores = ['blue', 'orange', 'green', 'purple'] %}
+                            {% for empresa in empresas_destacadas %}
+                            <div class="company-item">
+                                <div class="company-avatar {{ colores[loop.index0 % 4] }}">{{ empresa.inicial }}</div>
+                                <div class="company-info">
+                                    <div class="company-name">{{ empresa.nombre }}</div>
+                                    <div class="company-vacancies">{{ empresa.vacantes }} vacante{{ 's' if empresa.vacantes != 1 else '' }} activa{{ 's' if empresa.vacantes != 1 else '' }}</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="company-item">
-                            <div class="company-avatar orange">B</div>
-                            <div class="company-info">
-                                <div class="company-name">Banco Regional</div>
-                                <div class="company-vacancies">3 vacantes activas</div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="company-item">
+                                <div class="company-avatar blue">?</div>
+                                <div class="company-info">
+                                    <div class="company-name">Sin empresas registradas</div>
+                                    <div class="company-vacancies">0 vacantes activas</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="company-item">
-                            <div class="company-avatar green">C</div>
-                            <div class="company-info">
-                                <div class="company-name">Comercial del Sureste</div>
-                                <div class="company-vacancies">7 vacantes activas</div>
-                            </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

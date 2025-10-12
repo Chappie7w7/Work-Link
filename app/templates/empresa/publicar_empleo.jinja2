@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Registrar Vacante</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_registro.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_publicar_empleo.css') }}">
 
 </head>
 
@@ -36,31 +36,29 @@
                 <label for="ubicacion">Ubicación</label>
                 <input type="text" id="ubicacion" name="ubicacion" maxlength="255">
 
-                <label for="estado">Estado
-                    <select id="estado" name="estado" required>
-                        <option value="publicada">Publicada</option>
-                        <option value="cerrada">Cerrada</option>
-                        <option value="pausada">Pausada</option>
-                    </select>
-                </label>
+                <label for="estado">Estado</label>
+                <select id="estado" name="estado" required>
+                    <option value="publicada">Publicada</option>
+                    <option value="cerrada">Cerrada</option>
+                    <option value="pausada">Pausada</option>
+                </select>
+
+                <label for="salario_aprox">Salario aproximado</label>
+                <input type="number" step="1500" id="salario_aprox" name="salario_aprox">
+
+                <label for="modalidad">Modalidad</label>
+                <select id="modalidad" name="modalidad">
+                    <option value="presencial">Presencial</option>
+                    <option value="remoto">Remoto</option>
+                    <option value="híbrido">Híbrido</option>
+                </select>
 
                 <div class="form-check">
-                    <label for="destacada">¿Vacante destacada?
+                    <label for="destacada">
                         <input type="checkbox" id="destacada" name="destacada" value="true">
+                        ¿Vacante destacada?
                     </label>
                 </div>
-
-                <label for="salario_aprox">Salario aproximado
-                    <input type="number" step="1500" id="salario_aprox" name="salario_aprox">
-                </label>
-
-                <label for="modalidad">Modalidad
-                    <select id="modalidad" name="modalidad">
-                        <option value="presencial">Presencial</option>
-                        <option value="remoto">Remoto</option>
-                        <option value="híbrido">Híbrido</option>
-                    </select>
-                </label>
 
                 <button type="submit">Registrar</button>
             </form>
