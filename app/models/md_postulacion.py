@@ -2,6 +2,7 @@ from app.db.sql import db
 from sqlalchemy import Column, Integer, DateTime, Text, Enum, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from app.utils.timezone_helper import get_mexico_time
 
 class PostulacionModel(db.Model):
     __tablename__ = 'postulaciones'
@@ -20,7 +21,7 @@ class PostulacionModel(db.Model):
     def __init__(self, vacante_id=None, empleado_id=None, fecha_postulacion=None, estado=None, notas_empresa=None):
         self.vacante_id = vacante_id
         self.empleado_id = empleado_id
-        self.fecha_postulacion = fecha_postulacion or datetime.utcnow()
+        self.fecha_postulacion = fecha_postulacion or get_mexico_time()
         self.estado = estado
         self.notas_empresa = notas_empresa
 

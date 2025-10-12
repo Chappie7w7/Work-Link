@@ -5,8 +5,248 @@
 }
 
 body {
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8fafc;
     color: #1e293b;
     line-height: 1.6;
     min-height: 100vh;
+    padding-bottom: 2rem;
+}
+
+.notificaciones-container {
+    max-width: 900px;
+    margin: 8rem auto 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.notificaciones-header {
+    background: white;
+    border-radius: 15px 15px 0 0;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.notificaciones-header h2 {
+    color: #1e293b;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.badge-count {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.btn-marcar-todas {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-marcar-todas:hover {
+    background-color: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.notificaciones-list {
+    background: white;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.notificacion-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.notificacion-item:last-child {
+    border-bottom: none;
+}
+
+.notificacion-item:hover {
+    background-color: #f8fafc;
+}
+
+.notificacion-item.no-leida {
+    background-color: #eff6ff;
+    border-left: 4px solid #3b82f6;
+}
+
+.notificacion-item.no-leida:hover {
+    background-color: #dbeafe;
+}
+
+.notificacion-content {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex: 1;
+}
+
+.notificacion-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.tipo-contratado .notificacion-icon {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.tipo-en_proceso .notificacion-icon {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.tipo-visto .notificacion-icon {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+}
+
+.tipo-rechazado .notificacion-icon {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.notificacion-texto {
+    flex: 1;
+}
+
+.notificacion-texto .mensaje {
+    color: #1e293b;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 0.4rem 0;
+    line-height: 1.5;
+}
+
+.notificacion-texto .fecha {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.notificacion-action {
+    margin: 0;
+}
+
+.btn-marcar-leida {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-marcar-leida:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.notificacion-leida-icon {
+    color: #10b981;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.sin-notificaciones {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.sin-notificaciones-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.sin-notificaciones h3 {
+    color: #1e293b;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.sin-notificaciones p {
+    color: #64748b;
+    font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .notificaciones-container {
+        padding: 0 1rem;
+        margin: 6rem auto 1rem auto;
+    }
+
+    .notificaciones-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: 1rem 1.5rem;
+    }
+
+    .notificaciones-header h2 {
+        font-size: 1.4rem;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-marcar-todas {
+        width: 100%;
+    }
+
+    .notificacion-item {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .notificacion-content {
+        width: 100%;
+    }
+
+    .notificacion-action {
+        align-self: flex-end;
+    }
 }

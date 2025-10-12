@@ -1,0 +1,239 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.container h2 {
+    color: white;
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.container p {
+    color: #94a3b8;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.container p strong {
+    color: #3b82f6;
+}
+
+form {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    margin-top: 2rem;
+    animation: slideUp 0.6s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+
+.form-group input[type="file"],
+.form-group textarea {
+    width: 100%;
+    padding: 0.9rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+}
+
+.form-group input[type="file"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background-color: white;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+}
+
+.form-group p {
+    text-align: left;
+    margin-top: 0.5rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.form-group p a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.form-group p a:hover {
+    color: #1e40af;
+    text-decoration: underline;
+}
+
+.form-group label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.6rem;
+    cursor: pointer;
+    accent-color: #3b82f6;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: flex-end;
+}
+
+.btn {
+    padding: 0.9rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    font-family: inherit;
+}
+
+.btn-secondary {
+    background-color: #e2e8f0;
+    color: #475569;
+    border: 2px solid #cbd5e1;
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+}
+
+.btn-primary:active,
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Estilo para el input de archivo */
+.form-group input[type="file"] {
+    cursor: pointer;
+    padding: 0.7rem;
+}
+
+.form-group input[type="file"]::file-selector-button {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input[type="file"]::file-selector-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    form {
+        padding: 1.5rem;
+    }
+
+    .container h2 {
+        font-size: 1.6rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Animación para el checkbox */
+.form-group label:has(input[type="checkbox"]) {
+    background-color: #f1f5f9;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.form-group label:has(input[type="checkbox"]):hover {
+    background-color: #e0f2fe;
+    border-color: #3b82f6;
+}

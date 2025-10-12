@@ -4,11 +4,66 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Notificaciones</title>
+    <title>Notificaciones - WorkLink</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_notificaciones.css') }}">
 </head>
 <body>
 {{ components.navbar(current_user) }}
+
+<div class="notificaciones-container">
+    <div class="notificaciones-header">
+        <h2>🔔 Notificaciones</h2>
+        {% if no_leidas > 0 %}
+        <div class="header-actions">
+            <span class="badge-count">{{ no_leidas }} sin leer</span>
+            <form action="{{ url_for('NotificacionesRoute.marcar_todas_leidas') }}" method="POST" style="display: inline;">
+                <button type="submit" class="btn-marcar-todas">Marcar todas como leídas</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="notificaciones-list">
+        {% if notificaciones %}
+            {% for notif in notificaciones %}
+            <div class="notificacion-item {% if not notif.leido %}no-leida{% endif %} tipo-{{ notif.tipo }}">
+                <div class="notificacion-content">
+                    <div class="notificacion-icon">
+                        {% if notif.tipo == 'contratado' %}
+                            🎉
+                        {% elif notif.tipo == 'en_proceso' %}
+                            ⏳
+                        {% elif notif.tipo == 'visto' %}
+                            👁️
+                        {% elif notif.tipo == 'rechazado' %}
+                            ❌
+                        {% else %}
+                            📩
+                        {% endif %}
+                    </div>
+                    <div class="notificacion-texto">
+                        <p class="mensaje">{{ notif.mensaje }}</p>
+                        <span class="fecha">{{ notif.fecha_envio.strftime('%d/%m/%Y %H:%M') if notif.fecha_envio else 'Fecha desconocida' }}</span>
+                    </div>
+                </div>
+                {% if not notif.leido %}
+                <form action="{{ url_for('NotificacionesRoute.marcar_leida', notificacion_id=notif.id) }}" method="POST" class="notificacion-action">
+                    <button type="submit" class="btn-marcar-leida" title="Marcar como leída">✓</button>
+                </form>
+                {% else %}
+                <div class="notificacion-leida-icon">✓</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="sin-notificaciones">
+                <div class="sin-notificaciones-icon">🔕</div>
+                <h3>No tienes notificaciones</h3>
+                <p>Cuando las empresas actualicen el estado de tus postulaciones, aparecerán aquí.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
 
 <!-- Llamar al componente footer -->
 {{ footer.footer() }}

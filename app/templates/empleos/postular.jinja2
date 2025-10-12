@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postular a {{ vacante.titulo }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_postular.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Postular a: {{ vacante.titulo }}</h2>
+        <p><strong>Empresa:</strong> {{ vacante.empresa.nombre_empresa if vacante.empresa else 'Sin empresa' }}</p>
+        <p><strong>Ubicación:</strong> {{ vacante.ubicacion or 'No especificada' }}</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="curriculum">Currículum (PDF/DOC)</label>
+                {% if empleado and empleado.curriculum_url %}
+                    <p>CV actual: <a href="{{ empleado.curriculum_url }}" target="_blank">Ver</a></p>
+                {% endif %}
+                <input type="file" name="curriculum" id="curriculum" accept=".pdf,.doc,.docx">
+            </div>
+
+            <div class="form-group">
+                <label for="educacion">Educación</label>
+                <textarea name="educacion" id="educacion" rows="3">{{ empleado.educacion if empleado else '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="experiencia">Experiencia</label>
+                <textarea name="experiencia" id="experiencia" rows="4">{{ empleado.experiencia if empleado else '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="habilidades">Habilidades</label>
+                <textarea name="habilidades" id="habilidades" rows="3">{{ empleado.habilidades if empleado else '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="cv_destacado" {% if empleado and empleado.cv_destacado %}checked{% endif %}>
+                    Marcar mi CV como destacado
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <a class="btn btn-secondary" href="{{ url_for('EmpleosRoute.empleos') }}">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Enviar postulación</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

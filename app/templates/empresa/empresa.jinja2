@@ -97,10 +97,31 @@
                         {% if candidatos %}
                         <ul class="list-group">
                             {% for c in candidatos %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ c.nombre }}
-                                <a href="{{ url_for('rt_empresa.ver_candidato', candidato_id=c.id) }}"
-                                    class="btn btn-sm btn-outline-primary">Ver perfil</a>
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong>{{ c.empleado.usuario.nombre if c.empleado and c.empleado.usuario else 'Candidato' }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ c.vacante.titulo if c.vacante else 'Vacante' }}</small>
+                                    </div>
+                                    <div>
+                                        {% if c.estado == 'postulado' %}
+                                            <span class="badge bg-info">📩 Postulado</span>
+                                        {% elif c.estado == 'visto' %}
+                                            <span class="badge bg-primary">👁️ Visto</span>
+                                        {% elif c.estado == 'en_proceso' %}
+                                            <span class="badge bg-warning">⏳ En proceso</span>
+                                        {% elif c.estado == 'rechazado' %}
+                                            <span class="badge bg-danger">❌ Rechazado</span>
+                                        {% elif c.estado == 'contratado' %}
+                                            <span class="badge bg-success">✅ Contratado</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ url_for('rt_empresa.ver_candidato', candidato_id=c.empleado_id) }}"
+                                        class="btn btn-sm btn-outline-primary">Ver perfil completo</a>
+                                </div>
                             </li>
                             {% endfor %}
                         </ul>
