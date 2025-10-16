@@ -6,7 +6,16 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Worklink</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_inicio.css') }}">
 </head>
 
@@ -145,6 +154,15 @@
     <!-- Inicializar AOS -->
     <script>
         AOS.init();
+    </script>
+    
+    <!-- Service Worker -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
+                .then(() => console.log("✅ Service Worker registrado"))
+                .catch(err => console.log("❌ Error registrando SW:", err));
+        }
     </script>
 </body>
 
