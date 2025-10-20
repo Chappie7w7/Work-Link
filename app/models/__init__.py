@@ -2,9 +2,11 @@ from .md_cursos import CursoCapacitacionModel
 from .md_cursousario import CursoUsuarioModel
 from .md_empleados import EmpleadoModel
 from .md_empresas import EmpresaModel
+from .md_mensaje import MensajeModel
 from .md_metricavacante import MetricaVacanteModel
 from .md_notificacion import NotificacionModel
 from .md_planes import PlanModel
 from .md_postulacion import PostulacionModel
+from .md_reporte import ReporteModel
 from .md_usuarios import UsuarioModel
 from .md_vacantes import VacanteModel

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session
 from flask_migrate import Migrate
 from app.config import Config
 from app.db.sql import db, migrate
@@ -15,6 +15,16 @@ def create_app():
     
     # Inicializar extensiones (Flask-Mail, etc.)
     init_extensiones(app)
+
+    # Context processor para variables globales en templates
+    @app.context_processor
+    def inject_mensajes_no_leidos():
+        """Inyecta el contador de mensajes no leídos en todas las plantillas"""
+        usuario = session.get('usuario')
+        if usuario:
+            from app.utils.mensaje_helper import contar_mensajes_no_leidos
+            return {'mensajes_no_leidos': contar_mensajes_no_leidos(usuario['id'])}
+        return {'mensajes_no_leidos': 0}
 
     # Registrar TODAS las rutas
     register_routes(app)

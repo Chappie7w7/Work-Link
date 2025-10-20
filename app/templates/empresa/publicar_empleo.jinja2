@@ -1,3 +1,4 @@
+{% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,6 +10,7 @@
 </head>
 
 <body>
+    {{ flash.render_flash_messages() }}
     <header>
         <div class="logo"></div>
         <h1>WorkLink</h1>

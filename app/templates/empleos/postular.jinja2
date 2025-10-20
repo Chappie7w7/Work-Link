@@ -1,3 +1,4 @@
+{% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_postular.css') }}">
 </head>
 <body>
+    {{ flash.render_flash_messages() }}
     <div class="container">
         <h2>Postular a: {{ vacante.titulo }}</h2>
         <p><strong>Empresa:</strong> {{ vacante.empresa.nombre_empresa if vacante.empresa else 'Sin empresa' }}</p>

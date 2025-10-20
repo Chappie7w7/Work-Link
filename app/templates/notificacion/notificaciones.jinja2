@@ -13,11 +13,16 @@
 <div class="notificaciones-container">
     <div class="notificaciones-header">
         <h2>🔔 Notificaciones</h2>
-        {% if no_leidas > 0 %}
+        {% if notificaciones %}
         <div class="header-actions">
+            {% if no_leidas > 0 %}
             <span class="badge-count">{{ no_leidas }} sin leer</span>
             <form action="{{ url_for('NotificacionesRoute.marcar_todas_leidas') }}" method="POST" style="display: inline;">
-                <button type="submit" class="btn-marcar-todas">Marcar todas como leídas</button>
+                <button type="submit" class="btn-marcar-todas">Marcar como leídas</button>
+            </form>
+            {% endif %}
+            <form action="{{ url_for('NotificacionesRoute.eliminar_todas') }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar todas las notificaciones?');">
+                <button type="submit" class="btn-eliminar-todas">🗑️ Eliminar todas</button>
             </form>
         </div>
         {% endif %}
@@ -37,6 +42,8 @@
                             👁️
                         {% elif notif.tipo == 'rechazado' %}
                             ❌
+                        {% elif notif.tipo == 'mensaje' %}
+                            💬
                         {% else %}
                             📩
                         {% endif %}

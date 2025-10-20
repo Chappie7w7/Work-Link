@@ -10,3 +10,4 @@ flask-mail
 itsdangerous
 bleach
 email-validator
+reportlab
