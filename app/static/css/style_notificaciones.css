@@ -5,8 +5,8 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f8fafc;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #1e293b;
     line-height: 1.6;
     min-height: 100vh;
@@ -14,26 +14,39 @@ body {
 }
 
 .notificaciones-container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 8rem auto 2rem auto;
     padding: 0 1.5rem;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .notificaciones-header {
-    background: white;
-    border-radius: 15px 15px 0 0;
-    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px 20px 0 0;
+    padding: 2rem 2.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .notificaciones-header h2 {
-    color: #1e293b;
-    font-size: 1.8rem;
-    font-weight: 700;
+    color: white;
+    font-size: 2rem;
+    font-weight: 800;
     margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .header-actions {
@@ -43,36 +56,60 @@ body {
 }
 
 .badge-count {
-    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    background: rgba(255, 255, 255, 0.2);
     color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
+    padding: 0.5rem 1.2rem;
+    border-radius: 25px;
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 700;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
 }
 
 .btn-marcar-todas {
-    background-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.2);
     color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
+    border: 2px solid white;
+    padding: 0.7rem 1.5rem;
+    border-radius: 25px;
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
 .btn-marcar-todas:hover {
-    background-color: #1e40af;
+    background: white;
+    color: #667eea;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.3);
+}
+
+.btn-eliminar-todas {
+    background: rgba(239, 68, 68, 0.2);
+    color: white;
+    border: 2px solid rgba(239, 68, 68, 0.6);
+    padding: 0.7rem 1.5rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.btn-eliminar-todas:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
 .notificaciones-list {
     background: white;
-    border-radius: 0 0 15px 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     overflow: hidden;
 }
 
@@ -80,10 +117,22 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid #e2e8f0;
+    padding: 1.8rem 2.5rem;
+    border-bottom: 1px solid #f0f0f0;
     transition: all 0.3s ease;
     position: relative;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .notificacion-item:last-child {
@@ -91,16 +140,17 @@ body {
 }
 
 .notificacion-item:hover {
-    background-color: #f8fafc;
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.03) 0%, transparent 100%);
+    transform: translateX(5px);
 }
 
 .notificacion-item.no-leida {
-    background-color: #eff6ff;
-    border-left: 4px solid #3b82f6;
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.08) 0%, transparent 100%);
+    border-left: 5px solid #667eea;
 }
 
 .notificacion-item.no-leida:hover {
-    background-color: #dbeafe;
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.12) 0%, transparent 100%);
 }
 
 .notificacion-content {
@@ -111,31 +161,46 @@ body {
 }
 
 .notificacion-icon {
-    font-size: 2rem;
-    width: 50px;
-    height: 50px;
+    font-size: 2.2rem;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f1f5f9;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
     border-radius: 50%;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.notificacion-item:hover .notificacion-icon {
+    transform: scale(1.1) rotate(5deg);
 }
 
 .tipo-contratado .notificacion-icon {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .tipo-en_proceso .notificacion-icon {
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
 .tipo-visto .notificacion-icon {
-    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .tipo-rechazado .notificacion-icon {
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.tipo-mensaje .notificacion-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .notificacion-texto {
@@ -143,16 +208,17 @@ body {
 }
 
 .notificacion-texto .mensaje {
-    color: #1e293b;
-    font-size: 1rem;
-    font-weight: 500;
-    margin: 0 0 0.4rem 0;
-    line-height: 1.5;
+    color: #2d3748;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.6;
 }
 
 .notificacion-texto .fecha {
-    color: #64748b;
+    color: #718096;
     font-size: 0.85rem;
+    font-weight: 500;
 }
 
 .notificacion-action {
@@ -160,23 +226,24 @@ body {
 }
 
 .btn-marcar-leida {
-    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .btn-marcar-leida:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    transform: scale(1.15) rotate(15deg);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
 }
 
 .notificacion-leida-icon {
@@ -187,24 +254,35 @@ body {
 
 .sin-notificaciones {
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 5rem 2rem;
 }
 
 .sin-notificaciones-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.4;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .sin-notificaciones h3 {
-    color: #1e293b;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    color: #2d3748;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
 }
 
 .sin-notificaciones p {
-    color: #64748b;
-    font-size: 1rem;
+    color: #718096;
+    font-size: 1.05rem;
 }
 
 /* Responsive */

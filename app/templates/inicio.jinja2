@@ -1,5 +1,6 @@
 {% import "components/navbar.jinja2" as navbar %}
 {% import "components/footer.jinja2" as footer %}
+{% import "components/flash_messages.jinja2" as flash %}
 
 <!DOCTYPE html>
 <html lang="es">
@@ -21,6 +22,7 @@
 
 <body>
 {{ navbar.navbar(current_user) }}
+{{ flash.render_flash_messages() }}
 
     <section class="inicio-p">
         <div class="main-content">

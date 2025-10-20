@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request
+from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
 from app.utils.decorators import login_role_required
 from app.utils.roles import Roles
 from app.models.md_notificacion import NotificacionModel
@@ -54,3 +54,27 @@ def marcar_todas_leidas():
     db.session.commit()
     
     return redirect(url_for('NotificacionesRoute.notificaciones'))
+
+
+@rt_notificaciones.route("/notificaciones/eliminar_todas", methods=["POST"])
+def eliminar_todas():
+    """Eliminar todas las notificaciones del usuario"""
+    usuario = session.get('usuario')
+    if not usuario:
+        return redirect(url_for('IndexRoute.index'))
+    
+    NotificacionModel.query.filter_by(usuario_id=usuario['id']).delete()
+    db.session.commit()
+    
+    return redirect(url_for('NotificacionesRoute.notificaciones'))
+
+
+@rt_notificaciones.route("/api/notificaciones/contador")
+def contador_notificaciones():
+    """API endpoint para obtener el contador de notificaciones no leídas en tiempo real"""
+    usuario = session.get('usuario')
+    if not usuario:
+        return jsonify({"count": 0})
+    
+    count = NotificacionModel.query.filter_by(usuario_id=usuario['id'], leido=False).count()
+    return jsonify({"count": count})

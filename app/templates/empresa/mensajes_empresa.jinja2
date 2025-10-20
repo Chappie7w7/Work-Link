@@ -1,15 +1,37 @@
-{% import "components/navbar.jinja2" as components %}
-{% import "components/footer.jinja2" as footer %}
+{% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mensajes</title>
+    <title>Mensajes - Empresa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_mensajes.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Ajustar tamaño para empresas */
+        .messages-wrapper {
+            max-width: 1200px;
+            height: calc(100vh - 150px);
+            margin: 20px auto;
+        }
+        
+        body {
+            background: #f5f5f5;
+        }
+    </style>
 </head>
 
 <body>
-    {{ components.navbar(current_user) }}
+    {{ flash.render_flash_messages() }}
+    <header style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="logo"></div>
+            <h1 style="margin: 0;"><b>WorkLink</b></h1>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="{{ url_for('rt_empresa.dashboard') }}" class="btn btn-sm btn-outline-light">← Volver al Dashboard</a>
+            <a href="{{ url_for('IndexRoute.index') }}" class="btn btn-sm btn-danger">Salir</a>
+        </div>
+    </header>
 
     <div class="messages-wrapper">
         <!-- Barra lateral de conversaciones -->
@@ -24,7 +46,7 @@
                     <li class="conversation" data-user-id="{{ conv.id }}" onclick="cargarConversacion({{ conv.id }}, '{{ conv.nombre }}')">
                         <div class="avatar">{{ conv.nombre[0].upper() }}</div>
                         <div class="details">
-                            <h4>{{ conv.nombre }} {% if conv.tipo_usuario == 'empresa' %}(Empresa){% endif %}</h4>
+                            <h4>{{ conv.nombre }} {% if conv.tipo_usuario == 'empleado' %}(Candidato){% endif %}</h4>
                             <p>Haz clic para ver la conversación</p>
                         </div>
                     </li>
@@ -32,21 +54,21 @@
                 {% else %}
                     <li style="padding: 20px; text-align: center; color: #999;">
                         <p>No tienes conversaciones aún</p>
-                        {% if empresas_disponibles %}
-                        <p style="font-size: 12px; margin-top: 10px;">Selecciona una empresa abajo para iniciar chat</p>
+                        {% if empleados_disponibles %}
+                        <p style="font-size: 12px; margin-top: 10px;">Selecciona un candidato abajo para iniciar chat</p>
                         {% endif %}
                     </li>
                 {% endif %}
                 
-                {% if empresas_disponibles %}
+                {% if empleados_disponibles %}
                 <li style="padding: 10px 15px; background: #f0f0f0; font-weight: bold; font-size: 12px; color: #666;">
                     INICIAR NUEVA CONVERSACIÓN
                 </li>
-                {% for empresa in empresas_disponibles %}
-                <li class="conversation" data-user-id="{{ empresa.id }}" onclick="cargarConversacion({{ empresa.id }}, '{{ empresa.nombre }}')">
-                    <div class="avatar">{{ empresa.nombre[0].upper() }}</div>
+                {% for empleado in empleados_disponibles %}
+                <li class="conversation" data-user-id="{{ empleado.id }}" onclick="cargarConversacion({{ empleado.id }}, '{{ empleado.nombre }}')">
+                    <div class="avatar">{{ empleado.nombre[0].upper() }}</div>
                     <div class="details">
-                        <h4>{{ empresa.nombre }} (Empresa)</h4>
+                        <h4>{{ empleado.nombre }} (Candidato)</h4>
                         <p>Iniciar conversación</p>
                     </div>
                 </li>
@@ -79,14 +101,6 @@
         </main>
     </div>
 
-    
-    
-    {{ footer.footer() }}
-    <!-- Inicializar AOS -->
-    <script>
-        AOS.init();
-    </script>
-    
     <script>
         let destinatarioActual = null;
         
@@ -106,7 +120,7 @@
             document.querySelector(`[data-user-id="${userId}"]`).classList.add('active');
             
             // Cargar mensajes
-            fetch(`/mensajes/conversacion/${userId}`)
+            fetch(`/empresa/mensajes/conversacion/${userId}`)
                 .then(response => response.json())
                 .then(data => {
                     const chatMessages = document.getElementById('chatMessages');
@@ -141,7 +155,7 @@
             
             if (!contenido || !destinatarioActual) return;
             
-            fetch('/mensajes/enviar', {
+            fetch('/empresa/mensajes/enviar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
