@@ -20,5 +20,5 @@ def empleos():
     vacantes = VacanteModel.query.options(joinedload(VacanteModel.empresa)) \
                 .order_by(VacanteModel.id.desc()).all()
 
-    return render_template("empleos/empleos.jinja2", usuario=user, vacantes=vacantes)
+    return render_template("empleos/jobs.jinja2", usuario=user, vacantes=vacantes)
 

@@ -6,9 +6,7 @@
     right: 0;
     background: rgba(15, 14, 14, 0.95);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgb(227, 229, 233);
     z-index: 1000;
-    /*padding: 15px 20px;*/
     padding: 15px 20px;
     transition: all 1s ease;
     border-radius: 0;

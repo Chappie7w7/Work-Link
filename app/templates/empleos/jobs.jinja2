@@ -1,0 +1,175 @@
+{% import "components/navbar.jinja2" as components %}
+{% import 'components/footer.jinja2' as footer %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorkLink – Job Listings</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_jobs.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
+</head>
+<body>
+
+  {{ components.navbar( current_user) }}
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-image">
+      <img src="https://www.acceptmission.com/wp-content/uploads/2021/05/Blogbanner-Business-Development-vs-Innovation-Whats-the-Difference-800x267.png.webp"
+           alt="Job Opportunities">
+      <div class="hero-overlay">
+        <h1>Find Your Dream Job, Anywhere</h1>
+        <p>
+          Explore thousands of opportunities from top companies worldwide.
+          Your next career move is just a click away with WorkLink.
+        </p>
+        <button class="btn-orange">Explore Job Opportunities</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters Section -->
+  <section class="filters-section">
+    <div class="filters-container">
+      <input type="text" placeholder="Search keyword">
+      <select>
+        <option>Job Title</option>
+      </select>
+      <select>
+        <option>Location</option>
+      </select>
+      <select>
+        <option>Job Type</option>
+      </select>
+      <select>
+        <option>Salary Range</option>
+      </select>
+      <button class="btn-dark">Apply Filters</button>
+    </div>
+  </section>
+
+  <!-- Job Listings -->
+  <section class="jobs-section">
+    <h2>Latest Job Listings</h2>
+
+    <div class="jobs-grid">
+      <!-- Job Card -->
+      <div class="job-card">
+        <h3>Senior Software Engineer</h3>
+        <p class="company">Tech Innovators Inc.</p>
+        <div class="job-info">📍 San Francisco, CA · <span class="job-type">Full-time</span></div>
+        <p class="description">
+          Develop and maintain high-performance web applications using modern frameworks.
+        </p>
+        <button class="btn-orange">Apply Now</button>
+      </div>
+
+      <div class="job-card">
+        <h3>Digital Marketing Specialist</h3>
+        <p class="company">Global Marketing Solutions</p>
+        <div class="job-info">🌐 Remote · <span class="job-type">Full-time</span></div>
+        <p class="description">
+          Execute and optimize digital campaigns across multiple channels.
+        </p>
+        <button class="btn-orange">Apply Now</button>
+      </div>
+
+      <div class="job-card">
+        <h3>UX/UI Designer</h3>
+        <p class="company">Creative Design Studio</p>
+        <div class="job-info">📍 New York, NY · <span class="job-type">Contract</span></div>
+        <p class="description">
+          Design intuitive and visually appealing user interfaces for mobile and web.
+        </p>
+        <button class="btn-orange">Apply Now</button>
+      </div>
+
+      <!-- Puedes duplicar las tarjetas si lo deseas -->
+      <div class="job-card">
+        <h3>Senior Software Engineer</h3>
+        <p class="company">Tech Innovators Inc.</p>
+        <div class="job-info">📍 San Francisco, CA · <span class="job-type">Full-time</span></div>
+        <p class="description">
+          Develop and maintain high-performance web applications using modern frameworks.
+        </p>
+        <button class="btn-orange">Apply Now</button>
+      </div>
+
+      <div class="job-card">
+        <h3>Digital Marketing Specialist</h3>
+        <p class="company">Global Marketing Solutions</p>
+        <div class="job-info">🌐 Remote · <span class="job-type">Full-time</span></div>
+        <p class="description">
+          Execute and optimize digital campaigns across multiple channels.
+        </p>
+        <button class="btn-orange">Apply Now</button>
+      </div>
+
+      <div class="job-card">
+        <h3>UX/UI Designer</h3>
+        <p class="company">Creative Design Studio</p>
+        <div class="job-info">📍 New York, NY · <span class="job-type">Contract</span></div>
+        <p class="description">
+          Design intuitive and visually appealing user interfaces for mobile and web.
+        </p>
+        <button class="btn-orange">Apply Now</button>
+      </div>
+
+      <div class="job-card">
+        <h3>Senior Software Engineer</h3>
+        <p class="company">Tech Innovators Inc.</p>
+        <div class="job-info">📍 San Francisco, CA · <span class="job-type">Full-time</span></div>
+        <p class="description">
+          Develop and maintain high-performance web applications using modern frameworks.
+        </p>
+        <button class="btn-orange">Apply Now</button>
+      </div>
+
+      <div class="job-card">
+        <h3>Digital Marketing Specialist</h3>
+        <p class="company">Global Marketing Solutions</p>
+        <div class="job-info">🌐 Remote · <span class="job-type">Full-time</span></div>
+        <p class="description">
+          Execute and optimize digital campaigns across multiple channels.
+        </p>
+        <button class="btn-orange">Apply Now</button>
+      </div>
+
+      <div class="job-card">
+        <h3>UX/UI Designer</h3>
+        <p class="company">Creative Design Studio</p>
+        <div class="job-info">📍 New York, NY · <span class="job-type">Contract</span></div>
+        <p class="description">
+          Design intuitive and visually appealing user interfaces for mobile and web.
+        </p>
+        <button class="btn-orange">Apply Now</button>
+      </div>
+
+      <!--div class="job-card">
+        <div class="job-header">
+          <h3>UX/UI Designer</h3>
+          <p class="company">Creative Design Studio</p>
+        </div>
+        <div class="job-details">
+          <p><i class="fa-solid fa-location-dot"></i> New York, NY</p>
+          <p><i class="fa-solid fa-briefcase"></i> <span class="job-type">Contract</span></p>
+        </div>
+        <div class="job-description"></div>
+        <div class="job-footer">
+          <button class="btn-orange">Apply Now</button>
+        </div>
+      </div-->
+    </div>
+  </section>
+
+  <!-- Llamar al componente footer -->
+  {{ footer.footer() }}
+  <!-- Inicializar AOS -->
+  <script>
+      AOS.init();
+  </script>
+
+</body>
+</html>
