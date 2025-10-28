@@ -448,55 +448,205 @@ def eliminar_todas_notificaciones_empresa():
     return redirect(url_for('rt_empresa.notificaciones_empresa'))
 
 
-def generar_reporte_html(user, vacantes, postulaciones, ofertas_activas, contratados, en_proceso, rechazados, vistos, postulados):
-    """Función auxiliar para generar reporte en HTML si reportlab no está disponible"""
-    from flask import make_response
+def generar_reporte_html_content(user, vacantes, postulaciones, ofertas_activas, contratados, en_proceso, rechazados, vistos, postulados):
+    """Función auxiliar para generar contenido HTML del reporte"""
     from datetime import datetime
     
     html_content = f"""
     <!DOCTYPE html>
-    <html>
+    <html lang="es">
     <head>
         <meta charset="UTF-8">
-        <title>Reporte de Postulaciones</title>
+        <title>Reporte de Postulaciones - WorkLink</title>
         <style>
-            body {{ font-family: Arial, sans-serif; margin: 40px; color: #333; }}
-            .header {{ text-align: center; border-bottom: 3px solid #6366f1; padding-bottom: 20px; margin-bottom: 30px; }}
-            .header h1 {{ color: #6366f1; margin: 0; }}
-            .stats-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }}
-            .stat-box {{ background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 10px; padding: 20px; text-align: center; }}
-            .stat-box .number {{ font-size: 36px; font-weight: bold; color: #6366f1; }}
-            table {{ width: 100%; border-collapse: collapse; margin-top: 20px; }}
-            th, td {{ border: 1px solid #e5e7eb; padding: 12px; text-align: left; }}
-            th {{ background: #6366f1; color: white; }}
-            tr:nth-child(even) {{ background: #f9fafb; }}
-            @media print {{ body {{ margin: 20px; }} }}
+            * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+            body {{ 
+                font-family: 'Inter', 'Segoe UI', sans-serif; 
+                background: #ffffff; 
+                color: #1e293b; 
+                line-height: 1.6; 
+                padding: 40px;
+            }}
+            .header {{ 
+                text-align: center; 
+                border-bottom: 3px solid #3b82f6; 
+                padding-bottom: 30px; 
+                margin-bottom: 40px;
+                background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+                padding: 40px 20px;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            }}
+            .header h1 {{ 
+                color: #0f172a; 
+                font-size: 2.5rem;
+                font-weight: 800;
+                margin-bottom: 10px;
+            }}
+            .header p {{ 
+                color: #64748b; 
+                margin: 5px 0;
+                font-size: 1rem;
+            }}
+            .company-name {{
+                color: #3b82f6;
+                font-weight: 700;
+                font-size: 1.2rem;
+            }}
+            .section {{ 
+                margin: 40px 0; 
+            }}
+            .section h2 {{ 
+                color: #0f172a; 
+                font-size: 1.5rem; 
+                font-weight: 700; 
+                margin-bottom: 20px; 
+                padding-bottom: 10px; 
+                border-bottom: 2px solid #e2e8f0; 
+            }}
+            .stats-grid {{ 
+                display: grid; 
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+                gap: 20px; 
+                margin: 20px 0; 
+            }}
+            .stat-box {{ 
+                background: #ffffff; 
+                border: 2px solid #e2e8f0; 
+                border-radius: 12px; 
+                padding: 25px; 
+                text-align: center; 
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }}
+            .stat-box:hover {{
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(59,130,246,0.15);
+                border-color: #3b82f6;
+            }}
+            .stat-box .number {{ 
+                font-size: 2.5rem; 
+                font-weight: 800; 
+                color: #3b82f6; 
+                margin-bottom: 8px;
+                display: block;
+            }}
+            .stat-box .label {{
+                color: #64748b;
+                font-weight: 600;
+                font-size: 0.95rem;
+            }}
+            .stat-success .number {{ color: #10b981; }}
+            .stat-warning .number {{ color: #f59e0b; }}
+            .stat-danger .number {{ color: #ef4444; }}
+            table {{ 
+                width: 100%; 
+                border-collapse: collapse; 
+                margin-top: 20px; 
+                background: #ffffff;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }}
+            th, td {{ 
+                border: 1px solid #e2e8f0; 
+                padding: 15px 20px; 
+                text-align: left; 
+            }}
+            th {{ 
+                background: linear-gradient(135deg, #1e40af, #3b82f6); 
+                color: white; 
+                font-weight: 700;
+                font-size: 0.95rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }}
+            tr:nth-child(even) {{ 
+                background: #f8fafc; 
+            }}
+            tr:hover {{
+                background: #f1f5f9;
+            }}
+            td {{ 
+                color: #475569; 
+                font-size: 0.95rem;
+            }}
+            .footer {{ 
+                text-align: center; 
+                margin-top: 60px; 
+                padding-top: 30px;
+                border-top: 2px solid #e2e8f0;
+                color: #94a3b8; 
+                font-size: 0.9rem;
+            }}
+            .footer strong {{ 
+                color: #3b82f6;
+                font-weight: 700;
+            }}
+            @media print {{ 
+                body {{ 
+                    padding: 20px; 
+                }}
+                .stat-box:hover {{
+                    transform: none;
+                }}
+            }}
         </style>
     </head>
     <body>
         <div class="header">
             <h1>📊 Reporte de Postulaciones</h1>
-            <p>Generado el {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
-            <p><strong>Empresa:</strong> {user.get('nombre', 'N/A')}</p>
+            <p><strong>Generado:</strong> {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
+            <p class="company-name">🏢 {user.get('nombre', 'N/A')}</p>
         </div>
         
+        <div class="section">
         <h2>📈 Resumen General</h2>
         <div class="stats-grid">
-            <div class="stat-box"><div class="number">{ofertas_activas}</div><div>Ofertas Activas</div></div>
-            <div class="stat-box"><div class="number">{len(postulaciones)}</div><div>Total Postulaciones</div></div>
-            <div class="stat-box"><div class="number">{len(vacantes)}</div><div>Total Vacantes</div></div>
+                <div class="stat-box">
+                    <div class="number">{ofertas_activas}</div>
+                    <div class="label">Ofertas Activas</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">{len(postulaciones)}</div>
+                    <div class="label">Total Postulaciones</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">{len(vacantes)}</div>
+                    <div class="label">Total Vacantes</div>
+                </div>
+            </div>
         </div>
         
+        <div class="section">
         <h2>📊 Estado de Postulaciones</h2>
         <div class="stats-grid">
-            <div class="stat-box"><div class="number" style="color: #10b981;">✅ {contratados}</div><div>Contratados</div></div>
-            <div class="stat-box"><div class="number" style="color: #f59e0b;">⏳ {en_proceso}</div><div>En Proceso</div></div>
-            <div class="stat-box"><div class="number" style="color: #ef4444;">❌ {rechazados}</div><div>Rechazados</div></div>
+                <div class="stat-box stat-success">
+                    <div class="number">✓ {contratados}</div>
+                    <div class="label">Contratados</div>
+                </div>
+                <div class="stat-box stat-warning">
+                    <div class="number">⏳ {en_proceso}</div>
+                    <div class="label">En Proceso</div>
+                </div>
+                <div class="stat-box stat-danger">
+                    <div class="number">✗ {rechazados}</div>
+                    <div class="label">Rechazados</div>
+                </div>
+            </div>
         </div>
         
+        <div class="section">
         <h2>💼 Vacantes Publicadas</h2>
         <table>
-            <thead><tr><th>Título</th><th>Estado</th><th>Postulaciones</th><th>Fecha</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Título de la Vacante</th>
+                        <th>Estado</th>
+                        <th>Postulaciones</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
             <tbody>
     """
     
@@ -508,37 +658,40 @@ def generar_reporte_html(user, vacantes, postulaciones, ofertas_activas, contrat
     html_content += """
             </tbody>
         </table>
-        <p style="text-align: center; margin-top: 50px; color: #666;">
-            WorkLink - Sistema de Gestión de Empleo<br>
-            <small>Para guardar como PDF: Ctrl+P → Guardar como PDF</small>
-        </p>
+        </div>
+        
+        <div class="footer">
+            <strong>WorkLink</strong> - Sistema de Gestión de Empleo<br>
+            <small>Reporte generado automáticamente</small>
+        </div>
     </body>
     </html>
     """
     
+    return html_content
+
+
+def generar_reporte_html(user, vacantes, postulaciones, ofertas_activas, contratados, en_proceso, rechazados, vistos, postulados):
+    """Función auxiliar para generar reporte en HTML si reportlab no está disponible"""
+    from flask import make_response
+    from datetime import datetime
+    
+    html_content = generar_reporte_html_content(user, vacantes, postulaciones, ofertas_activas, 
+                                               contratados, en_proceso, rechazados, vistos, postulados)
+    
     response = make_response(html_content)
     response.headers['Content-Type'] = 'text/html; charset=utf-8'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte.html"'
     return response
 
 
-@rt_empresa.route("/generar_reporte")
+@rt_empresa.route("/generar_reporte", methods=['GET', 'POST'])
 @login_role_required(Roles.EMPRESA)
 def generar_reporte():
     """Generar reporte en PDF con estadísticas de la empresa"""
     from flask import make_response
     from datetime import datetime
     from io import BytesIO
-    
-    try:
-        from reportlab.lib.pagesizes import letter, A4
-        from reportlab.lib import colors
-        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-        from reportlab.lib.units import inch
-        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
-        from reportlab.lib.enums import TA_CENTER, TA_LEFT
-        REPORTLAB_AVAILABLE = True
-    except ImportError:
-        REPORTLAB_AVAILABLE = False
     
     user = get_user_from_session(session)
     if not user:
@@ -559,162 +712,9 @@ def generar_reporte():
     vistos = sum(1 for p in postulaciones if p.estado == 'visto')
     postulados = sum(1 for p in postulaciones if p.estado == 'postulado')
     
-    # Si reportlab no está disponible, generar HTML
-    if not REPORTLAB_AVAILABLE:
-        return generar_reporte_html(user, vacantes, postulaciones, ofertas_activas, 
-                                   contratados, en_proceso, rechazados, vistos, postulados)
-    
-    # Crear PDF en memoria
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=50, leftMargin=50, topMargin=50, bottomMargin=50)
-    
-    # Estilos
-    styles = getSampleStyleSheet()
-    title_style = ParagraphStyle(
-        'CustomTitle',
-        parent=styles['Heading1'],
-        fontSize=24,
-        textColor=colors.HexColor('#6366f1'),
-        spaceAfter=30,
-        alignment=TA_CENTER,
-        fontName='Helvetica-Bold'
-    )
-    
-    heading_style = ParagraphStyle(
-        'CustomHeading',
-        parent=styles['Heading2'],
-        fontSize=16,
-        textColor=colors.HexColor('#4f46e5'),
-        spaceAfter=12,
-        spaceBefore=12,
-        fontName='Helvetica-Bold'
-    )
-    
-    normal_style = styles['Normal']
-    center_style = ParagraphStyle('Center', parent=normal_style, alignment=TA_CENTER)
-    
-    # Contenido del PDF
-    story = []
-    
-    # Header
-    story.append(Paragraph("Reporte de Postulaciones", title_style))
-    story.append(Paragraph(f"Generado el {datetime.now().strftime('%d/%m/%Y %H:%M')}", center_style))
-    story.append(Paragraph(f"<b>Empresa:</b> {user.get('nombre', 'N/A')}", center_style))
-    story.append(Spacer(1, 0.3*inch))
-    
-    # Resumen General
-    story.append(Paragraph("Resumen General", heading_style))
-    data_resumen = [
-        ['Ofertas Activas', 'Total Postulaciones', 'Total Vacantes'],
-        [str(ofertas_activas), str(len(postulaciones)), str(len(vacantes))]
-    ]
-    table_resumen = Table(data_resumen, colWidths=[2*inch, 2*inch, 2*inch])
-    table_resumen.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#6366f1')),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 12),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f9fafb')),
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
-        ('FONTSIZE', (0, 1), (-1, -1), 14),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica-Bold'),
-    ]))
-    story.append(table_resumen)
-    story.append(Spacer(1, 0.3*inch))
-    
-    # Estado de Postulaciones
-    story.append(Paragraph("Estado de Postulaciones", heading_style))
-    data_estados = [
-        ['Contratados', 'En Proceso', 'Rechazados', 'Vistos', 'Postulados'],
-        [str(contratados), str(en_proceso), str(rechazados), str(vistos), str(postulados)]
-    ]
-    table_estados = Table(data_estados, colWidths=[1.2*inch]*5)
-    table_estados.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#6366f1')),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f9fafb')),
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
-        ('FONTSIZE', (0, 1), (-1, -1), 14),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica-Bold'),
-    ]))
-    story.append(table_estados)
-    story.append(Spacer(1, 0.3*inch))
-    
-    # Vacantes Publicadas
-    story.append(Paragraph("Vacantes Publicadas", heading_style))
-    data_vacantes = [['Titulo', 'Estado', 'Postulaciones', 'Fecha']]
-    
-    for vacante in vacantes:
-        postulaciones_vacante = sum(1 for p in postulaciones if p.vacante_id == vacante.id)
-        fecha = vacante.fecha_publicacion.strftime('%d/%m/%Y') if vacante.fecha_publicacion else 'N/A'
-        data_vacantes.append([
-            vacante.titulo[:30] + '...' if len(vacante.titulo) > 30 else vacante.titulo,
-            vacante.estado,
-            str(postulaciones_vacante),
-            fecha
-        ])
-    
-    table_vacantes = Table(data_vacantes, colWidths=[2.5*inch, 1.5*inch, 1.2*inch, 1.2*inch])
-    table_vacantes.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#6366f1')),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
-        ('FONTSIZE', (0, 1), (-1, -1), 9),
-        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9fafb')]),
-    ]))
-    story.append(table_vacantes)
-    story.append(Spacer(1, 0.5*inch))
-    
-    # Footer
-    story.append(Paragraph("<br/><br/>WorkLink - Sistema de Gestion de Empleo", center_style))
-    story.append(Paragraph("Este reporte es confidencial y solo para uso interno", center_style))
-    
-    # Construir PDF
-    doc.build(story)
-    
-    # Preparar respuesta
-    buffer.seek(0)
-    pdf_data = buffer.getvalue()
-    
-    # Guardar en base de datos
-    try:
-        from app.models.md_reporte import ReporteModel
-        nombre_archivo = f'reporte_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pdf'
-        
-        nuevo_reporte = ReporteModel(
-            empresa_id=user['id'],
-            nombre_archivo=nombre_archivo,
-            tipo_reporte='postulaciones',
-            archivo_pdf=pdf_data,
-            total_vacantes=len(vacantes),
-            total_postulaciones=len(postulaciones),
-            ofertas_activas=ofertas_activas,
-            contratados=contratados,
-            en_proceso=en_proceso,
-            rechazados=rechazados
-        )
-        
-        db.session.add(nuevo_reporte)
-        db.session.commit()
-    except Exception as e:
-        print(f"Error al guardar reporte: {e}")
-    
-    response = make_response(pdf_data)
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f'attachment; filename=reporte_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pdf'
-    
-    return response
+    # Generar reporte HTML (versión original que funcionaba)
+    return generar_reporte_html(user, vacantes, postulaciones, ofertas_activas, 
+                               contratados, en_proceso, rechazados, vistos, postulados)
 
 
 @rt_empresa.route("/api/notificaciones/contador")

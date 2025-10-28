@@ -8,255 +8,345 @@
     <title>Panel Empresa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        .badge-header {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-left: 8px;
-            box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
-        }
-        
-        .pulse-animation {
-            animation: pulse 0.6s ease-in-out;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-        
-        .card-reportes {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card-reportes::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-        
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .card-reportes:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
-        }
-        
-        .card-reportes .card-body {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .report-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            display: block;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .report-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        
-        .report-description {
-            font-size: 0.85rem;
-            opacity: 0.9;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
-        
-        .btn-generar-reporte {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .btn-generar-reporte:hover {
-            background: white;
-            color: #6366f1;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
     {{ flash.render_flash_messages() }}
-    <header>
-        <div class="logo"></div>
-        <h1><b>WorkLink</b></h1>
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <a href="{{ url_for('rt_empresa.mensajes_empresa') }}" style="color: white; text-decoration: none; display: flex; align-items: center;">
-                💬 Mensajes
-                <span id="badge-mensajes-header" class="badge-header"></span>
-            </a>
-            <a href="{{ url_for('rt_empresa.notificaciones_empresa') }}" style="color: white; text-decoration: none; display: flex; align-items: center;">
-                🔔 Notificaciones
-                <span id="badge-notificaciones-header" class="badge-header"></span>
-            </a>
-            <a href="{{ url_for('IndexRoute.index') }}" class="btn-regresar">Salir</a>
+    
+    <!-- Navigation Bar -->
+    <nav class="empresa-navbar">
+        <div class="nav-brand">
+            <h1>WorkLink</h1>
         </div>
-    </header>
+        <div class="nav-links">
+            <a href="{{ url_for('rt_empresa.mensajes_empresa') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-envelope"></i> 
+                <span>Mensajes</span>
+                <span id="badge-mensajes-header" class="badge-header" style="display: none;"></span>
+            </a>
+            <a href="{{ url_for('rt_empresa.notificaciones_empresa') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-bell"></i> 
+                <span>Notificaciones</span>
+                <span id="badge-notificaciones-header" class="badge-header" style="display: none;"></span>
+            </a>
+            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </nav>
 
-    <div class="container mt-4">
-        <h2 class="mb-4">Panel de Empresa</h2>
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h2 class="page-title">Panel de Empresa</h2>
+            <p class="page-subtitle">Gestiona tus ofertas y candidatos desde un solo lugar</p>
+        </div>
 
-        <!-- Dashboard resumen -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Ofertas activas</h5>
-                        <p class="display-6">{{ ofertas_activas }}</p>
+        <!-- Company Profile Card -->
+        <div class="company-profile-card">
+            <div class="company-header">
+                <div class="company-logo-section">
+                    <div class="company-logo">
+                        <i class="fas fa-building"></i>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Postulantes totales</h5>
-                        <p class="display-6">{{ postulantes_totales }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Estadísticas</h5>
-                        <p class="text-muted">En construcción</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm card-reportes">
-                    <div class="card-body">
-                        <span class="report-icon">📊</span>
-                        <h5 class="report-title">Generar Reporte</h5>
-                        <p class="report-description">
-                            Descarga un reporte completo de tus postulaciones, candidatos y estadísticas
+                    <div class="company-info-header">
+                        <h3 class="company-name">Mi Empresa</h3>
+                        <p class="company-sector">
+                            <i class="fas fa-industry"></i> Tecnología
+                            <span class="separator">•</span>
+                            <i class="fas fa-map-marker-alt"></i> Ciudad
                         </p>
-                        <a href="{{ url_for('rt_empresa.generar_reporte') }}" class="btn-generar-reporte">
-                            📄 Descargar Reporte
-                        </a>
+                    </div>
+                </div>
+                <a href="#" class="btn-edit-profile">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </a>
+            </div>
+            <div class="company-details">
+                <div class="detail-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>contacto@empresa.com</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+1 234 567 890</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-globe"></i>
+                    <span>www.empresa.com</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-users"></i>
+                    <span>11-50 empleados</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ ofertas_activas }}</h3>
+                    <p class="stat-label">Ofertas Activas</p>
+                    <p class="stat-trend">
+                        <i class="fas fa-arrow-up"></i> 2 este mes
+                    </p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ postulantes_totales }}</h3>
+                    <p class="stat-label">Postulantes Totales</p>
+                    <p class="stat-trend">
+                        <i class="fas fa-arrow-up"></i> 15% este mes
+                    </p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">45%</h3>
+                    <p class="stat-label">Tasa de Conversión</p>
+                    <p class="stat-trend">
+                        <i class="fas fa-arrow-down"></i> -2% este mes
+                    </p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">18d</h3>
+                    <p class="stat-label">Tiempo Promedio</p>
+                    <p class="stat-trend">
+                        <i class="fas fa-arrow-down"></i> -3 días
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Statistics Section -->
+        <div class="detailed-stats-section">
+            <h3 class="section-heading">
+                <i class="fas fa-chart-bar"></i> Estadísticas Detalladas
+            </h3>
+            
+            <div class="detailed-stats-grid">
+                <!-- Estados de Postulantes -->
+                <div class="stats-chart-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">
+                            <i class="fas fa-user-clock"></i> Estados de Postulantes
+                        </h4>
+                    </div>
+                    <div class="chart-content">
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>Postulado</span>
+                                <span class="stat-number">12</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 45%; background: #0ea5e9;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>En Revisión</span>
+                                <span class="stat-number">8</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 30%; background: #3b82f6;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>Entrevista</span>
+                                <span class="stat-number">5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 19%; background: #f59e0b;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>Contratado</span>
+                                <span class="stat-number">2</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 8%; background: #10b981;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Métricas Clave -->
+                <div class="stats-chart-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">
+                            <i class="fas fa-key"></i> Métricas Clave
+                        </h4>
+                    </div>
+                    <div class="chart-content">
+                        <div class="metric-item">
+                            <i class="fas fa-star"></i>
+                            <div class="metric-content">
+                                <h5>Vacantes más vistas</h5>
+                                <p>Desarrollador Full Stack - 156 vistas</p>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <i class="fas fa-users"></i>
+                            <div class="metric-content">
+                                <h5>Mejor tasa de respuesta</h5>
+                                <p>Diseñador UI/UX - 24% postulaciones</p>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <i class="fas fa-trophy"></i>
+                            <div class="metric-content">
+                                <h5>Contrataciones del mes</h5>
+                                <p>3 nuevos empleados</p>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <i class="fas fa-calendar"></i>
+                            <div class="metric-content">
+                                <h5>Próximas entrevistas</h5>
+                                <p>8 programadas esta semana</p>
+                </div>
+            </div>
+                    </div>
+                </div>
+
+                <!-- Reporte Descargable -->
+                <div class="stats-chart-card download-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">
+                            <i class="fas fa-file-pdf"></i> Ver Reporte
+                        </h4>
+            </div>
+                    <div class="chart-content">
+                        <p class="download-description">
+                            Visualiza un reporte completo con todas tus estadísticas, postulantes y métricas en formato PDF.
+                        </p>
+                <button onclick="verPDF()" class="btn-download-full">
+                    <i class="fas fa-file-pdf"></i> Ver Reporte PDF
+                </button>
+                        <div class="download-info">
+                            <i class="fas fa-info-circle"></i>
+                            Última actualización: hace 2 horas
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Botón publicar -->
-        <div class="text-end mb-3">
-            <a href="{{ url_for('rt_empresa.publicar_empleo') }}" class="btn btn-primary">
-                + Publicar empleo
+        <!-- Action Button -->
+        <div class="action-section">
+            <a href="{{ url_for('rt_empresa.publicar_empleo') }}" class="btn-primary-large">
+                <i class="fas fa-plus"></i> Publicar Empleo
             </a>
         </div>
 
-        <div class="row">
+        <!-- Content Grid -->
+        <div class="content-grid">
             <!-- Ofertas laborales -->
-            <div class="col-md-6">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-dark text-white">
-                        Mis ofertas laborales
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-briefcase"></i>
+                        Mis Ofertas Laborales
+                    </h3>
+                </div>
+                <div class="section-content">
+                    {% if ofertas %}
+                    <div class="list-container">
+                        {% for oferta in ofertas %}
+                        <div class="list-item">
+                            <div class="item-main">
+                                <h4 class="item-title">{{ oferta.titulo }}</h4>
+                                <p class="item-meta">{{ oferta.fecha_publicacion.strftime('%d/%m/%Y') if oferta.fecha_publicacion else 'Sin fecha' }}</p>
+                            </div>
+                            <span class="badge-status badge-success">Activa</span>
+                        </div>
+                        {% endfor %}
                     </div>
-                    <div class="card-body">
-                        {% if ofertas %}
-                        <ul class="list-group">
-                            {% for oferta in ofertas %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ oferta.titulo }}
-                                <span class="badge bg-success">{{ oferta.estado }}</span>
-                            </li>
-                            {% endfor %}
-                        </ul>
                         {% else %}
-                        <p class="text-muted">No tienes ofertas activas.</p>
-                        {% endif %}
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>No tienes ofertas activas.</p>
                     </div>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Candidatos -->
-            <div class="col-md-6">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-dark text-white">
-                        Postulantes recientes
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-user-check"></i>
+                        Postulantes Recientes
+                    </h3>
                     </div>
-                    <div class="card-body">
+                <div class="section-content">
                         {% if candidatos %}
-                        <ul class="list-group">
+                    <div class="list-container">
                             {% for c in candidatos %}
-                            <li class="list-group-item">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <div>
-                                        <strong>{{ c.empleado.usuario.nombre if c.empleado and c.empleado.usuario else 'Candidato' }}</strong>
-                                        <br>
-                                        <small class="text-muted">{{ c.vacante.titulo if c.vacante else 'Vacante' }}</small>
+                        <div class="candidate-item">
+                            <div class="candidate-info">
+                                <h4 class="candidate-name">
+                                    {{ c.empleado.usuario.nombre if c.empleado and c.empleado.usuario else 'Candidato' }}
+                                </h4>
+                                <p class="candidate-position">{{ c.vacante.titulo if c.vacante else 'Vacante' }}</p>
                                     </div>
-                                    <div>
+                            <div class="candidate-actions">
                                         {% if c.estado == 'postulado' %}
-                                            <span class="badge bg-info">📩 Postulado</span>
+                                    <span class="badge-status badge-info">Postulado</span>
                                         {% elif c.estado == 'visto' %}
-                                            <span class="badge bg-primary">👁️ Visto</span>
+                                    <span class="badge-status badge-primary">Visto</span>
                                         {% elif c.estado == 'en_proceso' %}
-                                            <span class="badge bg-warning">⏳ En proceso</span>
+                                    <span class="badge-status badge-warning">En proceso</span>
                                         {% elif c.estado == 'rechazado' %}
-                                            <span class="badge bg-danger">❌ Rechazado</span>
+                                    <span class="badge-status badge-danger">Rechazado</span>
                                         {% elif c.estado == 'contratado' %}
-                                            <span class="badge bg-success">✅ Contratado</span>
+                                    <span class="badge-status badge-success">Contratado</span>
                                         {% endif %}
+                                <a href="{{ url_for('rt_empresa.ver_candidato', candidato_id=c.empleado_id) }}" class="btn-view">
+                                    <i class="fas fa-eye"></i> Ver perfil
+                                </a>
                                     </div>
                                 </div>
-                                <div class="d-flex gap-2">
-                                    <a href="{{ url_for('rt_empresa.ver_candidato', candidato_id=c.empleado_id) }}"
-                                        class="btn btn-sm btn-outline-primary">Ver perfil completo</a>
+                        {% endfor %}
                                 </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
                         {% else %}
-                        <p class="text-muted">No tienes postulantes recientes.</p>
-                        {% endif %}
+                    <div class="empty-state">
+                        <i class="fas fa-user-slash"></i>
+                        <p>No tienes postulantes recientes.</p>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
     <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
+    
+    <script>
+        function verPDF() {
+            window.open("{{ url_for('rt_empresa.generar_reporte') }}", '_blank');
+        }
+    </script>
 </body>
 
 </html>
