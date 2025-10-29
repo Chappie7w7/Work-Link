@@ -10,14 +10,15 @@ body {
 /* === Hero Section === */
 .hero-section {
   position: relative;
-  background-color: #f3f3f3;
-  padding: 80px 0 0;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  padding: 0;
+  overflow: hidden;
 }
 
 .hero-image {
   position: relative;
   width: 100%;
-  height: 400px;
+  height: 500px;
   overflow: hidden;
 }
 
@@ -25,12 +26,13 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: brightness(0.7);
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(55, 65, 81, 0.6) 100%);
   color: white;
   display: flex;
   flex-direction: column;
@@ -41,15 +43,33 @@ body {
 }
 
 .hero-overlay h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 12px;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
 }
 
 .hero-overlay p {
-  font-size: 1.1rem;
-  max-width: 700px;
-  margin-bottom: 24px;
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin-bottom: 32px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .hero-overlay h1 {
+    font-size: 2.2rem;
+  }
+  
+  .hero-overlay p {
+    font-size: 1rem;
+  }
+  
+  .hero-image {
+    height: 400px;
+  }
 }
 
 /* === Botones === */
@@ -71,24 +91,30 @@ body {
 }
 
 .btn-dark {
-  background-color: #1f2937;
+  background: linear-gradient(135deg, #1f2937, #374151);
   color: white;
   border: none;
-  border-radius: 9999px;
-  padding: 10px 24px;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(31, 41, 55, 0.2);
 }
 
 .btn-dark:hover {
-  background-color: #111827;
+  background: linear-gradient(135deg, #111827, #1f2937);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(31, 41, 55, 0.3);
 }
 
 /* === Filtros === */
 .filters-section {
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  padding: 25px 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  padding: 40px 0;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .filters-container {
@@ -96,29 +122,69 @@ body {
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
   justify-content: center;
   align-items: center;
+  padding: 0 20px;
 }
 
-.filters-container select,
 .filters-container input[type="text"] {
-  border: 1px solid #d1d5db;
-  border-radius: 9999px;
-  padding: 8px 16px;
-  font-size: 0.95rem;
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 1rem;
   outline: none;
+  transition: all 0.2s ease;
+  background: #ffffff;
 }
 
-.filters-container input[type="text"] {
-  width: 500px;
+.filters-container input[type="text"]:focus {
+  border-color: #1f2937;
+  box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.1);
+}
+
+.filters-container select {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  outline: none;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 150px;
+}
+
+.filters-container select:focus {
+  border-color: #1f2937;
+  box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.1);
+}
+
+.filters-container select:hover {
+  border-color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .filters-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filters-container input[type="text"],
+  .filters-container select {
+    width: 100%;
+    min-width: auto;
+  }
 }
 
 /* === Job Listings === */
 .jobs-section {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 60px 16px;
+  padding: 30px 16px;
 }
 
 .jobs-section h2 {
@@ -130,8 +196,23 @@ body {
 
 .jobs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+  padding: 0 4px;
+}
+
+@media (max-width: 768px) {
+  .jobs-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .jobs-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* === Tarjeta de empleo === */
@@ -139,41 +220,268 @@ body {
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 24px;
-  background-color: white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  transition: box-shadow 0.3s ease, transform 0.2s;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
 }
 
 .job-card:hover {
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
   transform: translateY(-4px);
+  border-color: #d1d5db;
+}
+
+/* Job Header */
+.job-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.company-logo {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid #e5e7eb;
+}
+
+.company-logo i {
+  font-size: 20px;
+  color: #6b7280;
+}
+
+.job-title-section {
+  flex: 1;
+  min-width: 0;
 }
 
 .job-card h3 {
   font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  color: #111827;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
 }
 
 .company {
   font-size: 0.9rem;
   color: #6b7280;
-  margin-bottom: 8px;
+  margin-bottom: 0;
+  font-weight: 500;
 }
 
+/* Job Info */
 .job-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.9rem;
-  color: #4b5563;
-  margin-bottom: 12px;
+  color: #6b7280;
+}
+
+.location i {
+  font-size: 0.8rem;
+  color: #9ca3af;
 }
 
 .job-type {
-  color: #16a34a;
-  font-weight: 600;
+  background: #f0fdf4;
+  color: #166534;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  border: 1px solid #bbf7d0;
 }
 
+/* Description */
 .description {
   font-size: 0.9rem;
   color: #4b5563;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 0;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 4.5em;
+}
+
+/* Job Actions */
+.job-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: auto;
+}
+
+@media (max-width: 768px) {
+  .job-card {
+    min-height: 320px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .job-card {
+    min-height: 380px;
+  }
+}
+
+.btn-view-more {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.btn-view-more:hover {
+  background: #f9fafb;
+  color: #374151;
+  border-color: #9ca3af;
+}
+
+.job-card .btn-orange {
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.job-card .btn-orange:hover {
+  background: #111827;
+  transform: translateY(-1px);
+}
+
+/* === Paginado === */
+.pagination-container {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-numbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pagination-number {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-number:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.pagination-number.active {
+  background: #1f2937;
+  color: white;
+  border-color: #1f2937;
+}
+
+.pagination-dots {
+  padding: 0 8px;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.pagination-info {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .pagination-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .pagination-number {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8rem;
+  }
 }

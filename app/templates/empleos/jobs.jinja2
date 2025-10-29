@@ -9,13 +9,14 @@
   <title>WorkLink – Job Listings</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_jobs.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
   {{ components.navbar( current_user) }}
 
   <!-- Hero Section -->
-  <section class="hero-section">
+  <section class="hero-section" data-aos="fade-up" data-aos-delay="50">
     <div class="hero-image">
       <img src="https://www.acceptmission.com/wp-content/uploads/2021/05/Blogbanner-Business-Development-vs-Innovation-Whats-the-Difference-800x267.png.webp"
            alt="Job Opportunities">
@@ -25,13 +26,13 @@
           Explore thousands of opportunities from top companies worldwide.
           Your next career move is just a click away with WorkLink.
         </p>
-        <button class="btn-orange">Explore Job Opportunities</button>
+        <!--button class="btn-orange">Explore Job Opportunities</!--button-->
       </div>
     </div>
   </section>
 
   <!-- Filters Section -->
-  <section class="filters-section">
+  <section class="filters-section" data-aos="fade-up" data-aos-delay="100">
     <div class="filters-container">
       <input type="text" placeholder="Search keyword">
       <select>
@@ -51,116 +52,241 @@
   </section>
 
   <!-- Job Listings -->
-  <section class="jobs-section">
+  <section class="jobs-section" data-aos="fade-up" data-aos-delay="150">
     <h2>Latest Job Listings</h2>
 
     <div class="jobs-grid">
       <!-- Job Card -->
-      <div class="job-card">
-        <h3>Senior Software Engineer</h3>
-        <p class="company">Tech Innovators Inc.</p>
-        <div class="job-info">📍 San Francisco, CA · <span class="job-type">Full-time</span></div>
-        <p class="description">
-          Develop and maintain high-performance web applications using modern frameworks.
-        </p>
-        <button class="btn-orange">Apply Now</button>
-      </div>
-
-      <div class="job-card">
-        <h3>Digital Marketing Specialist</h3>
-        <p class="company">Global Marketing Solutions</p>
-        <div class="job-info">🌐 Remote · <span class="job-type">Full-time</span></div>
-        <p class="description">
-          Execute and optimize digital campaigns across multiple channels.
-        </p>
-        <button class="btn-orange">Apply Now</button>
-      </div>
-
-      <div class="job-card">
-        <h3>UX/UI Designer</h3>
-        <p class="company">Creative Design Studio</p>
-        <div class="job-info">📍 New York, NY · <span class="job-type">Contract</span></div>
-        <p class="description">
-          Design intuitive and visually appealing user interfaces for mobile and web.
-        </p>
-        <button class="btn-orange">Apply Now</button>
-      </div>
-
-      <!-- Puedes duplicar las tarjetas si lo deseas -->
-      <div class="job-card">
-        <h3>Senior Software Engineer</h3>
-        <p class="company">Tech Innovators Inc.</p>
-        <div class="job-info">📍 San Francisco, CA · <span class="job-type">Full-time</span></div>
-        <p class="description">
-          Develop and maintain high-performance web applications using modern frameworks.
-        </p>
-        <button class="btn-orange">Apply Now</button>
-      </div>
-
-      <div class="job-card">
-        <h3>Digital Marketing Specialist</h3>
-        <p class="company">Global Marketing Solutions</p>
-        <div class="job-info">🌐 Remote · <span class="job-type">Full-time</span></div>
-        <p class="description">
-          Execute and optimize digital campaigns across multiple channels.
-        </p>
-        <button class="btn-orange">Apply Now</button>
-      </div>
-
-      <div class="job-card">
-        <h3>UX/UI Designer</h3>
-        <p class="company">Creative Design Studio</p>
-        <div class="job-info">📍 New York, NY · <span class="job-type">Contract</span></div>
-        <p class="description">
-          Design intuitive and visually appealing user interfaces for mobile and web.
-        </p>
-        <button class="btn-orange">Apply Now</button>
-      </div>
-
-      <div class="job-card">
-        <h3>Senior Software Engineer</h3>
-        <p class="company">Tech Innovators Inc.</p>
-        <div class="job-info">📍 San Francisco, CA · <span class="job-type">Full-time</span></div>
-        <p class="description">
-          Develop and maintain high-performance web applications using modern frameworks.
-        </p>
-        <button class="btn-orange">Apply Now</button>
-      </div>
-
-      <div class="job-card">
-        <h3>Digital Marketing Specialist</h3>
-        <p class="company">Global Marketing Solutions</p>
-        <div class="job-info">🌐 Remote · <span class="job-type">Full-time</span></div>
-        <p class="description">
-          Execute and optimize digital campaigns across multiple channels.
-        </p>
-        <button class="btn-orange">Apply Now</button>
-      </div>
-
-      <div class="job-card">
-        <h3>UX/UI Designer</h3>
-        <p class="company">Creative Design Studio</p>
-        <div class="job-info">📍 New York, NY · <span class="job-type">Contract</span></div>
-        <p class="description">
-          Design intuitive and visually appealing user interfaces for mobile and web.
-        </p>
-        <button class="btn-orange">Apply Now</button>
-      </div>
-
-      <!--div class="job-card">
+      <div class="job-card" data-aos="fade-up" data-aos-delay="0">
         <div class="job-header">
-          <h3>UX/UI Designer</h3>
-          <p class="company">Creative Design Studio</p>
+          <div class="company-logo">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <div class="job-title-section">
+            <h3>Senior Software Engineer</h3>
+            <p class="company">Tech Innovators Inc.</p>
+          </div>
         </div>
-        <div class="job-details">
-          <p><i class="fa-solid fa-location-dot"></i> New York, NY</p>
-          <p><i class="fa-solid fa-briefcase"></i> <span class="job-type">Contract</span></p>
+        <div class="job-info">
+          <span class="location"><i class="fas fa-map-marker-alt"></i> San Francisco, CA</span>
+          <span class="job-type">Full-time</span>
         </div>
-        <div class="job-description"></div>
-        <div class="job-footer">
+        <p class="description">
+          Develop and maintain high-performance web applications using modern frameworks. Collaborate with cross-functional teams to define, design, and ship new features.
+        </p>
+        <div class="job-actions">
+          <button class="btn-view-more">Ver Más</button>
           <button class="btn-orange">Apply Now</button>
         </div>
-      </div-->
+      </div>
+
+      <div class="job-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="job-header">
+          <div class="company-logo">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <div class="job-title-section">
+            <h3>Digital Marketing Specialist</h3>
+            <p class="company">Global Marketing Solutions</p>
+          </div>
+        </div>
+        <div class="job-info">
+          <span class="location"><i class="fas fa-globe"></i> Remote</span>
+          <span class="job-type">Full-time</span>
+        </div>
+        <p class="description">
+          Execute and optimize digital campaigns across multiple channels. Analyze performance metrics and implement strategies to maximize ROI.
+        </p>
+        <div class="job-actions">
+          <button class="btn-view-more">Ver Más</button>
+          <button class="btn-orange">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="job-header">
+          <div class="company-logo">
+            <i class="fas fa-palette"></i>
+          </div>
+          <div class="job-title-section">
+            <h3>UX/UI Designer</h3>
+            <p class="company">Creative Design Studio</p>
+          </div>
+        </div>
+        <div class="job-info">
+          <span class="location"><i class="fas fa-map-marker-alt"></i> New York, NY</span>
+          <span class="job-type">Contract</span>
+        </div>
+        <p class="description">
+          Design intuitive and visually appealing user interfaces for mobile and web. Create wireframes, prototypes, and high-fidelity designs.
+        </p>
+        <div class="job-actions">
+          <button class="btn-view-more">Ver Más</button>
+          <button class="btn-orange">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="job-header">
+          <div class="company-logo">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="job-title-section">
+            <h3>Financial Analyst</h3>
+            <p class="company">Finance Corp</p>
+          </div>
+        </div>
+        <div class="job-info">
+          <span class="location"><i class="fas fa-map-marker-alt"></i> Chicago, IL</span>
+          <span class="job-type">Full-time</span>
+        </div>
+        <p class="description">
+          Analyze financial data and market trends to provide insights for investment decisions. Prepare reports and presentations for stakeholders.
+        </p>
+        <div class="job-actions">
+          <button class="btn-view-more">Ver Más</button>
+          <button class="btn-orange">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" data-aos="fade-up" data-aos-delay="400">
+        <div class="job-header">
+          <div class="company-logo">
+            <i class="fas fa-heart"></i>
+          </div>
+          <div class="job-title-section">
+            <h3>Healthcare Administrator</h3>
+            <p class="company">MedCare Systems</p>
+          </div>
+        </div>
+        <div class="job-info">
+          <span class="location"><i class="fas fa-map-marker-alt"></i> Boston, MA</span>
+          <span class="job-type">Full-time</span>
+        </div>
+        <p class="description">
+          Manage healthcare operations and ensure compliance with regulations. Coordinate with medical staff and administrative teams.
+        </p>
+        <div class="job-actions">
+          <button class="btn-view-more">Ver Más</button>
+          <button class="btn-orange">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" data-aos="fade-up" data-aos-delay="500">
+        <div class="job-header">
+          <div class="company-logo">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="job-title-section">
+            <h3>Online Course Instructor</h3>
+            <p class="company">EduTech Academy</p>
+          </div>
+        </div>
+        <div class="job-info">
+          <span class="location"><i class="fas fa-globe"></i> Remote</span>
+          <span class="job-type">Part-time</span>
+        </div>
+        <p class="description">
+          Create and deliver engaging online courses in technology and programming. Mentor students and provide feedback on assignments.
+        </p>
+        <div class="job-actions">
+          <button class="btn-view-more">Ver Más</button>
+          <button class="btn-orange">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" data-aos="fade-up" data-aos-delay="600">
+        <div class="job-header">
+          <div class="company-logo">
+            <i class="fas fa-industry"></i>
+          </div>
+          <div class="job-title-section">
+            <h3>Operations Manager</h3>
+            <p class="company">Manufacturing Plus</p>
+          </div>
+        </div>
+        <div class="job-info">
+          <span class="location"><i class="fas fa-map-marker-alt"></i> Detroit, MI</span>
+          <span class="job-type">Full-time</span>
+        </div>
+        <p class="description">
+          Oversee daily operations and ensure efficient production processes. Manage teams and implement process improvements.
+        </p>
+        <div class="job-actions">
+          <button class="btn-view-more">Ver Más</button>
+          <button class="btn-orange">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" data-aos="fade-up" data-aos-delay="700">
+        <div class="job-header">
+          <div class="company-logo">
+            <i class="fas fa-headset"></i>
+          </div>
+          <div class="job-title-section">
+            <h3>Customer Support Rep</h3>
+            <p class="company">Service Solutions</p>
+          </div>
+        </div>
+        <div class="job-info">
+          <span class="location"><i class="fas fa-globe"></i> Remote</span>
+          <span class="job-type">Full-time</span>
+        </div>
+        <p class="description">
+          Provide excellent customer service through multiple channels. Resolve issues and maintain customer satisfaction.
+        </p>
+        <div class="job-actions">
+          <button class="btn-view-more">Ver Más</button>
+          <button class="btn-orange">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" data-aos="fade-up" data-aos-delay="700">
+        <div class="job-header">
+          <div class="company-logo">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <div class="job-title-section">
+            <h3>Data Scientist</h3>
+            <p class="company">Analytics Pro</p>
+          </div>
+        </div>
+        <div class="job-info">
+          <span class="location"><i class="fas fa-map-marker-alt"></i> Seattle, WA</span>
+          <span class="job-type">Full-time</span>
+        </div>
+        <p class="description">
+          Analyze complex datasets to extract insights and build predictive models. Work with machine learning algorithms and statistical methods.
+        </p>
+        <div class="job-actions">
+          <button class="btn-view-more">Ver Más</button>
+          <button class="btn-orange">Apply Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paginado -->
+    <div class="pagination-container" data-aos="fade-up" data-aos-delay="200">
+      <div class="pagination">
+        <button class="pagination-btn prev-btn" disabled>
+          <i class="fas fa-chevron-left"></i>
+          Anterior
+        </button>
+        <div class="pagination-numbers">
+          <button class="pagination-number active">1</button>
+          <button class="pagination-number">2</button>
+          <button class="pagination-number">3</button>
+          <span class="pagination-dots">...</span>
+          <button class="pagination-number">8</button>
+        </div>
+        <button class="pagination-btn next-btn">
+          Siguiente
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="pagination-info">
+        <span>Mostrando 1-9 de 72 empleos</span>
+      </div>
     </div>
   </section>
 
