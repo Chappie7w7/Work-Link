@@ -2,6 +2,7 @@ from app.db.sql import db
 from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from app.utils.timezone_helper import get_mexico_time
 
 class NotificacionModel(db.Model):
     __tablename__ = 'notificaciones'
@@ -21,7 +22,7 @@ class NotificacionModel(db.Model):
         self.mensaje = mensaje
         self.tipo = tipo
         self.leido = leido
-        self.fecha_envio = fecha_envio or datetime.utcnow()
+        self.fecha_envio = fecha_envio or get_mexico_time()
 
     def to_json(self):
         return {

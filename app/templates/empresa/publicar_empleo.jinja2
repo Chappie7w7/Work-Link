@@ -1,72 +1,175 @@
+{% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Registrar Vacante</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_registro.css') }}">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicar Empleo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_publicar_empleo.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-
 <body>
-    <header>
-        <div class="logo"></div>
-        <h1>WorkLink</h1>
-    <!-- Botón que regresa al dashboard de empresa -->
-    <a href="{{ url_for('rt_empresa.dashboard') }}" class="btn-regresar">Regresar</a>
+    {{ flash.render_flash_messages() }}
+    
+    <!-- Navigation Bar -->
+    <nav class="empresa-navbar">
+        <div class="nav-brand">
+            <h1>WorkLink</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('rt_empresa.dashboard') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="{{ url_for('rt_empresa.mensajes_empresa') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-envelope"></i> Mensajes
+            </a>
+            <a href="{{ url_for('rt_empresa.notificaciones_empresa') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-bell"></i> Notificaciones
+            </a>
+            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </nav>
 
-    </header>
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h2 class="page-title">
+                <i class="fas fa-plus-circle"></i> Publicar Nuevo Empleo
+            </h2>
+            <p class="page-subtitle">Completa el formulario para crear una nueva vacante</p>
+        </div>
 
-    <div class="container">
-        <div class="register-box">
-            <h2>Registrar Vacante</h2>
-            <form action="{{ url_for('rt_empresa.nueva_vacante') }}" method="POST">
-                <p><strong>Empresa:</strong> {{ usuario.nombre }}</p>
-                <input type="hidden" name="empresa_id" value="{{ usuario.id }}">
-                
-                <label for="titulo">Título de la vacante</label>
-                <input type="text" id="titulo" name="titulo" maxlength="150" required>
-
-                <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" name="descripcion" rows="3" required></textarea>
-
-                <label for="requisitos">Requisitos</label>
-                <textarea id="requisitos" name="requisitos" rows="3"></textarea>
-
-                <label for="ubicacion">Ubicación</label>
-                <input type="text" id="ubicacion" name="ubicacion" maxlength="255">
-
-                <label for="estado">Estado
-                    <select id="estado" name="estado" required>
-                        <option value="publicada">Publicada</option>
-                        <option value="cerrada">Cerrada</option>
-                        <option value="pausada">Pausada</option>
-                    </select>
-                </label>
-
-                <div class="form-check">
-                    <label for="destacada">¿Vacante destacada?
-                        <input type="checkbox" id="destacada" name="destacada" value="true">
-                    </label>
+        <div class="form-container">
+            <div class="form-card">
+                <div class="company-info">
+                    <i class="fas fa-building"></i>
+                    <div>
+                        <strong>{{ usuario.nombre }}</strong>
+                        <span>Empresa registrada</span>
+                    </div>
                 </div>
 
-                <label for="salario_aprox">Salario aproximado
-                    <input type="number" step="1500" id="salario_aprox" name="salario_aprox">
-                </label>
+                <form action="{{ url_for('rt_empresa.nueva_vacante') }}" method="POST" id="vacanteForm">
+                    <input type="hidden" name="empresa_id" value="{{ usuario.id }}">
+                    
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-info-circle"></i> Información Básica
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="titulo">
+                                <i class="fas fa-briefcase"></i> Título de la vacante *
+                            </label>
+                            <input type="text" id="titulo" name="titulo" maxlength="150" required
+                                   placeholder="Ej: Desarrollador Full Stack">
+                        </div>
 
-                <label for="modalidad">Modalidad
-                    <select id="modalidad" name="modalidad">
-                        <option value="presencial">Presencial</option>
-                        <option value="remoto">Remoto</option>
-                        <option value="híbrido">Híbrido</option>
-                    </select>
-                </label>
+                        <div class="form-group">
+                            <label for="descripcion">
+                                <i class="fas fa-align-left"></i> Descripción *
+                            </label>
+                            <textarea id="descripcion" name="descripcion" rows="4" required
+                                      placeholder="Describe las responsabilidades principales del puesto..."></textarea>
+                        </div>
 
-                <button type="submit">Registrar</button>
-            </form>
+                        <div class="form-group">
+                            <label for="requisitos">
+                                <i class="fas fa-check-circle"></i> Requisitos
+                            </label>
+                            <textarea id="requisitos" name="requisitos" rows="3"
+                                      placeholder="Lista los requisitos o habilidades necesarias..."></textarea>
+                        </div>
+                    </div>
 
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-map-marker-alt"></i> Ubicación y Modalidad
+                        </h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ubicacion">
+                                    <i class="fas fa-location-dot"></i> Ubicación
+                                </label>
+                                <input type="text" id="ubicacion" name="ubicacion" maxlength="255"
+                                       placeholder="Ciudad, País">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="modalidad">
+                                    <i class="fas fa-briefcase"></i> Modalidad
+                                </label>
+                                <select id="modalidad" name="modalidad">
+                                    <option value="presencial">Presencial</option>
+                                    <option value="remoto">Remoto</option>
+                                    <option value="híbrido">Híbrido</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-dollar-sign"></i> Compensación
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="salario_aprox">
+                                <i class="fas fa-money-bill-wave"></i> Salario aproximado
+                            </label>
+                            <input type="number" step="1500" id="salario_aprox" name="salario_aprox"
+                                   placeholder="Ej: 45000">
+                            <small class="form-hint">Ingresa el monto anual aproximado</small>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-cog"></i> Configuración
+                        </h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="estado">
+                                    <i class="fas fa-toggle-on"></i> Estado *
+                                </label>
+                                <select id="estado" name="estado" required>
+                                    <option value="publicada">Publicada</option>
+                                    <option value="cerrada">Cerrada</option>
+                                    <option value="pausada">Pausada</option>
+                                </select>
+                            </div>
+
+                            <div class="checkbox-group">
+                                <label for="destacada" class="checkbox-label">
+                                    <input type="checkbox" id="destacada" name="destacada" value="true">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="checkbox-text">
+                                        <i class="fas fa-star"></i> Marcar como destacada
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="window.history.back()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-paper-plane"></i> Publicar Empleo
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</body>
 
+    <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
+</body>
 </html>

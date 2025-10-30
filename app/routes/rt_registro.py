@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from datetime import datetime
 from app.db.sql import db
 from app.models.md_usuarios import UsuarioModel
@@ -26,8 +26,8 @@ def registro():
     db.session.add(nuevo_usuario)
     db.session.commit()
 
-    flash("Cuenta creada con éxito", "success")
-    return render_template("registro.jinja2", tab="empleado")
+    flash("Cuenta creada con éxito. Por favor inicia sesión.", "success")
+    return redirect(url_for("LoginRoute.login_form"))
 
 @rt_registro.route("/verificar_correo", methods=["POST"])
 def verificar_correo():

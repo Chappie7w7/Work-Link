@@ -1,5 +1,6 @@
 {% import "components/navbar.jinja2" as components %}
 {% import 'components/footer.jinja2' as footer %}
+{% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -13,6 +14,8 @@
 <body>
 
     {{ components.navbar( current_user) }}
+
+    {{ flash.render_flash_messages() }}
 
     <!-- ===== SECCIÓN DEL BUSCADOR CON FONDO ===== -->
     <div class="search-section">
@@ -92,16 +95,16 @@
             <div class="tags-row">
                 {% if v.modalidad %}<span class="tag">{{ v.modalidad }}</span>{% endif %}
                 {% if v.estado %}<span class="tag-estado">{{ v.estado }}</span>{% endif %}
-                {% if v.salario_aprox %}<span class="tag-salary">💰 ${{ "%.2f"|format(v.salario_aprox) }}</span>{% endif
-                %}
+                {% if v.salario_aprox %}<span class="tag-salary">💰 ${{ "%.2f"|format(v.salario_aprox) }}</span>{% endif %}
             </div>
 
             <p>{{ v.descripcion[:100] }}...</p>
 
             <a href="#" class="card-btn"
-                onclick="openModal('{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Sin empresa')|escape }}', '{{ v.empresa.logo_url|default(url_for('static', filename='img/default-company.png')) }}', '{{ v.avatar_url|default(url_for('static', filename='img/default-user.png')) }}')">
+                onclick="openModal({{ v.id }}, '{{ v.titulo|escape }}', '{{ v.descripcion|escape }}', '{{ v.empresa.nombre_empresa|default('Sin empresa')|escape }}', '{{ v.empresa.logo_url|default(url_for('static', filename='img/default-company.png')) }}', '{{ v.avatar_url|default(url_for('static', filename='img/default-user.png')) }}')">
                 Ver más
             </a>
+
         </div>
         {% endfor %}
         {% else %}
@@ -136,7 +139,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <a href="#" class="modal-btn">Postular</a>
+                    <a id="modalPostularBtn" href="#" class="modal-btn">Postular</a>
                 </div>
             </div>
         </div>
@@ -150,12 +153,16 @@
     </script>
 
     <script>
-        function openModal(title, desc, empresa, empresaLogo, userLogo) {
+        function openModal(vacanteId, title, desc, empresa, empresaLogo, userLogo) {
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalDesc").innerText = desc;
             document.getElementById("modalEmpresaName").innerText = empresa;
             document.getElementById("modalEmpresaLogo").src = empresaLogo;
             document.getElementById("modalUserLogo").src = userLogo;
+            // Set postular href
+            const baseUrl = "{{ url_for('EmpleosRoute.postular', vacante_id=0) }}";
+            const postularUrl = baseUrl.replace(/0$/, String(vacanteId));
+            document.getElementById("modalPostularBtn").setAttribute('href', postularUrl);
             document.getElementById("jobModal").style.display = "block";
         }
 
