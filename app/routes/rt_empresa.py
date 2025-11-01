@@ -689,9 +689,14 @@ def generar_reporte_html(user, vacantes, postulaciones, ofertas_activas, contrat
 @login_role_required(Roles.EMPRESA)
 def generar_reporte():
     """Generar reporte en PDF con estadísticas de la empresa"""
-    from flask import make_response
+    from flask import make_response, send_file
     from datetime import datetime
     from io import BytesIO
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib import colors
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import inch
     
     user = get_user_from_session(session)
     if not user:
@@ -711,10 +716,120 @@ def generar_reporte():
     rechazados = sum(1 for p in postulaciones if p.estado == 'rechazado')
     vistos = sum(1 for p in postulaciones if p.estado == 'visto')
     postulados = sum(1 for p in postulaciones if p.estado == 'postulado')
+    total_postulaciones = len(postulaciones)
     
-    # Generar reporte HTML (versión original que funcionaba)
-    return generar_reporte_html(user, vacantes, postulaciones, ofertas_activas, 
-                               contratados, en_proceso, rechazados, vistos, postulados)
+    # Crear un objeto BytesIO para el PDF
+    buffer = BytesIO()
+    
+    # Crear el documento PDF
+    doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
+    
+    # Estilos
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'Title',
+        parent=styles['Heading1'],
+        fontSize=18,
+        spaceAfter=20,
+        textColor=colors.HexColor('#2c3e50')
+    )
+    
+    subtitle_style = ParagraphStyle(
+        'Subtitle',
+        parent=styles['Heading2'],
+        fontSize=14,
+        spaceAfter=10,
+        textColor=colors.HexColor('#3498db')
+    )
+    
+    normal_style = styles['Normal']
+    
+    # Contenido del PDF
+    content = []
+    
+    # Título
+    content.append(Paragraph("Reporte de Postulaciones", title_style))
+    content.append(Paragraph(f"Generado el: {datetime.now().strftime('%d/%m/%Y %H:%M')}", styles['Normal']))
+    content.append(Paragraph(f"Empresa: {user.get('nombre', 'N/A')}", styles['Normal']))
+    content.append(Spacer(1, 20))
+    
+    # Resumen de estadísticas
+    content.append(Paragraph("Resumen de Estadísticas", subtitle_style))
+    
+    # Tabla de estadísticas
+    stats_data = [
+        ['Métrica', 'Cantidad'],
+        ['Total de vacantes', len(vacantes)],
+        ['Ofertas activas', ofertas_activas],
+        ['Total de postulaciones', total_postulaciones],
+        ['Postulados', postulados],
+        ['Vistos', vistos],
+        ['En proceso', en_proceso],
+        ['Contratados', contratados],
+        ['Rechazados', rechazados]
+    ]
+    
+    # Crear tabla de estadísticas
+    stats_table = Table(stats_data, colWidths=[doc.width/2.0]*2)
+    stats_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#3498db')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f8f9fa')),
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#dee2e6')),
+        ('BOX', (0, 0), (-1, -1), 1, colors.HexColor('#6c757d')),
+    ]))
+    
+    content.append(stats_table)
+    content.append(Spacer(1, 20))
+    
+    # Detalle de vacantes
+    if vacantes:
+        content.append(Paragraph("Vacantes Publicadas", subtitle_style))
+        
+        vacantes_data = [['Título', 'Estado', 'Postulaciones']]
+        for vacante in vacantes[:10]:  # Mostrar solo las 10 primeras vacantes
+            vacantes_data.append([
+                vacante.titulo,
+                vacante.estado,
+                len(vacante.postulaciones)
+            ])
+        
+        vacantes_table = Table(vacantes_data, colWidths=[doc.width*0.5, doc.width*0.25, doc.width*0.25])
+        vacantes_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#6c757d')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f8f9fa')),
+            ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#dee2e6')),
+            ('BOX', (0, 0), (-1, -1), 1, colors.HexColor('#6c757d')),
+        ]))
+        
+        content.append(vacantes_table)
+        if len(vacantes) > 10:
+            content.append(Paragraph(f"... y {len(vacantes) - 10} vacantes más", styles['Italic']))
+    
+    # Pie de página
+    content.append(Spacer(1, 20))
+    content.append(Paragraph("WorkLink - Sistema de Gestión de Empleo", styles['Italic']))
+    content.append(Paragraph("Reporte generado automáticamente", styles['Italic']))
+    
+    # Construir el PDF
+    doc.build(content)
+    
+    # Preparar la respuesta para descargar el PDF
+    buffer.seek(0)
+    response = make_response(buffer.getvalue())
+    response.mimetype = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=reporte_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pdf'
+    
+    return response
 
 
 @rt_empresa.route("/api/notificaciones/contador")
