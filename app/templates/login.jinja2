@@ -64,7 +64,6 @@
                     {% endif %}
                     {% endwith %}
                 </div>
-
                 <!-- Formulario de login -->
                 <form method="post" action="{{ url_for('LoginRoute.login') }}" class="form">
                     <div>
@@ -87,7 +86,15 @@
                     <a href="{{ url_for('LoginRoute.recuperar') }}" class="link-recuperar">¿Olvidaste tu contraseña?</a>
                 </form>
 
+                <div class="divider">o</div>
+                <!-- Botón de Google -->
+                <a href="{{ url_for('LoginRoute.google_login') }}" class="google-btn">
+                    <img src="{{ url_for('static', filename='images/googlelogin.png') }}" alt="Google Logo">
+                    Continuar con Google
+                </a>
+
             </div>
+            
         </div>
     </div>
 
