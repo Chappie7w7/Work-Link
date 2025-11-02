@@ -53,216 +53,40 @@
 
   <!-- Job Listings -->
   <section class="jobs-section" data-aos="fade-up" data-aos-delay="150">
-    <h2>Latest Job Listings</h2>
+    <h2>Empleos publicados recientemente</h2>
 
     <div class="jobs-grid">
-      <!-- Job Card -->
-      <div class="job-card" data-aos="fade-up" data-aos-delay="0">
+      {% if vacantes %}
+      {% for v in vacantes %}
+      <div class="job-card" data-aos="fade-up" data-aos-delay="{{ (loop.index0 % 8) * 100 }}">
         <div class="job-header">
           <div class="company-logo">
-            <i class="fas fa-cogs"></i>
+            <img src="{{ v.empresa.logo_url if v.empresa and v.empresa.logo_url else url_for('static', filename='img/default-company.png') }}" alt="{{ v.empresa.nombre_empresa if v.empresa else 'Empresa' }}">
           </div>
           <div class="job-title-section">
-            <h3>Senior Software Engineer</h3>
-            <p class="company">Tech Innovators Inc.</p>
+            <h3>{{ v.titulo }}</h3>
+            <p class="company">{{ v.empresa.nombre_empresa if v.empresa else "Sin empresa" }}</p>
           </div>
         </div>
         <div class="job-info">
-          <span class="location"><i class="fas fa-map-marker-alt"></i> San Francisco, CA</span>
-          <span class="job-type">Full-time</span>
+          <span class="location"><i class="fas fa-map-marker-alt"></i> {{ v.ubicacion or 'No especificada' }}</span>
+          <span class="job-type">{{ v.modalidad or v.estado or 'General' }}</span>
         </div>
-        <p class="description">
-          Develop and maintain high-performance web applications using modern frameworks. Collaborate with cross-functional teams to define, design, and ship new features.
-        </p>
+        {% if v.salario_aprox %}
+        <div class="salary">
+          <span class="amount">Salario: ${{ "%.2f"|format(v.salario_aprox) }}</span>
+        </div>
+        {% endif %}
+        <p class="description">{{ v.descripcion[:160] }}...</p>
         <div class="job-actions">
-          <button class="btn-view-more">Ver Más</button>
-          <button class="btn-orange">Apply Now</button>
+          <a class="btn-view-more" href="#">Ver Más</a>
+          <a class="btn-orange" href="{{ url_for('EmpleosRoute.postular', vacante_id=v.id) }}">Aplicar ahora</a>
         </div>
       </div>
-
-      <div class="job-card" data-aos="fade-up" data-aos-delay="100">
-        <div class="job-header">
-          <div class="company-logo">
-            <i class="fas fa-bullseye"></i>
-          </div>
-          <div class="job-title-section">
-            <h3>Digital Marketing Specialist</h3>
-            <p class="company">Global Marketing Solutions</p>
-          </div>
-        </div>
-        <div class="job-info">
-          <span class="location"><i class="fas fa-globe"></i> Remote</span>
-          <span class="job-type">Full-time</span>
-        </div>
-        <p class="description">
-          Execute and optimize digital campaigns across multiple channels. Analyze performance metrics and implement strategies to maximize ROI.
-        </p>
-        <div class="job-actions">
-          <button class="btn-view-more">Ver Más</button>
-          <button class="btn-orange">Apply Now</button>
-        </div>
-      </div>
-
-      <div class="job-card" data-aos="fade-up" data-aos-delay="200">
-        <div class="job-header">
-          <div class="company-logo">
-            <i class="fas fa-palette"></i>
-          </div>
-          <div class="job-title-section">
-            <h3>UX/UI Designer</h3>
-            <p class="company">Creative Design Studio</p>
-          </div>
-        </div>
-        <div class="job-info">
-          <span class="location"><i class="fas fa-map-marker-alt"></i> New York, NY</span>
-          <span class="job-type">Contract</span>
-        </div>
-        <p class="description">
-          Design intuitive and visually appealing user interfaces for mobile and web. Create wireframes, prototypes, and high-fidelity designs.
-        </p>
-        <div class="job-actions">
-          <button class="btn-view-more">Ver Más</button>
-          <button class="btn-orange">Apply Now</button>
-        </div>
-      </div>
-
-      <div class="job-card" data-aos="fade-up" data-aos-delay="300">
-        <div class="job-header">
-          <div class="company-logo">
-            <i class="fas fa-chart-line"></i>
-          </div>
-          <div class="job-title-section">
-            <h3>Financial Analyst</h3>
-            <p class="company">Finance Corp</p>
-          </div>
-        </div>
-        <div class="job-info">
-          <span class="location"><i class="fas fa-map-marker-alt"></i> Chicago, IL</span>
-          <span class="job-type">Full-time</span>
-        </div>
-        <p class="description">
-          Analyze financial data and market trends to provide insights for investment decisions. Prepare reports and presentations for stakeholders.
-        </p>
-        <div class="job-actions">
-          <button class="btn-view-more">Ver Más</button>
-          <button class="btn-orange">Apply Now</button>
-        </div>
-      </div>
-
-      <div class="job-card" data-aos="fade-up" data-aos-delay="400">
-        <div class="job-header">
-          <div class="company-logo">
-            <i class="fas fa-heart"></i>
-          </div>
-          <div class="job-title-section">
-            <h3>Healthcare Administrator</h3>
-            <p class="company">MedCare Systems</p>
-          </div>
-        </div>
-        <div class="job-info">
-          <span class="location"><i class="fas fa-map-marker-alt"></i> Boston, MA</span>
-          <span class="job-type">Full-time</span>
-        </div>
-        <p class="description">
-          Manage healthcare operations and ensure compliance with regulations. Coordinate with medical staff and administrative teams.
-        </p>
-        <div class="job-actions">
-          <button class="btn-view-more">Ver Más</button>
-          <button class="btn-orange">Apply Now</button>
-        </div>
-      </div>
-
-      <div class="job-card" data-aos="fade-up" data-aos-delay="500">
-        <div class="job-header">
-          <div class="company-logo">
-            <i class="fas fa-book"></i>
-          </div>
-          <div class="job-title-section">
-            <h3>Online Course Instructor</h3>
-            <p class="company">EduTech Academy</p>
-          </div>
-        </div>
-        <div class="job-info">
-          <span class="location"><i class="fas fa-globe"></i> Remote</span>
-          <span class="job-type">Part-time</span>
-        </div>
-        <p class="description">
-          Create and deliver engaging online courses in technology and programming. Mentor students and provide feedback on assignments.
-        </p>
-        <div class="job-actions">
-          <button class="btn-view-more">Ver Más</button>
-          <button class="btn-orange">Apply Now</button>
-        </div>
-      </div>
-
-      <div class="job-card" data-aos="fade-up" data-aos-delay="600">
-        <div class="job-header">
-          <div class="company-logo">
-            <i class="fas fa-industry"></i>
-          </div>
-          <div class="job-title-section">
-            <h3>Operations Manager</h3>
-            <p class="company">Manufacturing Plus</p>
-          </div>
-        </div>
-        <div class="job-info">
-          <span class="location"><i class="fas fa-map-marker-alt"></i> Detroit, MI</span>
-          <span class="job-type">Full-time</span>
-        </div>
-        <p class="description">
-          Oversee daily operations and ensure efficient production processes. Manage teams and implement process improvements.
-        </p>
-        <div class="job-actions">
-          <button class="btn-view-more">Ver Más</button>
-          <button class="btn-orange">Apply Now</button>
-        </div>
-      </div>
-
-      <div class="job-card" data-aos="fade-up" data-aos-delay="700">
-        <div class="job-header">
-          <div class="company-logo">
-            <i class="fas fa-headset"></i>
-          </div>
-          <div class="job-title-section">
-            <h3>Customer Support Rep</h3>
-            <p class="company">Service Solutions</p>
-          </div>
-        </div>
-        <div class="job-info">
-          <span class="location"><i class="fas fa-globe"></i> Remote</span>
-          <span class="job-type">Full-time</span>
-        </div>
-        <p class="description">
-          Provide excellent customer service through multiple channels. Resolve issues and maintain customer satisfaction.
-        </p>
-        <div class="job-actions">
-          <button class="btn-view-more">Ver Más</button>
-          <button class="btn-orange">Apply Now</button>
-        </div>
-      </div>
-
-      <div class="job-card" data-aos="fade-up" data-aos-delay="700">
-        <div class="job-header">
-          <div class="company-logo">
-            <i class="fas fa-chart-bar"></i>
-          </div>
-          <div class="job-title-section">
-            <h3>Data Scientist</h3>
-            <p class="company">Analytics Pro</p>
-          </div>
-        </div>
-        <div class="job-info">
-          <span class="location"><i class="fas fa-map-marker-alt"></i> Seattle, WA</span>
-          <span class="job-type">Full-time</span>
-        </div>
-        <p class="description">
-          Analyze complex datasets to extract insights and build predictive models. Work with machine learning algorithms and statistical methods.
-        </p>
-        <div class="job-actions">
-          <button class="btn-view-more">Ver Más</button>
-          <button class="btn-orange">Apply Now</button>
-        </div>
-      </div>
+      {% endfor %}
+      {% else %}
+      <p>No hay vacantes registradas aún.</p>
+      {% endif %}
     </div>
 
     <!-- Paginado -->

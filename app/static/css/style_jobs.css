@@ -12,13 +12,14 @@ body {
   position: relative;
   background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
   padding: 0;
+  margin-top: 80px; /* Compensa altura del navbar fijo en desktop */
   overflow: hidden;
 }
 
 .hero-image {
   position: relative;
   width: 100%;
-  height: 500px;
+  height: 340px;
   overflow: hidden;
 }
 
@@ -59,6 +60,9 @@ body {
 }
 
 @media (max-width: 768px) {
+  .hero-section {
+    margin-top: 64px; /* Navbar más compacto en móviles */
+  }
   .hero-overlay h1 {
     font-size: 2.2rem;
   }
@@ -68,7 +72,7 @@ body {
   }
   
   .hero-image {
-    height: 400px;
+    height: 280px;
   }
 }
 
@@ -192,6 +196,7 @@ body {
   font-weight: 700;
   color: #111827;
   margin-bottom: 32px;
+  text-align: center;
 }
 
 .jobs-grid {
@@ -227,7 +232,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 360px;
+  min-height: 320px;
 }
 
 .job-card:hover {
@@ -261,6 +266,13 @@ body {
   color: #6b7280;
 }
 
+.company-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
 .job-title-section {
   flex: 1;
   min-width: 0;
@@ -291,6 +303,19 @@ body {
   flex-wrap: wrap;
 }
 
+.salary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #374151;
+  font-weight: 600;
+}
+
+.salary i {
+  color: #16a34a;
+}
+
 .location {
   display: flex;
   align-items: center;
@@ -318,21 +343,19 @@ body {
 .description {
   font-size: 0.9rem;
   color: #4b5563;
-  margin-bottom: 20px;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 0;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 4.5em;
+  margin-bottom: 16px;
+  line-height: 1.55;
+  display: block;
+  overflow-wrap: anywhere;
 }
 
 /* Job Actions */
 .job-actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
   margin-top: auto;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
@@ -348,40 +371,52 @@ body {
 }
 
 .btn-view-more {
-  background: transparent;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
-  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: #1f2937;
+  border: 2px solid #1f2937;
+  height: 40px;
+  padding: 0 14px;
+  min-width: 140px;
   border-radius: 8px;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
+  text-decoration: none;
   transition: all 0.2s ease;
-  flex: 1;
 }
 
 .btn-view-more:hover {
-  background: #f9fafb;
-  color: #374151;
-  border-color: #9ca3af;
+  background: #1f2937;
+  color: #ffffff;
+  border-color: #1f2937;
 }
 
 .job-card .btn-orange {
-  background: #1f2937;
-  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #ffffff;
   border: none;
-  padding: 8px 16px;
+  height: 40px;
+  padding: 0 14px;
+  min-width: 140px;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  flex: 1;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
 }
 
 .job-card .btn-orange:hover {
-  background: #111827;
+  background: linear-gradient(135deg, #ea580c, #dc2626);
   transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
 }
 
 /* === Paginado === */

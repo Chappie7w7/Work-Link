@@ -6,23 +6,33 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    background: transparent; /* Fondo transparente para heredar del sitio */
     min-height: 100vh;
-    padding: 2rem 0;
+}
+
+.postular-section {
+    padding: 96px 0 48px;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 20px;
 }
 
-.container h2 {
-    color: white;
+.page-header h2 {
+    color: #000000;
     font-size: 2.2rem;
-    margin-bottom: 1rem;
+    margin-bottom: 8px;
     text-align: center;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.page-header .subtitle {
+    color: #9ca3af;
+    text-align: center;
+    margin-bottom: 28px;
 }
 
 .container p {
@@ -36,12 +46,83 @@ body {
     color: #3b82f6;
 }
 
-form {
-    background: white;
-    border-radius: 20px;
-    padding: 2.5rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-    margin-top: 2rem;
+.content-grid {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 28px;
+}
+
+.job-summary {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.summary-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.summary-header .company-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    display: grid;
+    place-items: center;
+}
+
+.summary-header .company-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.summary-header .job-meta h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: #111827;
+}
+
+.summary-header .job-meta .company {
+    margin: 2px 0 0;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.summary-info {
+    display: grid;
+    gap: 8px;
+    margin: 12px 0 8px;
+    color: #374151;
+    font-size: 0.95rem;
+}
+
+.summary-info .info-item i {
+    color: #2563eb;
+    margin-right: 8px;
+}
+
+.summary-description {
+    margin-top: 8px;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.summary-description p {
+    text-align: justify; /* Descripción justificada */
+}
+
+.apply-form {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     animation: slideUp 0.6s ease;
 }
 
@@ -57,14 +138,14 @@ form {
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
 }
 
 .form-group label {
     display: block;
     color: #1e293b;
     font-weight: 600;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
     font-size: 0.95rem;
     letter-spacing: 0.3px;
 }
@@ -72,7 +153,7 @@ form {
 .form-group input[type="file"],
 .form-group textarea {
     width: 100%;
-    padding: 0.9rem;
+    padding: 0.85rem;
     border: 2px solid #e2e8f0;
     border-radius: 12px;
     font-size: 1rem;
@@ -129,17 +210,27 @@ form {
     cursor: pointer;
 }
 
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
 .form-actions {
     display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 12px;
+    margin-top: 1.6rem;
     justify-content: flex-end;
 }
 
+.form-actions.centered {
+    justify-content: center;
+}
+
 .btn {
-    padding: 0.9rem 2rem;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 0.75rem 1.4rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -150,9 +241,9 @@ form {
 }
 
 .btn-secondary {
-    background-color: #e2e8f0;
-    color: #475569;
-    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #1f2937;
+    border: 2px solid #1f2937;
 }
 
 .btn-secondary:hover {
@@ -162,9 +253,9 @@ form {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    background: linear-gradient(135deg, #f97316, #ea580c);
     color: white;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
 }
 
 .btn-primary:hover {
@@ -202,21 +293,23 @@ form {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .container {
-        padding: 0 1rem;
+    .postular-section {
+        padding: 84px 0 36px;
     }
 
-    form {
-        padding: 1.5rem;
+    .container {
+        padding: 0 16px;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
     }
 
     .container h2 {
         font-size: 1.6rem;
     }
 
-    .form-actions {
-        flex-direction: column;
-    }
+    .form-actions { flex-direction: column; }
 
     .btn {
         width: 100%;
