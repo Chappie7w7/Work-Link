@@ -157,6 +157,25 @@ body {
     box-shadow: 0 12px 35px rgba(59, 130, 246, 0.6);
 }
 
+/* Foto de perfil del usuario */
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: block;
+    object-fit: cover;
+    border: 3px solid rgba(59, 130, 246, 0.3);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s ease;
+}
+
+.profile-photo:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.6);
+    border-color: rgba(59, 130, 246, 0.6);
+}
+
 /* Estilos para el contenido del centro */
 .center-column .box:first-child {
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(30, 64, 175, 0.1));

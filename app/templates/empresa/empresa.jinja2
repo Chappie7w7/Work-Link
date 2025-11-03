@@ -48,39 +48,59 @@
         <div class="company-profile-card">
             <div class="company-header">
                 <div class="company-logo-section">
-                    <div class="company-logo">
-                        <i class="fas fa-building"></i>
-                    </div>
+                    {% if empresa and empresa.logo_url %}
+                        <div class="company-logo" style="background: none; border: none;">
+                            <img src="{{ empresa.logo_url }}" alt="Logo de {{ empresa.nombre_empresa }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        </div>
+                    {% else %}
+                        <div class="company-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
+                    {% endif %}
                     <div class="company-info-header">
-                        <h3 class="company-name">Mi Empresa</h3>
+                        <h3 class="company-name">{{ empresa.nombre_empresa if empresa and empresa.nombre_empresa else 'Mi Empresa' }}</h3>
                         <p class="company-sector">
-                            <i class="fas fa-industry"></i> Tecnología
+                            {% if empresa and empresa.sector %}
+                            <i class="fas fa-industry"></i> {{ empresa.sector }}
+                            {% if empresa and empresa.direccion %}
                             <span class="separator">•</span>
-                            <i class="fas fa-map-marker-alt"></i> Ciudad
+                            {% endif %}
+                            {% endif %}
+                            {% if empresa and empresa.direccion %}
+                            <i class="fas fa-map-marker-alt"></i> {{ empresa.direccion }}
+                            {% endif %}
                         </p>
                     </div>
                 </div>
-                <a href="#" class="btn-edit-profile">
+                {% if empresa %}
+                <a href="{{ url_for('rt_empresa.editar_perfil') }}" class="btn-edit-profile">
                     <i class="fas fa-edit"></i> Editar Perfil
                 </a>
+                {% else %}
+                <a href="{{ url_for('rt_empresa.editar_perfil') }}" class="btn-edit-profile">
+                    <i class="fas fa-edit"></i> Configurar Perfil
+                </a>
+                {% endif %}
             </div>
             <div class="company-details">
+                {% if usuario_empresa and usuario_empresa.correo %}
                 <div class="detail-item">
                     <i class="fas fa-envelope"></i>
-                    <span>contacto@empresa.com</span>
+                    <span>{{ usuario_empresa.correo }}</span>
                 </div>
+                {% endif %}
+                {% if empresa and empresa.telefono %}
                 <div class="detail-item">
                     <i class="fas fa-phone"></i>
-                    <span>+1 234 567 890</span>
+                    <span>{{ empresa.telefono }}</span>
                 </div>
+                {% endif %}
+                {% if empresa and empresa.descripcion %}
                 <div class="detail-item">
-                    <i class="fas fa-globe"></i>
-                    <span>www.empresa.com</span>
+                    <i class="fas fa-info-circle"></i>
+                    <span>{{ empresa.descripcion[:100] }}{% if empresa.descripcion|length > 100 %}...{% endif %}</span>
                 </div>
-                <div class="detail-item">
-                    <i class="fas fa-users"></i>
-                    <span>11-50 empleados</span>
-                </div>
+                {% endif %}
             </div>
         </div>
 
@@ -115,7 +135,7 @@
                     <i class="fas fa-user-check"></i>
                 </div>
                 <div class="stat-content">
-                    <h3 class="stat-value">45%</h3>
+                    <h3 class="stat-value">{{ tasa_conversion if tasa_conversion else 0 }}%</h3>
                     <p class="stat-label">Tasa de Conversión</p>
                     <p class="stat-trend">
                         <i class="fas fa-arrow-down"></i> -2% este mes
@@ -151,40 +171,56 @@
                         </h4>
                     </div>
                     <div class="chart-content">
+                        {% set total_estados = total_con_estados if total_con_estados and total_con_estados > 0 else 1 %}
+                        {% set postulados_val = postulados if postulados else 0 %}
+                        {% set vistos_val = vistos if vistos else 0 %}
+                        {% set en_proceso_val = en_proceso if en_proceso else 0 %}
+                        {% set contratados_val = contratados if contratados else 0 %}
+                        {% set rechazados_val = rechazados if rechazados else 0 %}
+                        
                         <div class="stat-bar">
                             <div class="stat-label-bar">
                                 <span>Postulado</span>
-                                <span class="stat-number">12</span>
+                                <span class="stat-number">{{ postulados_val }}</span>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 45%; background: #0ea5e9;"></div>
+                                <div class="progress-fill" style="width: {{ (postulados_val / total_estados * 100)|round(1) }}%; background: #0ea5e9;"></div>
                             </div>
                         </div>
                         <div class="stat-bar">
                             <div class="stat-label-bar">
-                                <span>En Revisión</span>
-                                <span class="stat-number">8</span>
+                                <span>Visto</span>
+                                <span class="stat-number">{{ vistos_val }}</span>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 30%; background: #3b82f6;"></div>
+                                <div class="progress-fill" style="width: {{ (vistos_val / total_estados * 100)|round(1) }}%; background: #3b82f6;"></div>
                             </div>
                         </div>
                         <div class="stat-bar">
                             <div class="stat-label-bar">
-                                <span>Entrevista</span>
-                                <span class="stat-number">5</span>
+                                <span>En Proceso</span>
+                                <span class="stat-number">{{ en_proceso_val }}</span>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 19%; background: #f59e0b;"></div>
+                                <div class="progress-fill" style="width: {{ (en_proceso_val / total_estados * 100)|round(1) }}%; background: #f59e0b;"></div>
                             </div>
                         </div>
                         <div class="stat-bar">
                             <div class="stat-label-bar">
                                 <span>Contratado</span>
-                                <span class="stat-number">2</span>
+                                <span class="stat-number">{{ contratados_val }}</span>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 8%; background: #10b981;"></div>
+                                <div class="progress-fill" style="width: {{ (contratados_val / total_estados * 100)|round(1) }}%; background: #10b981;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>Rechazado</span>
+                                <span class="stat-number">{{ rechazados_val }}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ (rechazados_val / total_estados * 100)|round(1) }}%; background: #ef4444;"></div>
                             </div>
                         </div>
                     </div>
@@ -198,34 +234,57 @@
                         </h4>
                     </div>
                     <div class="chart-content">
+                        {% if vacante_mas_vista %}
                         <div class="metric-item">
                             <i class="fas fa-star"></i>
                             <div class="metric-content">
-                                <h5>Vacantes más vistas</h5>
-                                <p>Desarrollador Full Stack - 156 vistas</p>
+                                <h5>Vacante más popular</h5>
+                                <p>{{ vacante_mas_vista.titulo }} - {{ vacante_mas_vista.total_postulaciones }} postulación{{ 'es' if vacante_mas_vista.total_postulaciones != 1 else '' }}</p>
                             </div>
                         </div>
+                        {% else %}
+                        <div class="metric-item">
+                            <i class="fas fa-star"></i>
+                            <div class="metric-content">
+                                <h5>Vacante más popular</h5>
+                                <p>No hay postulaciones aún</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if mejor_tasa_respuesta %}
                         <div class="metric-item">
                             <i class="fas fa-users"></i>
                             <div class="metric-content">
                                 <h5>Mejor tasa de respuesta</h5>
-                                <p>Diseñador UI/UX - 24% postulaciones</p>
+                                <p>{{ mejor_tasa_respuesta.titulo }} - {{ mejor_tasa_respuesta.tasa }}% respuesta</p>
                             </div>
                         </div>
+                        {% else %}
+                        <div class="metric-item">
+                            <i class="fas fa-users"></i>
+                            <div class="metric-content">
+                                <h5>Mejor tasa de respuesta</h5>
+                                <p>No hay datos disponibles</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
                         <div class="metric-item">
                             <i class="fas fa-trophy"></i>
                             <div class="metric-content">
                                 <h5>Contrataciones del mes</h5>
-                                <p>3 nuevos empleados</p>
+                                <p>{{ contrataciones_mes if contrataciones_mes else 0 }} nuevo{{ 's' if contrataciones_mes != 1 else '' }} empleado{{ 's' if contrataciones_mes != 1 else '' }}</p>
                             </div>
                         </div>
+                        
                         <div class="metric-item">
                             <i class="fas fa-calendar"></i>
                             <div class="metric-content">
-                                <h5>Próximas entrevistas</h5>
-                                <p>8 programadas esta semana</p>
-                </div>
-            </div>
+                                <h5>En proceso de selección</h5>
+                                <p>{{ entrevistas_programadas if entrevistas_programadas else 0 }} candidato{{ 's' if entrevistas_programadas != 1 else '' }} en proceso</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

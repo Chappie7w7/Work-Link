@@ -99,42 +99,61 @@ body {
     background-color: #0056b3;
 }
 
-/* Contenedor del formulario */
-.form-container {
-    max-width: 500px;  /* límite de ancho */
-    margin: 40px auto; /* centrado en la página */
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* Estilos para foto de perfil */
+.current-photo {
+    margin-bottom: 15px;
+    text-align: center;
 }
 
-/* Inputs */
-.form-container input,
-.form-container select,
-.form-container textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+.profile-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+}
+
+.photo-note {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 5px;
+}
+
+.form-help {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}
+
+.perfil-form input[type="file"] {
+    padding: 8px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.perfil-form input[type="file"]:hover {
+    border-color: #007bff;
+    background-color: #f0f7ff;
+}
+
+.perfil-form textarea {
+    padding: 10px 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
+    background-color: #fdfdfd;
+    font-family: inherit;
+    resize: vertical;
 }
 
-/* Botón de guardar */
-.form-container button {
-    display: block;
-    margin: 20px auto 0 auto;
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #007bff; /* azul */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.form-container button:hover {
-    background-color: #0056b3;
+.perfil-form textarea:focus {
+    border-color: #007bff;
+    outline: none;
 }

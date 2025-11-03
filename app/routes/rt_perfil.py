@@ -14,6 +14,25 @@ def editar():
         flash("Debes iniciar sesión", "error")
         return redirect(url_for("LoginRoute.login_form"))
 
+    if request.method == "POST":
+        nombre = request.form.get("nombre", "").strip()
+        correo = request.form.get("correo", "").strip()
+        foto_perfil_file = request.files.get("foto_perfil")
+
+        user_db, error = ctr_perfil.update_user_with_photo(
+            usuario["id"], nombre, correo, foto_perfil_file
+        )
+        if error:
+            flash(error, "error")
+            return redirect(url_for("PerfilRoute.editar"))
+
+        # Actualizar sesión
+        session["usuario"]["nombre"] = user_db.nombre
+        session["usuario"]["correo"] = user_db.correo
+
+        flash("Perfil actualizado correctamente", "success")
+        return redirect(url_for("PerfilRoute.editar"))
+
     # Obtener usuario desde la base de datos para que siempre esté actualizado
     user_db, error = ctr_perfil.get_user_by_id(usuario["id"])
     if error:
@@ -21,28 +40,3 @@ def editar():
         return redirect(url_for("InicioRoute.inicio"))
 
     return render_template("perfil/editar_perfil.jinja2", current_user=user_db)
-
-
-@rt_perfil.route("/editar", methods=["POST"])
-@login_role_required(Roles.EMPLEADO, Roles.EMPRESA, Roles.SUPERADMIN)
-def editar_post():
-    usuario = session.get("usuario")
-    if not usuario:
-        flash("Debes iniciar sesión", "error")
-        return redirect(url_for("LoginRoute.login_form"))
-
-    nombre = request.form.get("nombre", "").strip()
-    correo = request.form.get("correo", "").strip()
-    ubicacion = request.form.get("ubicacion", "").strip()
-
-    user_db, error = ctr_perfil.update_user(usuario["id"], nombre, correo, ubicacion)
-    if error:
-        flash(error, "error")
-        return redirect(url_for("PerfilRoute.editar"))
-
-    # Actualizar sesión
-    session["usuario"]["nombre"] = user_db.nombre
-    session["usuario"]["correo"] = user_db.correo
-
-    flash("Perfil actualizado correctamente", "success")
-    return redirect(url_for("PerfilRoute.editar"))

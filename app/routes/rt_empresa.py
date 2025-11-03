@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, session, redirect, url_for, reques
 from app.utils.decorators import login_role_required
 from app.utils.roles import Roles
 from app.controller.ctr_empleos import get_user_from_session
+from app.controller import ctr_empresa
 from app.db.sql import db
 from app.models.md_vacantes import VacanteModel
 from app.models.md_empresas import EmpresaModel
@@ -10,7 +11,7 @@ from app.models.md_empleados import EmpleadoModel
 from app.models.md_mensaje import MensajeModel
 from app.models.md_usuarios import UsuarioModel
 from app.models.md_notificacion import NotificacionModel
-from sqlalchemy import or_, and_, desc
+from sqlalchemy import or_, and_, desc, func
 from app.utils.timezone_helper import get_mexico_time
 from app.utils.mensaje_helper import contar_mensajes_no_leidos
 
@@ -22,62 +23,200 @@ rt_empresa = Blueprint("rt_empresa", __name__, url_prefix="/empresa")
 @rt_empresa.route("/")
 @login_role_required(Roles.EMPRESA)
 def dashboard():
+    try:
+        user = get_user_from_session(session)
+        if not user:
+            return redirect(url_for("IndexRoute.index"))
+
+        #  Traer vacantes de la empresa logueada
+        vacantes_empresa = VacanteModel.query.filter_by(empresa_id=user["id"]).all()
+
+        #  Contar postulaciones de todas las vacantes de la empresa
+        postulantes_totales = (
+            db.session.query(PostulacionModel)
+            .join(VacanteModel)
+            .filter(VacanteModel.empresa_id == user["id"])
+            .count()
+        )
+
+        #  Contar ofertas activas
+        ofertas_activas = VacanteModel.query.filter_by(empresa_id=user["id"], estado="publicada").count()
+
+        #  Traer lista de postulaciones con empleado y usuario cargados
+        from sqlalchemy.orm import joinedload, outerjoin
+        try:
+            postulantes = (
+                db.session.query(PostulacionModel)
+                .join(VacanteModel)
+                .filter(VacanteModel.empresa_id == user["id"])
+                .options(joinedload(PostulacionModel.empleado).joinedload(EmpleadoModel.usuario))
+                .order_by(PostulacionModel.fecha_postulacion.desc())
+                .limit(10)
+                .all()
+            )
+        except Exception as e:
+            # Si hay error en la consulta con joins, intentar sin los joins
+            print(f"⚠️ Advertencia en consulta de postulantes: {str(e)}")
+            postulantes = (
+                db.session.query(PostulacionModel)
+                .join(VacanteModel)
+                .filter(VacanteModel.empresa_id == user["id"])
+                .order_by(PostulacionModel.fecha_postulacion.desc())
+                .limit(10)
+                .all()
+            )
+        
+        # Estadísticas de postulaciones por estado
+        contratados = db.session.query(PostulacionModel).join(VacanteModel).filter(
+            VacanteModel.empresa_id == user["id"],
+            PostulacionModel.estado == 'contratado'
+        ).count()
+        
+        en_proceso = db.session.query(PostulacionModel).join(VacanteModel).filter(
+            VacanteModel.empresa_id == user["id"],
+            PostulacionModel.estado == 'en_proceso'
+        ).count()
+        
+        rechazados = db.session.query(PostulacionModel).join(VacanteModel).filter(
+            VacanteModel.empresa_id == user["id"],
+            PostulacionModel.estado == 'rechazado'
+        ).count()
+        
+        postulados = db.session.query(PostulacionModel).join(VacanteModel).filter(
+            VacanteModel.empresa_id == user["id"],
+            PostulacionModel.estado == 'postulado'
+        ).count()
+        
+        vistos = db.session.query(PostulacionModel).join(VacanteModel).filter(
+            VacanteModel.empresa_id == user["id"],
+            PostulacionModel.estado == 'visto'
+        ).count()
+        
+        # Calcular porcentajes y tiempo promedio
+        total_con_estados = postulados + vistos + en_proceso + contratados + rechazados
+        tasa_conversion = round((contratados / total_con_estados * 100) if total_con_estados > 0 else 0, 1)
+
+        # Métricas Clave - Vacante con más postulaciones
+        vacante_mas_postulaciones = (
+            db.session.query(VacanteModel, func.count(PostulacionModel.id).label('total_postulaciones'))
+            .join(PostulacionModel, VacanteModel.id == PostulacionModel.vacante_id)
+            .filter(VacanteModel.empresa_id == user["id"])
+            .group_by(VacanteModel.id)
+            .order_by(desc('total_postulaciones'))
+            .first()
+        )
+        
+        vacante_mas_vista = None
+        if vacante_mas_postulaciones:
+            vacante, total_post = vacante_mas_postulaciones
+            vacante_mas_vista = {
+                'titulo': vacante.titulo,
+                'total_postulaciones': total_post
+            }
+
+        # Métricas Clave - Mejor tasa de respuesta (vacante con más postulaciones en relación a ofertas activas)
+        mejor_tasa_respuesta = None
+        if vacantes_empresa and len(vacantes_empresa) > 0:
+            # Calcular tasa de respuesta por vacante
+            tasas_vacantes = []
+            for vacante in vacantes_empresa:
+                if vacante.estado == 'publicada':
+                    total_post_vacante = db.session.query(PostulacionModel).filter(
+                        PostulacionModel.vacante_id == vacante.id
+                    ).count()
+                    tasa = round((total_post_vacante / ofertas_activas * 100) if ofertas_activas > 0 else 0, 1)
+                    tasas_vacantes.append({
+                        'titulo': vacante.titulo,
+                        'tasa': tasa,
+                        'postulaciones': total_post_vacante
+                    })
+            
+            if tasas_vacantes:
+                mejor_tasa_respuesta = max(tasas_vacantes, key=lambda x: x['tasa'])
+
+        # Métricas Clave - Contrataciones del mes actual
+        from datetime import datetime, timedelta
+        mes_inicio = get_mexico_time().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        contrataciones_mes = db.session.query(PostulacionModel).join(VacanteModel).filter(
+            VacanteModel.empresa_id == user["id"],
+            PostulacionModel.estado == 'contratado',
+            PostulacionModel.fecha_postulacion >= mes_inicio
+        ).count()
+
+        # Métricas Clave - Próximas entrevistas (postulaciones en proceso)
+        entrevistas_programadas = en_proceso
+
+        # Obtener datos de la empresa
+        empresa = EmpresaModel.query.get(user["id"])
+        usuario_empresa = UsuarioModel.query.get(user["id"])
+
+        return render_template(
+            "empresa/empresa.jinja2",
+            ofertas_activas=ofertas_activas,
+            postulantes_totales=postulantes_totales,
+            ofertas=vacantes_empresa,
+            candidatos=postulantes,
+            contratados=contratados,
+            en_proceso=en_proceso,
+            rechazados=rechazados,
+            postulados=postulados,
+            vistos=vistos,
+            total_con_estados=total_con_estados,
+            tasa_conversion=tasa_conversion,
+            empresa=empresa,
+            usuario_empresa=usuario_empresa,
+            vacante_mas_vista=vacante_mas_vista,
+            mejor_tasa_respuesta=mejor_tasa_respuesta,
+            contrataciones_mes=contrataciones_mes,
+            entrevistas_programadas=entrevistas_programadas,
+        )
+    except Exception as e:
+        import traceback
+        print(f"❌ ERROR en dashboard de empresa: {str(e)}")
+        traceback.print_exc()
+        flash(f"Error al cargar el dashboard: {str(e)}", "error")
+        return redirect(url_for("IndexRoute.index"))
+
+
+# Ruta para editar perfil de empresa
+@rt_empresa.route("/perfil/editar", methods=["GET", "POST"], endpoint="editar_perfil")
+@login_role_required(Roles.EMPRESA)
+def editar_perfil():
     user = get_user_from_session(session)
     if not user:
         return redirect(url_for("IndexRoute.index"))
 
-    #  Traer vacantes de la empresa logueada
-    vacantes_empresa = VacanteModel.query.filter_by(empresa_id=user["id"]).all()
+    if request.method == "POST":
+        nombre_empresa = request.form.get("nombre_empresa", "").strip()
+        sector = request.form.get("sector", "").strip()
+        descripcion = request.form.get("descripcion", "").strip()
+        direccion = request.form.get("direccion", "").strip()
+        telefono = request.form.get("telefono", "").strip()
+        correo = request.form.get("correo", "").strip()
+        logo_file = request.files.get("logo")
 
-    #  Contar postulaciones de todas las vacantes de la empresa
-    postulantes_totales = (
-        db.session.query(PostulacionModel)
-        .join(VacanteModel)
-        .filter(VacanteModel.empresa_id == user["id"])
-        .count()
-    )
+        empresa, error = ctr_empresa.update_empresa(
+            user["id"], nombre_empresa, sector, descripcion, direccion, telefono, correo, logo_file
+        )
+        if error:
+            flash(error, "error")
+            return redirect(url_for("rt_empresa.editar_perfil"))
 
-    #  Contar ofertas activas
-    ofertas_activas = VacanteModel.query.filter_by(empresa_id=user["id"], estado="publicada").count()
+        flash("Perfil actualizado correctamente", "success")
+        return redirect(url_for("rt_empresa.editar_perfil"))
 
-    #  Traer lista de postulaciones con empleado y usuario cargados
-    from sqlalchemy.orm import joinedload
-    from app.models.md_usuarios import UsuarioModel
-    postulantes = (
-        db.session.query(PostulacionModel)
-        .join(VacanteModel)
-        .filter(VacanteModel.empresa_id == user["id"])
-        .options(joinedload(PostulacionModel.empleado).joinedload(EmpleadoModel.usuario))
-        .order_by(PostulacionModel.fecha_postulacion.desc())
-        .limit(10)
-        .all()
-    )
-    
-    # Estadísticas de postulaciones por estado
-    contratados = db.session.query(PostulacionModel).join(VacanteModel).filter(
-        VacanteModel.empresa_id == user["id"],
-        PostulacionModel.estado == 'contratado'
-    ).count()
-    
-    en_proceso = db.session.query(PostulacionModel).join(VacanteModel).filter(
-        VacanteModel.empresa_id == user["id"],
-        PostulacionModel.estado == 'en_proceso'
-    ).count()
-    
-    rechazados = db.session.query(PostulacionModel).join(VacanteModel).filter(
-        VacanteModel.empresa_id == user["id"],
-        PostulacionModel.estado == 'rechazado'
-    ).count()
+    # GET: Obtener datos actuales
+    empresa, error = ctr_empresa.get_empresa_by_id(user["id"])
+    if error:
+        flash(error, "error")
+        return redirect(url_for("rt_empresa.dashboard"))
+
+    usuario_empresa = UsuarioModel.query.get(user["id"])
 
     return render_template(
-        "empresa/empresa.jinja2",
-        ofertas_activas=ofertas_activas,
-        postulantes_totales=postulantes_totales,
-        ofertas=vacantes_empresa,
-        candidatos=postulantes,
-        contratados=contratados,
-        en_proceso=en_proceso,
-        rechazados=rechazados,
+        "empresa/editar_perfil.jinja2",
+        empresa=empresa,
+        usuario_empresa=usuario_empresa,
     )
 
 
@@ -234,9 +373,19 @@ def cambiar_estado_postulacion(postulacion_id):
                     fecha_envio=get_mexico_time()
                 )
                 db.session.add(notificacion)
+            
+            # Si se contrata alguien, cerrar automáticamente la vacante
+            if nuevo_estado == 'contratado':
+                vacante = postulacion.vacante
+                if vacante and vacante.estado == 'publicada':
+                    vacante.estado = 'cerrada'
+                    flash(f"Estado actualizado a: {nuevo_estado}. La vacante ha sido cerrada automáticamente.", "success")
+                else:
+                    flash(f"Estado actualizado a: {nuevo_estado}", "success")
+            else:
+                flash(f"Estado actualizado a: {nuevo_estado}", "success")
         
         db.session.commit()
-        flash(f"Estado actualizado a: {nuevo_estado}", "success")
     else:
         flash("Estado inválido", "danger")
     
