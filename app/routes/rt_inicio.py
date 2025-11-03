@@ -19,6 +19,11 @@ def inicio():
     if not usuario:
         return redirect(url_for("LoginRoute.login_form"))
     
+    # Obtener usuario completo de la base de datos para tener acceso a foto_perfil
+    current_user = UsuarioModel.query.get(usuario["id"])
+    if not current_user:
+        return redirect(url_for("LoginRoute.login_form"))
+    
     #  Estadísticas de la plataforma
     total_empresas = EmpresaModel.query.count()
     total_usuarios = UsuarioModel.query.filter_by(tipo_usuario='empleado').count()
@@ -99,7 +104,7 @@ def inicio():
     
     return render_template(
         "inicio.jinja2",
-        current_user=usuario,
+        current_user=current_user,
         total_empresas=total_empresas,
         total_usuarios=total_usuarios,
         total_vacantes=total_vacantes,

@@ -1,0 +1,101 @@
+{% import "components/flash_messages.jinja2" as flash %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Perfil de Empresa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_perfil.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="empresa-navbar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div class="nav-brand">
+            <h1 style="color: white; margin: 0;">WorkLink</h1>
+        </div>
+        <div class="nav-links" style="display: flex; gap: 20px;">
+            <a href="{{ url_for('rt_empresa.dashboard') }}" style="color: white; text-decoration: none;">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </nav>
+
+    {{ flash.render_flash_messages() }}
+
+    <div class="main-content">
+        <div class="form-container">
+            <h2>Editar Perfil de Empresa</h2>
+
+            <form action="{{ url_for('rt_empresa.editar_perfil') }}" method="post" class="perfil-form" enctype="multipart/form-data">
+                <!-- Logo de la Empresa -->
+                <div class="form-group">
+                    <label for="logo">Logo de la Empresa</label>
+                    {% if empresa and empresa.logo_url %}
+                        <div class="current-photo">
+                            <img src="{{ empresa.logo_url }}" alt="Logo actual" class="profile-preview">
+                            <p class="photo-note">Logo actual</p>
+                        </div>
+                    {% endif %}
+                    <input type="file" name="logo" id="logo" accept="image/png,image/jpg,image/jpeg,image/gif,image/webp">
+                    <small class="form-help">Formatos permitidos: PNG, JPG, JPEG, GIF, WEBP</small>
+                </div>
+
+                <!-- Nombre de la Empresa -->
+                <div class="form-group">
+                    <label for="nombre_empresa">Nombre de la Empresa</label>
+                    <input type="text" name="nombre_empresa" id="nombre_empresa"
+                        value="{{ empresa.nombre_empresa if empresa else '' }}" required>
+                </div>
+
+                <!-- Correo -->
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" name="correo" id="correo"
+                        value="{{ usuario_empresa.correo if usuario_empresa else '' }}" required>
+                </div>
+
+                <!-- Sector -->
+                <div class="form-group">
+                    <label for="sector">Sector</label>
+                    <input type="text" name="sector" id="sector"
+                        value="{{ empresa.sector if empresa else '' }}"
+                        placeholder="Ej: Tecnología, Retail, Servicios...">
+                </div>
+
+                <!-- Dirección -->
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" name="direccion" id="direccion"
+                        value="{{ empresa.direccion if empresa else '' }}"
+                        placeholder="Dirección completa">
+                </div>
+
+                <!-- Teléfono -->
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="text" name="telefono" id="telefono"
+                        value="{{ empresa.telefono if empresa else '' }}"
+                        placeholder="Número de teléfono">
+                </div>
+
+                <!-- Descripción -->
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea name="descripcion" id="descripcion" rows="4"
+                        placeholder="Describe tu empresa...">{{ empresa.descripcion if empresa else '' }}</textarea>
+                </div>
+
+                <!-- Botón -->
+                <div class="form-group">
+                    <button type="submit">💾 Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+

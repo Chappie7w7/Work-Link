@@ -19,7 +19,20 @@
         <div class="form-container">
             <h2>Editar Perfil</h2>
 
-            <form action="{{ url_for('PerfilRoute.editar') }}" method="post" class="perfil-form">
+            <form action="{{ url_for('PerfilRoute.editar') }}" method="post" class="perfil-form" enctype="multipart/form-data">
+                <!-- Foto de Perfil -->
+                <div class="form-group">
+                    <label for="foto_perfil">Foto de Perfil</label>
+                    {% if current_user and current_user.foto_perfil %}
+                        <div class="current-photo">
+                            <img src="{{ current_user.foto_perfil }}" alt="Foto actual" class="profile-preview">
+                            <p class="photo-note">Foto actual</p>
+                        </div>
+                    {% endif %}
+                    <input type="file" name="foto_perfil" id="foto_perfil" accept="image/png,image/jpg,image/jpeg,image/gif,image/webp">
+                    <small class="form-help">Formatos permitidos: PNG, JPG, JPEG, GIF, WEBP</small>
+                </div>
+
                 <!-- Nombre -->
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
@@ -32,13 +45,6 @@
                     <label for="correo">Correo</label>
                     <input type="email" name="correo" id="correo"
                         value="{{ current_user.correo if current_user else '' }}" required>
-                </div>
-
-                <!-- Ubicación -->
-                <div class="form-group">
-                    <label for="ubicacion">Ubicación</label>
-                    <input type="text" name="ubicacion" id="ubicacion"
-                        value="{{ current_user.ubicacion if current_user else '' }}">
                 </div>
 
                 <!-- Botón -->

@@ -29,12 +29,13 @@
             <!-- Columna izquierda: perfil del usuario -->
             <div class="column left-column">
                 <div class="box perfil-box">
-                    <div class="circle"></div>
+                    {% if current_user and current_user.foto_perfil %}
+                        <img src="{{ current_user.foto_perfil }}" alt="Foto de perfil" class="profile-photo">
+                    {% else %}
+                        <div class="circle"></div>
+                    {% endif %}
                     <h3>{{ current_user.nombre if current_user else '' }}</h3>
                     <p>📧 {{ current_user.correo if current_user else '' }}</p>
-                    {% if current_user.ubicacion %}
-                    <p>📍 {{ current_user.ubicacion }}</p>
-                    {% endif %}
                 </div>
                 <div class="box empty-box"></div>
             </div>

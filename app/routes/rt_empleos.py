@@ -20,8 +20,31 @@ def empleos():
     if not user:
         return redirect(url_for('IndexRoute.index'))
 
-    # Traer todas las vacantes con la empresa cargada
+    # Verificar y cerrar automáticamente vacantes publicadas que tengan contratados
+    from app.models.md_postulacion import PostulacionModel
+    from sqlalchemy import and_
+    
+    # Buscar vacantes publicadas que tienen contratados
+    vacantes_con_contratados = (
+        db.session.query(VacanteModel)
+        .join(PostulacionModel, and_(
+            VacanteModel.id == PostulacionModel.vacante_id,
+            PostulacionModel.estado == 'contratado'
+        ))
+        .filter(VacanteModel.estado == 'publicada')
+        .all()
+    )
+    
+    # Cerrar automáticamente estas vacantes
+    for vacante in vacantes_con_contratados:
+        vacante.estado = 'cerrada'
+    
+    if vacantes_con_contratados:
+        db.session.commit()
+    
+    # Traer solo las vacantes publicadas (activas) con la empresa cargada
     vacantes = VacanteModel.query.options(joinedload(VacanteModel.empresa)) \
+                .filter_by(estado='publicada') \
                 .order_by(VacanteModel.id.desc()).all()
 
     return render_template("empleos/empleos.jinja2", usuario=user, vacantes=vacantes)
@@ -38,6 +61,26 @@ def postular(vacante_id: int):
     vacante = VacanteModel.query.get(vacante_id)
     if not vacante:
         flash("La vacante no existe", "danger")
+        return redirect(url_for('EmpleosRoute.empleos'))
+    
+    # Verificar que la vacante esté activa (publicada)
+    if vacante.estado != 'publicada':
+        if vacante.estado == 'cerrada':
+            flash("Esta vacante está cerrada. Ya se ocupó la posición.", "warning")
+        else:
+            flash("Esta vacante no está disponible para postulaciones.", "warning")
+        return redirect(url_for('EmpleosRoute.empleos'))
+    
+    # Verificar si ya hay alguien contratado en esta vacante
+    ya_contratado = PostulacionModel.query.filter_by(
+        vacante_id=vacante_id,
+        estado='contratado'
+    ).first()
+    
+    if ya_contratado:
+        vacante.estado = 'cerrada'
+        db.session.commit()
+        flash("Esta vacante ya está ocupada y ha sido cerrada.", "warning")
         return redirect(url_for('EmpleosRoute.empleos'))
 
     # Obtener/crear perfil de empleado del usuario logueado
@@ -94,6 +137,26 @@ def postular(vacante_id: int):
             )
 
             db.session.add(postulacion)
+            
+            # Crear notificación para la empresa cuando alguien se postula
+            from app.models.md_notificacion import NotificacionModel
+            from app.utils.timezone_helper import get_mexico_time
+            
+            # Obtener información del empleado y la vacante
+            nombre_empleado = user.get('nombre', 'Un candidato')
+            titulo_vacante = vacante.titulo if vacante else 'una vacante'
+            empresa_id = vacante.empresa_id if vacante else None
+            
+            if empresa_id:
+                notificacion = NotificacionModel(
+                    usuario_id=empresa_id,
+                    mensaje=f"📝 {nombre_empleado} se ha postulado a la vacante: {titulo_vacante}",
+                    tipo='postulacion',
+                    leido=False,
+                    fecha_envio=get_mexico_time()
+                )
+                db.session.add(notificacion)
+            
             db.session.commit()
             flash("Tu postulación se registró correctamente", "success")
             return redirect(url_for('EmpleosRoute.empleos'))
