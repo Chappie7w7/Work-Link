@@ -1,13 +1,44 @@
 /* ========== GENERAL ========== */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #ffffff;
+    background-color: #f8fafc;
 }
 
 .main-container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 40px 40px 80px;
+    padding: 60px 40px 80px;
+}
+
+/* ========== PAGE HEADER ========== */
+.page-header {
+    margin-bottom: 40px;
+    padding-top: 20px;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-title i {
+    -webkit-text-fill-color: #3b82f6;
+    background: none;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    font-weight: 500;
 }
 
 /* ========== NOTIFICATIONS HEADER ACTIONS ========== */
