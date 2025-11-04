@@ -4,97 +4,177 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Perfil de Empresa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_perfil.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <!-- Navigation Bar -->
-    <nav class="empresa-navbar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    <nav class="empresa-navbar">
         <div class="nav-brand">
-            <h1 style="color: white; margin: 0;">WorkLink</h1>
+            <h1>WorkLink</h1>
         </div>
-        <div class="nav-links" style="display: flex; gap: 20px;">
-            <a href="{{ url_for('rt_empresa.dashboard') }}" style="color: white; text-decoration: none;">
-                <i class="fas fa-arrow-left"></i> Volver
+        <div class="nav-links">
+            <a href="{{ url_for('rt_empresa.dashboard') }}" class="nav-link">
+                <i class="fas fa-arrow-left"></i> 
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
             </a>
         </div>
     </nav>
 
     {{ flash.render_flash_messages() }}
 
-    <div class="main-content">
-        <div class="form-container">
-            <h2>Editar Perfil de Empresa</h2>
-
-            <form action="{{ url_for('rt_empresa.editar_perfil') }}" method="post" class="perfil-form" enctype="multipart/form-data">
-                <!-- Logo de la Empresa -->
-                <div class="form-group">
-                    <label for="logo">Logo de la Empresa</label>
-                    {% if empresa and empresa.logo_url %}
-                        <div class="current-photo">
-                            <img src="{{ empresa.logo_url }}" alt="Logo actual" class="profile-preview">
-                            <p class="photo-note">Logo actual</p>
+    <div class="main-content-edit">
+        <form action="{{ url_for('rt_empresa.editar_perfil') }}" method="post" class="perfil-form-edit" enctype="multipart/form-data">
+            <div class="edit-profile-grid">
+                <!-- Panel Izquierdo -->
+                <div class="panel-left">
+                    <!-- Tarjeta Editar Perfil -->
+                    <div class="edit-profile-card">
+                        <div class="edit-profile-icon">
+                            <i class="fas fa-edit"></i>
                         </div>
-                    {% endif %}
-                    <input type="file" name="logo" id="logo" accept="image/png,image/jpg,image/jpeg,image/gif,image/webp">
-                    <small class="form-help">Formatos permitidos: PNG, JPG, JPEG, GIF, WEBP</small>
+                        <h2 class="edit-profile-title">Editar Perfil</h2>
+                        <p class="edit-profile-subtitle">Actualiza la información de tu empresa</p>
+                    </div>
+
+                    <!-- Tarjeta Logo -->
+                    <div class="logo-card">
+                        <h3 class="logo-card-title">
+                            <i class="fas fa-image"></i> Logo de la Empresa
+                        </h3>
+                        {% if empresa and empresa.logo_url %}
+                            <div class="current-photo-edit">
+                                <img src="{{ empresa.logo_url }}" alt="Logo actual" class="profile-preview-edit">
+                                <p class="photo-note-edit">Logo actual</p>
+                            </div>
+                        {% else %}
+                            <div class="photo-placeholder-edit">
+                                <i class="fas fa-building"></i>
+                                <p>Sin logo</p>
+                            </div>
+                        {% endif %}
+                        <label for="logo" class="file-upload-btn-edit">
+                            <i class="fas fa-upload"></i> Seleccionar Logo
+                        </label>
+                        <input type="file" name="logo" id="logo" accept="image/png,image/jpg,image/jpeg,image/gif,image/webp" style="display: none;">
+                    </div>
                 </div>
 
-                <!-- Nombre de la Empresa -->
-                <div class="form-group">
-                    <label for="nombre_empresa">Nombre de la Empresa</label>
-                    <input type="text" name="nombre_empresa" id="nombre_empresa"
-                        value="{{ empresa.nombre_empresa if empresa else '' }}" required>
+                <!-- Panel Medio -->
+                <div class="panel-middle">
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <i class="fas fa-id-card"></i> Información de la Empresa
+                        </h3>
+                        <div class="info-card-content">
+                            <!-- Nombre de la Empresa -->
+                            <div class="form-group-edit">
+                                <label for="nombre_empresa" class="form-label-edit">
+                                    <i class="fas fa-building"></i> Nombre de la Empresa
+                                </label>
+                                <input type="text" name="nombre_empresa" id="nombre_empresa" class="form-input-edit"
+                                    value="{{ empresa.nombre_empresa if empresa else '' }}" required>
+                            </div>
+
+                            <!-- Sector -->
+                            <div class="form-group-edit">
+                                <label for="sector" class="form-label-edit">
+                                    <i class="fas fa-industry"></i> Sector
+                                </label>
+                                <input type="text" name="sector" id="sector" class="form-input-edit"
+                                    value="{{ empresa.sector if empresa else '' }}"
+                                    placeholder="Ej: Tecnología, Retail, Servicios...">
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="form-group-edit">
+                                <label for="descripcion" class="form-label-edit">
+                                    <i class="fas fa-align-left"></i> Descripción
+                                </label>
+                                <textarea name="descripcion" id="descripcion" rows="4" class="form-textarea-edit"
+                                    placeholder="Describe tu empresa...">{{ empresa.descripcion if empresa else '' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Correo -->
-                <div class="form-group">
-                    <label for="correo">Correo Electrónico</label>
-                    <input type="email" name="correo" id="correo"
-                        value="{{ usuario_empresa.correo if usuario_empresa else '' }}" required>
-                </div>
+                <!-- Panel Derecho -->
+                <div class="panel-right">
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <i class="fas fa-address-book"></i> Información de Contacto
+                        </h3>
+                        <div class="info-card-content">
+                            <!-- Correo -->
+                            <div class="form-group-edit">
+                                <label for="correo" class="form-label-edit">
+                                    <i class="fas fa-envelope"></i> Correo Electrónico
+                                </label>
+                                <input type="email" name="correo" id="correo" class="form-input-edit"
+                                    value="{{ usuario_empresa.correo if usuario_empresa else '' }}" required>
+                            </div>
 
-                <!-- Sector -->
-                <div class="form-group">
-                    <label for="sector">Sector</label>
-                    <input type="text" name="sector" id="sector"
-                        value="{{ empresa.sector if empresa else '' }}"
-                        placeholder="Ej: Tecnología, Retail, Servicios...">
-                </div>
+                            <!-- Teléfono -->
+                            <div class="form-group-edit">
+                                <label for="telefono" class="form-label-edit">
+                                    <i class="fas fa-phone"></i> Teléfono
+                                </label>
+                                <input type="text" name="telefono" id="telefono" class="form-input-edit"
+                                    value="{{ empresa.telefono if empresa else '' }}"
+                                    placeholder="Número de teléfono">
+                            </div>
 
-                <!-- Dirección -->
-                <div class="form-group">
-                    <label for="direccion">Dirección</label>
-                    <input type="text" name="direccion" id="direccion"
-                        value="{{ empresa.direccion if empresa else '' }}"
-                        placeholder="Dirección completa">
-                </div>
+                            <!-- Dirección -->
+                            <div class="form-group-edit">
+                                <label for="direccion" class="form-label-edit">
+                                    <i class="fas fa-map-marker-alt"></i> Dirección
+                                </label>
+                                <input type="text" name="direccion" id="direccion" class="form-input-edit"
+                                    value="{{ empresa.direccion if empresa else '' }}"
+                                    placeholder="Dirección completa">
+                            </div>
+                        </div>
 
-                <!-- Teléfono -->
-                <div class="form-group">
-                    <label for="telefono">Teléfono</label>
-                    <input type="text" name="telefono" id="telefono"
-                        value="{{ empresa.telefono if empresa else '' }}"
-                        placeholder="Número de teléfono">
+                        <!-- Botones -->
+                        <div class="form-actions-edit">
+                            <a href="{{ url_for('rt_empresa.dashboard') }}" class="btn-cancel-edit">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn-save-edit">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Descripción -->
-                <div class="form-group">
-                    <label for="descripcion">Descripción</label>
-                    <textarea name="descripcion" id="descripcion" rows="4"
-                        placeholder="Describe tu empresa...">{{ empresa.descripcion if empresa else '' }}</textarea>
-                </div>
-
-                <!-- Botón -->
-                <div class="form-group">
-                    <button type="submit">💾 Guardar Cambios</button>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
+
+    <script>
+        // Hacer que el label funcione como botón para el input file
+        document.querySelector('.file-upload-btn-edit').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('logo').click();
+        });
+        
+        // Mostrar el nombre del archivo seleccionado
+        document.getElementById('logo').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                const btn = document.querySelector('.file-upload-btn-edit');
+                btn.innerHTML = '<i class="fas fa-check"></i> ' + fileName;
+                btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            }
+        });
+    </script>
 </body>
 
 </html>

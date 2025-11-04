@@ -64,29 +64,31 @@
                     <div class="notification-text">
                         <p class="notification-message">{{ notif.mensaje }}</p>
                         <span class="notification-date">
-                            <i class="far fa-calendar-alt"></i> 
+                            <i class="fas fa-calendar-alt"></i> 
                             {{ notif.fecha_envio.strftime('%d/%m/%Y %H:%M') if notif.fecha_envio else 'Fecha desconocida' }}
                         </span>
                     </div>
                 </div>
-                {% if not notif.leido %}
-                <form action="{{ url_for('NotificacionesRoute.marcar_leida', notificacion_id=notif.id) }}" method="POST">
-                    <button type="submit" class="btn-mark-read" title="Marcar como leída">
-                        <i class="fas fa-check"></i>
-                    </button>
-                </form>
-                {% else %}
-                <div class="read-indicator">
-                    <i class="fas fa-check-circle"></i>
+                <div class="notification-actions">
+                    {% if not notif.leido %}
+                    <form action="{{ url_for('NotificacionesRoute.marcar_leida', notificacion_id=notif.id) }}" method="POST">
+                        <button type="submit" class="btn-mark-read" title="Marcar como leída">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </form>
+                    {% else %}
+                    <div class="read-indicator">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <div class="empty-state">
+        <div class="empty-notifications">
             <div class="empty-icon">
-                <i class="far fa-bell-slash"></i>
+                <i class="fas fa-bell-slash"></i>
             </div>
             <h3>No tienes notificaciones</h3>
             <p>Cuando las empresas actualicen el estado de tus postulaciones, aparecerán aquí.</p>
@@ -103,3 +105,5 @@
     </script>
 </body>
 </html>
+
+

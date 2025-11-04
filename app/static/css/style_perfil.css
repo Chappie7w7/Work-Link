@@ -1,3 +1,4 @@
+/* ===== ESTILOS PARA EDITAR PERFIL - DISEÑO DE 3 PANELES ===== */
 * {
     margin: 0;
     padding: 0;
@@ -5,155 +6,441 @@
 }
 
 body {
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
     color: #1e293b;
     line-height: 1.6;
     min-height: 100vh;
 }
 
-.main-content{
-    margin: 130px auto;
+/* ========== CONTENEDOR PRINCIPAL ========== */
+.main-content-edit {
+    max-width: 95%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 100px 20px 80px;
 }
 
-/* Formulario */
-.perfil-form .form-group {
-    margin-bottom: 15px;
+.perfil-form-edit {
+    width: 100%;
+}
+
+.edit-profile-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr 1fr;
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ========== PANEL IZQUIERDO ========== */
+.panel-left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Tarjeta Editar Perfil */
+.edit-profile-card {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #3b82f6 100%);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.edit-profile-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.edit-profile-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.edit-profile-subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* Tarjeta Logo */
+.logo-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.logo-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-card-title i {
+    color: #3b82f6;
+    font-size: 18px;
+}
+
+.current-photo-edit {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-preview-edit {
+    width: 100%;
+    max-width: 200px;
+    height: 200px;
+    border-radius: 16px;
+    object-fit: cover;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 0 auto 12px;
+    display: block;
+}
+
+.photo-placeholder-edit {
+    width: 100%;
+    max-width: 200px;
+    height: 200px;
+    margin: 0 auto 12px;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    border: 3px dashed #cbd5e1;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #94a3b8;
+}
+
+.photo-placeholder-edit i {
+    font-size: 48px;
+}
+
+.photo-placeholder-edit p {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.photo-note-edit {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.file-upload-btn-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    text-align: center;
+}
+
+.file-upload-btn-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+/* ========== PANELES MEDIO Y DERECHO ========== */
+.panel-middle,
+.panel-right {
     display: flex;
     flex-direction: column;
 }
 
-.perfil-form label {
-    font-weight: bold;
-    margin-bottom: 6px;
-    color: #444;
+.info-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-.perfil-form input {
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: #fdfdfd;
+.info-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f1f5f9;
 }
 
-.perfil-form input:focus {
-    border-color: #007bff;
-    outline: none;
+.info-card-title i {
+    color: #3b82f6;
+    font-size: 20px;
 }
 
-/* Botón */
-.perfil-form button {
+.info-card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ========== FORMULARIOS ========== */
+.form-group-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label-edit {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label-edit i {
+    color: #3b82f6;
+    font-size: 14px;
+}
+
+.form-input-edit,
+.form-textarea-edit {
     width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.2s ease;
-}
-
-.perfil-form button:hover {
-    background-color: #0056b3;
-}
-
-/* Contenedor del formulario */
-.form-container {
-    max-width: 500px;  /* límite de ancho */
-    margin: 40px auto; /* centrado en la página */
-    padding: 20px;
-    background: #fff;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 14.5px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    background: #f8fafc;
+    color: #1e293b;
+    transition: all 0.3s ease;
 }
 
-/* Inputs */
-.form-container input,
-.form-container select,
-.form-container textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
+.form-input-edit::placeholder,
+.form-textarea-edit::placeholder {
+    color: #94a3b8;
 }
 
-/* Botón de guardar */
-.form-container button {
-    display: block;
-    margin: 20px auto 0 auto;
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #007bff; /* azul */
+.form-input-edit:focus,
+.form-textarea-edit:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: #ffffff;
+}
+
+.form-textarea-edit {
+    resize: vertical;
+    min-height: 100px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ========== BOTONES ========== */
+.form-actions-edit {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 2px solid #f1f5f9;
+}
+
+.btn-cancel-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #ffffff;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-cancel-edit:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #475569;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn-save-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #10b981, #059669);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    font-family: 'Inter', sans-serif;
 }
 
-.form-container button:hover {
-    background-color: #0056b3;
+.btn-save-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #059669, #047857);
 }
 
-/* Estilos para foto de perfil */
-.current-photo {
-    margin-bottom: 15px;
-    text-align: center;
+.btn-save-edit:active {
+    transform: translateY(0);
 }
 
-.profile-preview {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #007bff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    margin-bottom: 10px;
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1200px) {
+    .edit-profile-grid {
+        grid-template-columns: 300px 1fr 1fr;
+        gap: 20px;
+    }
 }
 
-.photo-note {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 5px;
+@media (max-width: 1024px) {
+    .main-content-edit {
+        padding: 80px 15px 60px;
+    }
+    
+    .edit-profile-grid {
+        grid-template-columns: 280px 1fr 1fr;
+        gap: 18px;
+    }
+    
+    .info-card {
+        padding: 24px;
+    }
 }
 
-.form-help {
-    display: block;
-    margin-top: 5px;
-    font-size: 0.85rem;
-    color: #666;
-    font-style: italic;
+@media (max-width: 768px) {
+    .main-content-edit {
+        padding: 60px 10px 40px;
+    }
+    
+    .edit-profile-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .panel-left {
+        order: 1;
+    }
+    
+    .panel-middle {
+        order: 2;
+    }
+    
+    .panel-right {
+        order: 3;
+    }
+    
+    .edit-profile-card {
+        padding: 30px 24px;
+    }
+    
+    .edit-profile-title {
+        font-size: 24px;
+    }
+    
+    .info-card {
+        padding: 20px;
+    }
+    
+    .form-actions-edit {
+        flex-direction: column-reverse;
+    }
+    
+    .btn-cancel-edit,
+    .btn-save-edit {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
-.perfil-form input[type="file"] {
-    padding: 8px;
-    border: 2px dashed #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    cursor: pointer;
-    transition: border-color 0.3s ease;
-}
-
-.perfil-form input[type="file"]:hover {
-    border-color: #007bff;
-    background-color: #f0f7ff;
-}
-
-.perfil-form textarea {
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: #fdfdfd;
-    font-family: inherit;
-    resize: vertical;
-}
-
-.perfil-form textarea:focus {
-    border-color: #007bff;
-    outline: none;
+@media (max-width: 480px) {
+    .edit-profile-card {
+        padding: 24px 20px;
+        border-radius: 16px;
+    }
+    
+    .edit-profile-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+    }
+    
+    .edit-profile-title {
+        font-size: 20px;
+    }
+    
+    .edit-profile-subtitle {
+        font-size: 13px;
+    }
+    
+    .logo-card,
+    .info-card {
+        padding: 20px;
+        border-radius: 16px;
+    }
+    
+    .profile-preview-edit,
+    .photo-placeholder-edit {
+        max-width: 150px;
+        height: 150px;
+    }
+    
+    .form-input-edit,
+    .form-textarea-edit {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
 }

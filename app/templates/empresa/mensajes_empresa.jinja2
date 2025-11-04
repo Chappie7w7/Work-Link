@@ -3,39 +3,48 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mensajes - Empresa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_mensajes.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        /* Ajustar tamaño para empresas */
-        .messages-wrapper {
-            max-width: 1200px;
-            height: calc(100vh - 150px);
-            margin: 20px auto;
-        }
-        
-        body {
-            background: #f5f5f5;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
     {{ flash.render_flash_messages() }}
-    <header style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div class="logo"></div>
-            <h1 style="margin: 0;"><b>WorkLink</b></h1>
+    
+    <!-- Navigation Bar -->
+    <nav class="empresa-navbar">
+        <div class="nav-brand">
+            <h1>WorkLink</h1>
         </div>
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <a href="{{ url_for('rt_empresa.dashboard') }}" class="btn btn-sm btn-outline-light">← Volver al Dashboard</a>
-            <a href="{{ url_for('IndexRoute.index') }}" class="btn btn-sm btn-danger">Salir</a>
+        <div class="nav-links">
+            <a href="{{ url_for('rt_empresa.dashboard') }}" class="nav-link">
+                <i class="fas fa-arrow-left"></i> 
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('rt_empresa.notificaciones_empresa') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-bell"></i> 
+                <span>Notificaciones</span>
+                <span id="badge-notificaciones-header" class="badge-header" style="display: none;"></span>
+            </a>
+            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
         </div>
-    </header>
+    </nav>
 
-    <div class="messages-wrapper">
+    <div class="messages-container">
+        <div class="messages-wrapper">
         <!-- Barra lateral de conversaciones -->
         <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <i class="fas fa-comments"></i>
+                    <span>Mensajes</span>
+                </div>
+            </div>
             <div class="search-box">
                 <input type="text" placeholder="Buscar conversación...">
             </div>
@@ -52,17 +61,20 @@
                     </li>
                     {% endfor %}
                 {% else %}
-                    <li style="padding: 20px; text-align: center; color: #999;">
-                        <p>No tienes conversaciones aún</p>
+                    <li class="empty-conversations">
+                        <div class="empty-conversations-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <p class="empty-conversations-text">No tienes conversaciones aún</p>
                         {% if empleados_disponibles %}
-                        <p style="font-size: 12px; margin-top: 10px;">Selecciona un candidato abajo para iniciar chat</p>
+                        <p class="empty-conversations-hint">Selecciona un candidato abajo para iniciar chat</p>
                         {% endif %}
                     </li>
                 {% endif %}
                 
                 {% if empleados_disponibles %}
-                <li style="padding: 10px 15px; background: #f0f0f0; font-weight: bold; font-size: 12px; color: #666;">
-                    INICIAR NUEVA CONVERSACIÓN
+                <li class="section-divider">
+                    <span>INICIAR NUEVA CONVERSACIÓN</span>
                 </li>
                 {% for empleado in empleados_disponibles %}
                 <li class="conversation" data-user-id="{{ empleado.id }}" onclick="cargarConversacion({{ empleado.id }}, '{{ empleado.nombre }}')">
@@ -80,27 +92,48 @@
         <!-- Área principal del chat -->
         <main class="chat-section">
             <header class="chat-header" id="chatHeader" style="display: none;">
-                <div class="chat-avatar" id="chatAvatar">?</div>
-                <div class="chat-info">
-                    <h3 id="chatNombre">Selecciona una conversación</h3>
-                    <span class="status" id="chatStatus"></span>
+                <div class="chat-header-left">
+                    <div class="chat-avatar" id="chatAvatar">?</div>
+                    <div class="chat-info">
+                        <h3 id="chatNombre">Selecciona una conversación</h3>
+                        <span class="status" id="chatStatus"></span>
+                    </div>
+                </div>
+                <div class="chat-header-actions">
+                    <i class="fas fa-phone"></i>
+                    <i class="fas fa-video"></i>
+                    <i class="fas fa-ellipsis-v"></i>
                 </div>
             </header>
 
             <div class="chat-messages" id="chatMessages">
-                <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #999; flex-direction: column;">
-                    <p style="font-size: 18px; margin-bottom: 10px;">💬</p>
-                    <p>Selecciona una conversación para comenzar</p>
+                <div class="empty-chat-state">
+                    <div class="empty-chat-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <p class="empty-chat-text">Selecciona una conversación para comenzar</p>
                 </div>
             </div>
 
             <div class="chat-input" id="chatInput" style="display: none;">
-                <input type="text" id="mensajeInput" placeholder="Escribe tu mensaje..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
-                <button onclick="enviarMensaje()">Enviar</button>
+                <div class="chat-input-wrapper">
+                    <div class="chat-input-actions">
+                        <i class="fas fa-paperclip"></i>
+                    </div>
+                    <input type="text" id="mensajeInput" placeholder="Type a message here..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
+                    <div class="chat-input-actions">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                </div>
+                <button onclick="enviarMensaje()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </main>
+        </div>
     </div>
 
+    <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
     <script>
         let destinatarioActual = null;
         
@@ -128,9 +161,11 @@
                     
                     if (data.mensajes.length === 0) {
                         chatMessages.innerHTML = `
-                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #999; flex-direction: column;">
-                                <p style="font-size: 18px; margin-bottom: 10px;">💬</p>
-                                <p>No hay mensajes aún. ¡Inicia la conversación!</p>
+                            <div class="empty-chat-state">
+                                <div class="empty-chat-icon">
+                                    <i class="fas fa-comment-dots"></i>
+                                </div>
+                                <p class="empty-chat-text">No hay mensajes aún. ¡Inicia la conversación!</p>
                             </div>
                         `;
                     } else {
