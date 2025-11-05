@@ -1,54 +1,131 @@
 {% import "components/navbar.jinja2" as components %}
 {% import "components/footer.jinja2" as footer %}
+{% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Perfil</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_perfil.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
     {{ components.navbar(current_user) }}
+    {{ flash.render_flash_messages() }}
 
-    <div class="main-content">
-        <div class="form-container">
-            <h2>Editar Perfil</h2>
+    <div class="main-content-edit">
+        <form action="{{ url_for('PerfilRoute.editar') }}" method="post" class="perfil-form-edit" enctype="multipart/form-data">
+            <div class="edit-profile-grid">
+                <!-- Panel Izquierdo -->
+                <div class="panel-left">
+                    <!-- Tarjeta Editar Perfil -->
+                    <div class="edit-profile-card">
+                        <div class="edit-profile-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <h2 class="edit-profile-title">Editar Perfil</h2>
+                        <p class="edit-profile-subtitle">Actualiza tu información personal</p>
+                    </div>
 
-            <form action="{{ url_for('PerfilRoute.editar') }}" method="post" class="perfil-form">
-                <!-- Nombre -->
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre"
-                        value="{{ current_user.nombre if current_user else '' }}" required>
+                    <!-- Tarjeta Foto -->
+                    <div class="logo-card">
+                        <h3 class="logo-card-title">
+                            <i class="fas fa-user-circle"></i> Foto de Perfil
+                        </h3>
+                        {% if current_user and current_user.foto_perfil %}
+                            <div class="current-photo-edit">
+                                <img src="{{ current_user.foto_perfil }}" alt="Foto actual" class="profile-preview-edit">
+                                <p class="photo-note-edit">Foto actual</p>
+                            </div>
+                        {% else %}
+                            <div class="photo-placeholder-edit">
+                                <i class="fas fa-user"></i>
+                                <p>Sin foto</p>
+                            </div>
+                        {% endif %}
+                        <label for="foto_perfil" class="file-upload-btn-edit">
+                            <i class="fas fa-upload"></i> Seleccionar Foto
+                        </label>
+                        <input type="file" name="foto_perfil" id="foto_perfil" accept="image/png,image/jpg,image/jpeg,image/gif,image/webp" style="display: none;">
+                    </div>
                 </div>
 
-                <!-- Correo -->
-                <div class="form-group">
-                    <label for="correo">Correo</label>
-                    <input type="email" name="correo" id="correo"
-                        value="{{ current_user.correo if current_user else '' }}" required>
+                <!-- Panel Medio -->
+                <div class="panel-middle">
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <i class="fas fa-user"></i> Información Personal
+                        </h3>
+                        <div class="info-card-content">
+                            <!-- Nombre -->
+                            <div class="form-group-edit">
+                                <label for="nombre" class="form-label-edit">
+                                    <i class="fas fa-user"></i> Nombre
+                                </label>
+                                <input type="text" name="nombre" id="nombre" class="form-input-edit"
+                                    value="{{ current_user.nombre if current_user else '' }}" required>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Ubicación -->
-                <div class="form-group">
-                    <label for="ubicacion">Ubicación</label>
-                    <input type="text" name="ubicacion" id="ubicacion"
-                        value="{{ current_user.ubicacion if current_user else '' }}">
-                </div>
+                <!-- Panel Derecho -->
+                <div class="panel-right">
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <i class="fas fa-envelope"></i> Información de Contacto
+                        </h3>
+                        <div class="info-card-content">
+                            <!-- Correo -->
+                            <div class="form-group-edit">
+                                <label for="correo" class="form-label-edit">
+                                    <i class="fas fa-envelope"></i> Correo Electrónico
+                                </label>
+                                <input type="email" name="correo" id="correo" class="form-input-edit"
+                                    value="{{ current_user.correo if current_user else '' }}" required>
+                            </div>
+                        </div>
 
-                <!-- Botón -->
-                <div class="form-group">
-                    <button type="submit">💾 Guardar Cambios</button>
+                        <!-- Botones -->
+                        <div class="form-actions-edit">
+                            <a href="{{ url_for('InicioRoute.inicio') }}" class="btn-cancel-edit">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn-save-edit">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 
     <!-- Llamar al componente footer -->
     {{ footer.footer() }}
+    
+    <script>
+        // Hacer que el label funcione como botón para el input file
+        document.querySelector('.file-upload-btn-edit').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('foto_perfil').click();
+        });
+        
+        // Mostrar el nombre del archivo seleccionado
+        document.getElementById('foto_perfil').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                const btn = document.querySelector('.file-upload-btn-edit');
+                btn.innerHTML = '<i class="fas fa-check"></i> ' + fileName;
+                btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            }
+        });
+    </script>
+    
     <!-- Inicializar AOS -->
     <script>
         AOS.init();

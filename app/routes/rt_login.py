@@ -1,13 +1,18 @@
-from flask import Blueprint, redirect, render_template, request, url_for, session, flash
+from flask import Blueprint, redirect, render_template, request, url_for, session, flash, current_app
 from app.controller.ctr_login import login_user, logout_user
 from app.utils.roles import Roles
 from flask_mail import Message
 from app.models.md_usuarios import UsuarioModel
-from werkzeug.security import generate_password_hash
+from app.models.md_empleados import EmpleadoModel
+from werkzeug.security import generate_password_hash, check_password_hash
 from app.db.sql import db
 import secrets
+import os
+import requests
 from datetime import datetime, timedelta
 from app.extensiones import mail
+from app.auth.google_auth import get_google_auth, get_google_provider_cfg
+from authlib.integrations.requests_client import OAuth2Session
 
 rt_login = Blueprint("LoginRoute", __name__)
 
@@ -121,6 +126,131 @@ def reset_password(token):
         return redirect(url_for("LoginRoute.recuperar"))
 
     return render_template("reset_password.jinja2", token=token)
+
+# 🔹 Función para crear la sesión OAuth de Google
+def get_google_auth():
+    client_id = os.getenv("GOOGLE_CLIENT_ID")
+    client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
+    redirect_uri = "http://127.0.0.1:5000/google/callback"  # Debe coincidir con la ruta definida en @rt_login.route
+
+    return OAuth2Session(
+        client_id=client_id,
+        client_secret=client_secret,
+        redirect_uri=redirect_uri,
+        scope=["openid", "email", "profile"]
+    )
+
+# 🔹 Inicia el flujo de autenticación con Google
+@rt_login.route("/google/login")
+def google_login():
+    """Inicia el flujo de autenticación con Google"""
+    google_auth = get_google_auth()
+
+    # URL de autorización de Google
+    authorization_url, state = google_auth.create_authorization_url(
+        "https://accounts.google.com/o/oauth2/auth",
+        access_type="offline",
+        include_granted_scopes="true"
+    )
+
+    session["state"] = state
+    return redirect(authorization_url)
+# 🔹 Maneja la respuesta (callback) después del login con Google
+@rt_login.route("/google/callback")
+def google_callback():
+    try:
+        if request.args.get("state") != session.get("state"):
+            flash("Sesión inválida. Por favor, inténtalo de nuevo.", "error")
+            current_app.logger.error("Error de estado en Google OAuth: estado no coincide")
+            return redirect(url_for("LoginRoute.login_form"))
+
+        google_auth = get_google_auth()
+
+        try:
+            # Intercambia el código por un token
+            token_response = google_auth.fetch_token(
+                "https://oauth2.googleapis.com/token",
+                authorization_response=request.url
+            )
+            current_app.logger.info("Token obtenido exitosamente")
+        except Exception as e:
+            current_app.logger.error(f"Error al obtener token de Google: {str(e)}")
+            flash("Error al autenticar con Google. Por favor, inténtalo de nuevo.", "error")
+            return redirect(url_for("LoginRoute.login_form"))
+
+        try:
+            # Obtiene la información del usuario desde Google
+            userinfo_response = requests.get(
+                "https://www.googleapis.com/oauth2/v1/userinfo",
+                headers={"Authorization": f"Bearer {google_auth.token['access_token']}"}
+            )
+            userinfo_response.raise_for_status()
+            user_data = userinfo_response.json()
+            current_app.logger.info(f"Datos del usuario obtenidos: {user_data}")
+        except Exception as e:
+            current_app.logger.error(f"Error al obtener información del usuario: {str(e)}")
+            flash("No se pudo obtener la información de tu cuenta de Google.", "error")
+            return redirect(url_for("LoginRoute.login_form"))
+
+        try:
+            # Buscar o crear el usuario en tu base de datos
+            usuario = UsuarioModel.query.filter_by(correo=user_data["email"]).first()
+            
+            if not usuario:
+                # Crear nuevo usuario
+                nombre = user_data.get("name") or user_data["email"].split("@")[0]
+                usuario = UsuarioModel(
+                    nombre=nombre,
+                    correo=user_data["email"],
+                    tipo_usuario=Roles.EMPLEADO,
+                    google_id=user_data["id"],
+                    foto_perfil=user_data.get("picture"),
+                    fecha_registro=datetime.utcnow()
+                )
+                db.session.add(usuario)
+                db.session.flush()  # Para obtener el ID del usuario recién creado
+                
+                # Crear perfil de empleado automáticamente si es empleado
+                if usuario.tipo_usuario == Roles.EMPLEADO:
+                    empleado = EmpleadoModel(id=usuario.id)
+                    db.session.add(empleado)
+                
+                db.session.commit()
+                current_app.logger.info(f"Nuevo usuario creado: {usuario.correo}")
+
+            else:
+                # Actualizar datos del usuario existente
+                usuario.google_id = user_data["id"]
+                usuario.foto_perfil = user_data.get("picture", usuario.foto_perfil)
+                db.session.commit()
+                current_app.logger.info(f"Usuario existente: {usuario.correo}")
+
+            # Iniciar sesión
+            session["user_id"] = usuario.id
+            session["tipo_usuario"] = usuario.tipo_usuario
+            session["usuario"] = {
+                "id": usuario.id,
+                "nombre": usuario.nombre,
+                "correo": usuario.correo,
+                "tipo_usuario": usuario.tipo_usuario,
+                "foto_perfil": usuario.foto_perfil
+            }
+
+            flash(f"¡Bienvenido {usuario.nombre}!", "success")
+            
+            # Redirigir según el tipo de usuario
+            if usuario.tipo_usuario == Roles.EMPRESA:
+                return redirect(url_for("rt_empresa.dashboard"))
+            return redirect(url_for("InicioRoute.inicio"))
+                
+        except Exception as e:
+            current_app.logger.error(f"Error en el proceso de autenticación: {str(e)}")
+            flash("Ocurrió un error al iniciar sesión con Google. Por favor, inténtalo de nuevo.", "error")
+            return redirect(url_for("LoginRoute.login_form"))
+    except Exception as e:
+        current_app.logger.error(f"Error general en Google OAuth: {str(e)}")
+        flash("Error inesperado. Por favor, inténtalo de nuevo más tarde.", "error")
+        return redirect(url_for("LoginRoute.login_form"))
 
 @rt_login.route("/logout")
 def logout():

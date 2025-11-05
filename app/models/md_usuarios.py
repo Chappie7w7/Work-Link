@@ -12,7 +12,7 @@ class UsuarioModel(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String(50), nullable=False)
     correo = Column(String(100), unique=True, nullable=False)
-    contraseña = Column(String(255), nullable=False)
+    contraseña = Column(String(255), nullable=True)  # Hacer opcional para usuarios de Google
     tipo_usuario = Column(String(50), nullable=False)
     foto_perfil = Column(String(255), nullable=True)
     fecha_registro = Column(DateTime, default=datetime.utcnow)
@@ -21,6 +21,9 @@ class UsuarioModel(db.Model):
     ubicacion = Column(String(100), nullable=True)
     ultimo_login = Column(DateTime, nullable=True)
     
+    # Campos para autenticación
+    google_id = Column(String(100), nullable=True, unique=True)
+    
     # Campos para recuperación de contraseña
     reset_token = Column(String(64), nullable=True, unique=True)
     reset_token_expiration = Column(DateTime, nullable=True)
@@ -28,13 +31,12 @@ class UsuarioModel(db.Model):
     # Relación con el modelo PlanModel (si lo tienes)
     #plan = relationship("PlanModel", backref="usuarios")
 
-    def __init__(self, nombre, correo, contraseña, tipo_usuario, foto_perfil=None,
+    def __init__(self, nombre, correo, tipo_usuario, contraseña=None, foto_perfil=None,
             premium=False, plan_id=None, ubicacion=None, fecha_registro=None,
-            ultimo_login=None):
+            ultimo_login=None, google_id=None):
         self.nombre = nombre
         self.correo = correo
         self.contraseña = contraseña
-        self.tipo_usuario = tipo_usuario 
         self.tipo_usuario = tipo_usuario
         self.foto_perfil = foto_perfil
         self.premium = premium
@@ -42,6 +44,7 @@ class UsuarioModel(db.Model):
         self.ubicacion = ubicacion
         self.fecha_registro = fecha_registro or datetime.utcnow()
         self.ultimo_login = ultimo_login
+        self.google_id = google_id
 
     def to_json(self):
         return {

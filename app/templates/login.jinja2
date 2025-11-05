@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Formulario de Login</title>
 
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+
     <!-- Fuentes y estilos externos -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
@@ -57,7 +64,6 @@
                     {% endif %}
                     {% endwith %}
                 </div>
-
                 <!-- Formulario de login -->
                 <form method="post" action="{{ url_for('LoginRoute.login') }}" class="form">
                     <div>
@@ -80,7 +86,15 @@
                     <a href="{{ url_for('LoginRoute.recuperar') }}" class="link-recuperar">¿Olvidaste tu contraseña?</a>
                 </form>
 
+                <div class="divider">o</div>
+                <!-- Botón de Google -->
+                <a href="{{ url_for('LoginRoute.google_login') }}" class="google-btn">
+                    <img src="{{ url_for('static', filename='images/googlelogin.png') }}" alt="Google Logo">
+                    Continuar con Google
+                </a>
+
             </div>
+            
         </div>
     </div>
 

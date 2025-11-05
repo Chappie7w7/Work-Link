@@ -2,129 +2,212 @@
 {% import "components/footer.jinja2" as footer %}
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Mensajes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes - WorkLink</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_mensajes.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-
     {{ components.navbar(current_user) }}
 
     <div class="messages-container">
-        <!-- Sidebar de conversaciones -->
-        <div class="conversations-sidebar">
-            <div class="conversations-header">
-                <h2>💬 Mensajes</h2>
-                <button class="new-message-btn">+ Nuevo</button>
+        <div class="messages-wrapper">
+        <!-- Barra lateral de conversaciones -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <i class="fas fa-comments"></i>
+                    <span>Mensajes</span>
+                </div>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Buscar conversación...">
             </div>
 
-            <div class="conversation-list">
-                <div class="conversation-item active">
-                    <div class="conversation-header">
-                        <div class="conversation-avatar">A</div>
-                        <div class="conversation-info">
-                            <h4>Agroindustrias del Sur</h4>
+            <ul class="conversation-list" id="conversationList">
+                {% if conversaciones %}
+                    {% for conv in conversaciones %}
+                    <li class="conversation" data-user-id="{{ conv.id }}" onclick="cargarConversacion({{ conv.id }}, '{{ conv.nombre }}')">
+                        <div class="avatar">{{ conv.nombre[0].upper() }}</div>
+                        <div class="details">
+                            <h4>{{ conv.nombre }} {% if conv.tipo_usuario == 'empresa' %}(Empresa){% endif %}</h4>
+                            <p>Haz clic para ver la conversación</p>
                         </div>
-                    </div>
-                    <div class="conversation-preview">
-                        Hola, nos interesa tu perfil para la vacante de...
-                    </div>
-                    <div class="conversation-meta">
-                        <span class="conversation-time">Hace 2 horas</span>
-                        <div class="unread-badge">2</div>
-                    </div>
-                </div>
-
-                <div class="conversation-item">
-                    <div class="conversation-header">
-                        <div class="conversation-avatar">B</div>
-                        <div class="conversation-info">
-                            <h4>Banco Regional</h4>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="empty-conversations">
+                        <div class="empty-conversations-icon">
+                            <i class="fas fa-comments"></i>
                         </div>
+                        <p class="empty-conversations-text">No tienes conversaciones aún</p>
+                        {% if empresas_disponibles %}
+                        <p class="empty-conversations-hint">Selecciona una empresa abajo para iniciar chat</p>
+                        {% endif %}
+                    </li>
+                {% endif %}
+                
+                {% if empresas_disponibles %}
+                <li class="section-divider">
+                    <span>INICIAR NUEVA CONVERSACIÓN</span>
+                </li>
+                {% for empresa in empresas_disponibles %}
+                <li class="conversation" data-user-id="{{ empresa.id }}" onclick="cargarConversacion({{ empresa.id }}, '{{ empresa.nombre }}')">
+                    <div class="avatar">{{ empresa.nombre[0].upper() }}</div>
+                    <div class="details">
+                        <h4>{{ empresa.nombre }} (Empresa)</h4>
+                        <p>Iniciar conversación</p>
                     </div>
-                    <div class="conversation-preview">
-                        Gracias por tu interés en nuestra oferta...
-                    </div>
-                    <div class="conversation-meta">
-                        <span class="conversation-time">Ayer</span>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </aside>
+
+        <!-- Área principal del chat -->
+        <main class="chat-section">
+            <header class="chat-header" id="chatHeader" style="display: none;">
+                <div class="chat-header-left">
+                    <div class="chat-avatar" id="chatAvatar">?</div>
+                    <div class="chat-info">
+                        <h3 id="chatNombre">Selecciona una conversación</h3>
+                        <span class="status" id="chatStatus"></span>
                     </div>
                 </div>
-
-                <div class="conversation-item">
-                    <div class="conversation-header">
-                        <div class="conversation-avatar">C</div>
-                        <div class="conversation-info">
-                            <h4>Comercial del Sureste</h4>
-                        </div>
-                    </div>
-                    <div class="conversation-preview">
-                        ¿Podrías enviarnos tu CV actualizado?
-                    </div>
-                    <div class="conversation-meta">
-                        <span class="conversation-time">Hace 3 días</span>
-                        <div class="unread-badge">1</div>
-                    </div>
+                <div class="chat-header-actions">
+                    <i class="fas fa-phone"></i>
+                    <i class="fas fa-video"></i>
+                    <i class="fas fa-ellipsis-v"></i>
                 </div>
-            </div>
-        </div>
+            </header>
 
-        <!-- Área de chat -->
-        <div class="chat-area">
-            <div class="chat-header">
-                <div class="chat-avatar">A</div>
-                <div class="chat-info">
-                    <h3>Agroindustrias del Sur</h3>
-                    <div class="chat-status">En línea</div>
-                </div>
-            </div>
-
-            <div class="chat-messages">
-                <div class="message">
-                    <div class="message-avatar">A</div>
-                    <div class="message-content">
-                        <div class="message-text">Hola, nos interesa tu perfil para la vacante de Desarrollador Web. ¿Te
-                            gustaría agendar una entrevista?</div>
-                        <div class="message-time">10:30 AM</div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="empty-chat-state">
+                    <div class="empty-chat-icon">
+                        <i class="fas fa-comment-dots"></i>
                     </div>
-                </div>
-
-                <div class="message sent">
-                    <div class="message-avatar">{{ current_user.nombre[0] if current_user else 'U' }}</div>
-                    <div class="message-content">
-                        <div class="message-text">¡Hola! Sí, me interesa mucho la oportunidad. ¿Qué horarios tienen
-                            disponibles?</div>
-                        <div class="message-time">10:35 AM</div>
-                    </div>
-                </div>
-
-                <div class="message">
-                    <div class="message-avatar">A</div>
-                    <div class="message-content">
-                        <div class="message-text">Perfecto. Tenemos disponibilidad mañana a las 2:00 PM o el viernes a
-                            las 10:00 AM. ¿Cuál te conviene más?</div>
-                        <div class="message-time">10:37 AM</div>
-                    </div>
+                    <p class="empty-chat-text">Selecciona una conversación para comenzar</p>
                 </div>
             </div>
 
-            <div class="chat-input">
-                <div class="input-container">
-                    <input type="text" class="message-input" placeholder="Escribe tu mensaje...">
-                    <button class="send-btn">Enviar</button>
+            <div class="chat-input" id="chatInput" style="display: none;">
+                <div class="chat-input-wrapper">
+                    <div class="chat-input-actions">
+                        <i class="fas fa-paperclip"></i>
+                    </div>
+                    <input type="text" id="mensajeInput" placeholder="Type a message here..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
+                    <div class="chat-input-actions">
+                        <i class="fas fa-microphone"></i>
+                    </div>
                 </div>
+                <button onclick="enviarMensaje()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
+        </main>
         </div>
     </div>
 
-    <!-- Llamar al componente footer -->
     {{ footer.footer() }}
     <!-- Inicializar AOS -->
     <script>
         AOS.init();
     </script>
+    
+    <script>
+        let destinatarioActual = null;
+        
+        function cargarConversacion(userId, nombre) {
+            destinatarioActual = userId;
+            
+            // Actualizar UI del header
+            document.getElementById('chatHeader').style.display = 'flex';
+            document.getElementById('chatInput').style.display = 'flex';
+            document.getElementById('chatAvatar').textContent = nombre[0].toUpperCase();
+            document.getElementById('chatNombre').textContent = nombre;
+            
+            // Marcar conversación como activa
+            document.querySelectorAll('.conversation').forEach(conv => {
+                conv.classList.remove('active');
+            });
+            document.querySelector(`[data-user-id="${userId}"]`).classList.add('active');
+            
+            // Cargar mensajes
+            fetch(`/mensajes/conversacion/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const chatMessages = document.getElementById('chatMessages');
+                    chatMessages.innerHTML = '';
+                    
+                    if (data.mensajes.length === 0) {
+                        chatMessages.innerHTML = `
+                            <div class="empty-chat-state">
+                                <div class="empty-chat-icon">
+                                    <i class="fas fa-comment-dots"></i>
+                                </div>
+                                <p class="empty-chat-text">No hay mensajes aún. ¡Inicia la conversación!</p>
+                            </div>
+                        `;
+                    } else {
+                        data.mensajes.forEach(msg => {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = msg.es_mio ? 'message sent' : 'message received';
+                            messageDiv.innerHTML = `
+                                <p>${msg.contenido}</p>
+                                <span class="time">${msg.fecha_envio}</span>
+                            `;
+                            chatMessages.appendChild(messageDiv);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        
+        function enviarMensaje() {
+            const input = document.getElementById('mensajeInput');
+            const contenido = input.value.trim();
+            
+            if (!contenido || !destinatarioActual) return;
+            
+            fetch('/mensajes/enviar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    destinatario_id: destinatarioActual,
+                    contenido: contenido
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const chatMessages = document.getElementById('chatMessages');
+                    
+                    // Si era el mensaje de inicio, limpiar el placeholder
+                    if (chatMessages.querySelector('[style*="display: flex"]')) {
+                        chatMessages.innerHTML = '';
+                    }
+                    
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message sent';
+                    messageDiv.innerHTML = `
+                        <p>${data.mensaje.contenido}</p>
+                        <span class="time">${data.mensaje.fecha_envio}</span>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    input.value = '';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 </body>
-
 </html>

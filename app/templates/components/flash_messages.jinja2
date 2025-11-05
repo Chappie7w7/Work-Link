@@ -1,0 +1,37 @@
+{% macro render_flash_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages-container" style="position: fixed; top: 80px; right: 20px; z-index: 9999; max-width: 400px;">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" style="padding: 15px; margin-bottom: 10px; border-radius: 8px; background: {% if category == 'success' %}#d4edda{% elif category == 'danger' or category == 'error' %}#f8d7da{% else %}#d1ecf1{% endif %}; color: {% if category == 'success' %}#155724{% elif category == 'danger' or category == 'error' %}#721c24{% else %}#0c5460{% endif %}; border: 1px solid {% if category == 'success' %}#c3e6cb{% elif category == 'danger' or category == 'error' %}#f5c6cb{% else %}#bee5eb{% endif %}; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: slideIn 0.3s ease-out;">
+                        <strong>{% if category == 'success' %}✓{% elif category == 'danger' or category == 'error' %}✗{% else %}ℹ{% endif %}</strong>
+                        {{ message }}
+                        <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; font-size: 20px; cursor: pointer; color: inherit; margin-left: 10px;">&times;</button>
+                    </div>
+                {% endfor %}
+            </div>
+            <style>
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+            </style>
+            <script>
+                setTimeout(function() {
+                    document.querySelectorAll('.flash-messages-container .alert').forEach(function(alert) {
+                        alert.style.transition = 'opacity 0.5s, transform 0.5s';
+                        alert.style.opacity = '0';
+                        alert.style.transform = 'translateX(100%)';
+                        setTimeout(function() { alert.remove(); }, 500);
+                    });
+                }, 5000);
+            </script>
+        {% endif %}
+    {% endwith %}
+{% endmacro %}

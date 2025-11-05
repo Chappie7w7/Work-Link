@@ -1,3 +1,6 @@
+{% import "components/navbar.jinja2" as components %}
+{% import 'components/footer.jinja2' as footer %}
+{% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,49 +8,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postular a {{ vacante.titulo }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_postular.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h2>Postular a: {{ vacante.titulo }}</h2>
-        <p><strong>Empresa:</strong> {{ vacante.empresa.nombre_empresa if vacante.empresa else 'Sin empresa' }}</p>
-        <p><strong>Ubicación:</strong> {{ vacante.ubicacion or 'No especificada' }}</p>
+    {{ components.navbar( current_user) }}
+    {{ flash.render_flash_messages() }}
 
-        <form method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="curriculum">Currículum (PDF/DOC)</label>
-                {% if empleado and empleado.curriculum_url %}
-                    <p>CV actual: <a href="{{ empleado.curriculum_url }}" target="_blank">Ver</a></p>
-                {% endif %}
-                <input type="file" name="curriculum" id="curriculum" accept=".pdf,.doc,.docx">
+    <section class="postular-section" data-aos="fade-up">
+        <div class="container">
+            <div class="page-header">
+                <h2>Postular a: {{ vacante.titulo }}</h2>
+                <p class="subtitle">Aplica a la vacante y adjunta tu currículum</p>
             </div>
 
-            <div class="form-group">
-                <label for="educacion">Educación</label>
-                <textarea name="educacion" id="educacion" rows="3">{{ empleado.educacion if empleado else '' }}</textarea>
-            </div>
+            <div class="content-grid">
+                <aside class="job-summary" data-aos="fade-up" data-aos-delay="100">
+                    <div class="summary-header">
+                        <div class="company-logo">
+                            <img src="{{ vacante.empresa.logo_url if vacante.empresa and vacante.empresa.logo_url else url_for('static', filename='img/default-company.png') }}" alt="{{ vacante.empresa.nombre_empresa if vacante.empresa else 'Empresa' }}">
+                        </div>
+                        <div class="job-meta">
+                            <h3>{{ vacante.titulo }}</h3>
+                            <p class="company">{{ vacante.empresa.nombre_empresa if vacante.empresa else 'Sin empresa' }}</p>
+                        </div>
+                    </div>
+                    <div class="summary-info">
+                        <div class="info-item"><i class="fas fa-location-dot"></i> {{ vacante.ubicacion or 'No especificada' }}</div>
+                        {% if vacante.modalidad %}<div class="info-item"><i class="fas fa-briefcase"></i> {{ vacante.modalidad }}</div>{% endif %}
+                        {% if vacante.salario_aprox %}<div class="info-item"><i class="fas fa-money-bill-wave"></i> ${{ "%.2f"|format(vacante.salario_aprox) }}</div>{% endif %}
+                    </div>
+                    {% if vacante.descripcion %}
+                    <div class="summary-description">
+                        <p>{{ vacante.descripcion }}</p>
+                    </div>
+                    {% endif %}
+                </aside>
 
-            <div class="form-group">
-                <label for="experiencia">Experiencia</label>
-                <textarea name="experiencia" id="experiencia" rows="4">{{ empleado.experiencia if empleado else '' }}</textarea>
-            </div>
+                <form class="apply-form" method="POST" enctype="multipart/form-data" data-aos="fade-up" data-aos-delay="150">
+                    <div class="form-group">
+                        <label for="curriculum">Currículum (PDF/DOC)</label>
+                        {% if empleado and empleado.curriculum_url %}
+                            <p class="current-file">CV actual: <a href="{{ empleado.curriculum_url }}" target="_blank">Ver</a></p>
+                        {% endif %}
+                        <input type="file" name="curriculum" id="curriculum" accept=".pdf,.doc,.docx">
+                    </div>
 
-            <div class="form-group">
-                <label for="habilidades">Habilidades</label>
-                <textarea name="habilidades" id="habilidades" rows="3">{{ empleado.habilidades if empleado else '' }}</textarea>
-            </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="educacion">Educación</label>
+                            <textarea name="educacion" id="educacion" rows="3">{{ empleado.educacion if empleado else '' }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="habilidades">Habilidades</label>
+                            <textarea name="habilidades" id="habilidades" rows="3">{{ empleado.habilidades if empleado else '' }}</textarea>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name="cv_destacado" {% if empleado and empleado.cv_destacado %}checked{% endif %}>
-                    Marcar mi CV como destacado
-                </label>
-            </div>
+                    <div class="form-group">
+                        <label for="experiencia">Experiencia</label>
+                        <textarea name="experiencia" id="experiencia" rows="4">{{ empleado.experiencia if empleado else '' }}</textarea>
+                    </div>
 
-            <div class="form-actions">
-                <a class="btn btn-secondary" href="{{ url_for('EmpleosRoute.empleos') }}">Cancelar</a>
-                <button type="submit" class="btn btn-primary">Enviar postulación</button>
+                    <div class="form-group inline">
+                        <label>
+                            <input type="checkbox" name="cv_destacado" {% if empleado and empleado.cv_destacado %}checked{% endif %}>
+                            Marcar mi CV como destacado
+                        </label>
+                    </div>
+
+                    <div class="form-actions centered">
+                        <a class="btn btn-secondary" href="{{ url_for('EmpleosRoute.empleos') }}">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Enviar postulación</button>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
+        </div>
+    </section>
+
+    {{ footer.footer() }}
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init();</script>
 </body>
 </html>

@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from datetime import datetime
 from app.db.sql import db
 from app.models.md_usuarios import UsuarioModel
+from app.models.md_empleados import EmpleadoModel
 from werkzeug.security import generate_password_hash
 import re
 
@@ -24,10 +25,17 @@ def registro():
         tipo_usuario="empleado"
     )
     db.session.add(nuevo_usuario)
+    db.session.flush()  # Para obtener el ID del usuario recién creado
+    
+    # Crear perfil de empleado automáticamente
+    if nuevo_usuario.tipo_usuario == 'empleado':
+        empleado = EmpleadoModel(id=nuevo_usuario.id)
+        db.session.add(empleado)
+    
     db.session.commit()
 
-    flash("Cuenta creada con éxito", "success")
-    return render_template("registro.jinja2", tab="empleado")
+    flash("Cuenta creada con éxito. Por favor inicia sesión.", "success")
+    return redirect(url_for("LoginRoute.login_form"))
 
 @rt_registro.route("/verificar_correo", methods=["POST"])
 def verificar_correo():

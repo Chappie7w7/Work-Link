@@ -1,0 +1,229 @@
+{% import "components/flash_messages.jinja2" as flash %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes - Empresa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_mensajes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    {{ flash.render_flash_messages() }}
+    
+    <!-- Navigation Bar -->
+    <nav class="empresa-navbar">
+        <div class="nav-brand">
+            <h1>WorkLink</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('rt_empresa.dashboard') }}" class="nav-link">
+                <i class="fas fa-arrow-left"></i> 
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('rt_empresa.notificaciones_empresa') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-bell"></i> 
+                <span>Notificaciones</span>
+                <span id="badge-notificaciones-header" class="badge-header" style="display: none;"></span>
+            </a>
+            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </nav>
+
+    <div class="messages-container">
+        <div class="messages-wrapper">
+        <!-- Barra lateral de conversaciones -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <i class="fas fa-comments"></i>
+                    <span>Mensajes</span>
+                </div>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Buscar conversación...">
+            </div>
+
+            <ul class="conversation-list" id="conversationList">
+                {% if conversaciones %}
+                    {% for conv in conversaciones %}
+                    <li class="conversation" data-user-id="{{ conv.id }}" onclick="cargarConversacion({{ conv.id }}, '{{ conv.nombre }}')">
+                        <div class="avatar">{{ conv.nombre[0].upper() }}</div>
+                        <div class="details">
+                            <h4>{{ conv.nombre }} {% if conv.tipo_usuario == 'empleado' %}(Candidato){% endif %}</h4>
+                            <p>Haz clic para ver la conversación</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="empty-conversations">
+                        <div class="empty-conversations-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <p class="empty-conversations-text">No tienes conversaciones aún</p>
+                        {% if empleados_disponibles %}
+                        <p class="empty-conversations-hint">Selecciona un candidato abajo para iniciar chat</p>
+                        {% endif %}
+                    </li>
+                {% endif %}
+                
+                {% if empleados_disponibles %}
+                <li class="section-divider">
+                    <span>INICIAR NUEVA CONVERSACIÓN</span>
+                </li>
+                {% for empleado in empleados_disponibles %}
+                <li class="conversation" data-user-id="{{ empleado.id }}" onclick="cargarConversacion({{ empleado.id }}, '{{ empleado.nombre }}')">
+                    <div class="avatar">{{ empleado.nombre[0].upper() }}</div>
+                    <div class="details">
+                        <h4>{{ empleado.nombre }} (Candidato)</h4>
+                        <p>Iniciar conversación</p>
+                    </div>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </aside>
+
+        <!-- Área principal del chat -->
+        <main class="chat-section">
+            <header class="chat-header" id="chatHeader" style="display: none;">
+                <div class="chat-header-left">
+                    <div class="chat-avatar" id="chatAvatar">?</div>
+                    <div class="chat-info">
+                        <h3 id="chatNombre">Selecciona una conversación</h3>
+                        <span class="status" id="chatStatus"></span>
+                    </div>
+                </div>
+                <div class="chat-header-actions">
+                    <i class="fas fa-phone"></i>
+                    <i class="fas fa-video"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="empty-chat-state">
+                    <div class="empty-chat-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <p class="empty-chat-text">Selecciona una conversación para comenzar</p>
+                </div>
+            </div>
+
+            <div class="chat-input" id="chatInput" style="display: none;">
+                <div class="chat-input-wrapper">
+                    <div class="chat-input-actions">
+                        <i class="fas fa-paperclip"></i>
+                    </div>
+                    <input type="text" id="mensajeInput" placeholder="Type a message here..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
+                    <div class="chat-input-actions">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                </div>
+                <button onclick="enviarMensaje()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </main>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
+    <script>
+        let destinatarioActual = null;
+        
+        function cargarConversacion(userId, nombre) {
+            destinatarioActual = userId;
+            
+            // Actualizar UI del header
+            document.getElementById('chatHeader').style.display = 'flex';
+            document.getElementById('chatInput').style.display = 'flex';
+            document.getElementById('chatAvatar').textContent = nombre[0].toUpperCase();
+            document.getElementById('chatNombre').textContent = nombre;
+            
+            // Marcar conversación como activa
+            document.querySelectorAll('.conversation').forEach(conv => {
+                conv.classList.remove('active');
+            });
+            document.querySelector(`[data-user-id="${userId}"]`).classList.add('active');
+            
+            // Cargar mensajes
+            fetch(`/empresa/mensajes/conversacion/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const chatMessages = document.getElementById('chatMessages');
+                    chatMessages.innerHTML = '';
+                    
+                    if (data.mensajes.length === 0) {
+                        chatMessages.innerHTML = `
+                            <div class="empty-chat-state">
+                                <div class="empty-chat-icon">
+                                    <i class="fas fa-comment-dots"></i>
+                                </div>
+                                <p class="empty-chat-text">No hay mensajes aún. ¡Inicia la conversación!</p>
+                            </div>
+                        `;
+                    } else {
+                        data.mensajes.forEach(msg => {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = msg.es_mio ? 'message sent' : 'message received';
+                            messageDiv.innerHTML = `
+                                <p>${msg.contenido}</p>
+                                <span class="time">${msg.fecha_envio}</span>
+                            `;
+                            chatMessages.appendChild(messageDiv);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        
+        function enviarMensaje() {
+            const input = document.getElementById('mensajeInput');
+            const contenido = input.value.trim();
+            
+            if (!contenido || !destinatarioActual) return;
+            
+            fetch('/empresa/mensajes/enviar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    destinatario_id: destinatarioActual,
+                    contenido: contenido
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const chatMessages = document.getElementById('chatMessages');
+                    
+                    // Si era el mensaje de inicio, limpiar el placeholder
+                    if (chatMessages.querySelector('[style*="display: flex"]')) {
+                        chatMessages.innerHTML = '';
+                    }
+                    
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message sent';
+                    messageDiv.innerHTML = `
+                        <p>${data.mensaje.contenido}</p>
+                        <span class="time">${data.mensaje.fecha_envio}</span>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    input.value = '';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

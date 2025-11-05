@@ -1,139 +1,544 @@
+{% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Token CSRF eliminado temporalmente -->
     <title>Panel Empresa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-    <header>
-        <div class="logo"></div>
-        <h1><b>WorkLink</b></h1>
-        <a href="{{ url_for('IndexRoute.index') }}" class="btn-regresar">Salir</a>
+    {{ flash.render_flash_messages() }}
+    
+    <!-- Navigation Bar -->
+    <nav class="empresa-navbar">
+        <div class="nav-brand">
+            <h1>WorkLink</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('rt_empresa.mensajes_empresa') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-envelope"></i> 
+                <span>Mensajes</span>
+                <span id="badge-mensajes-header" class="badge-header" style="display: none;"></span>
+            </a>
+            <a href="{{ url_for('rt_empresa.notificaciones_empresa') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-bell"></i> 
+                <span>Notificaciones</span>
+                <span id="badge-notificaciones-header" class="badge-header" style="display: none;"></span>
+            </a>
+            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </nav>
 
-    </header>
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h2 class="page-title">Panel de Empresa</h2>
+            <p class="page-subtitle">Gestiona tus ofertas y candidatos desde un solo lugar</p>
+        </div>
 
-    <div class="container mt-4">
-        <h2 class="mb-4">Panel de Empresa</h2>
-
-        <!-- Dashboard resumen -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Ofertas activas</h5>
-                        <p class="display-6">{{ ofertas_activas }}</p>
+        <!-- Company Profile Card -->
+        <div class="company-profile-card">
+            <div class="company-header">
+                <div class="company-logo-section">
+                    {% if empresa and empresa.logo_url %}
+                        <div class="company-logo" style="background: none; border: none;">
+                            <img src="{{ empresa.logo_url }}" alt="Logo de {{ empresa.nombre_empresa }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        </div>
+                    {% else %}
+                        <div class="company-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
+                    {% endif %}
+                    <div class="company-info-header">
+                        <h3 class="company-name">{{ empresa.nombre_empresa if empresa and empresa.nombre_empresa else 'Mi Empresa' }}</h3>
+                        <p class="company-sector">
+                            {% if empresa and empresa.sector %}
+                            <i class="fas fa-industry"></i> {{ empresa.sector }}
+                            {% if empresa and empresa.direccion %}
+                            <span class="separator">•</span>
+                            {% endif %}
+                            {% endif %}
+                            {% if empresa and empresa.direccion %}
+                            <i class="fas fa-map-marker-alt"></i> {{ empresa.direccion }}
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
+                {% if empresa %}
+                <a href="{{ url_for('rt_empresa.editar_perfil') }}" class="btn-edit-profile">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </a>
+                {% else %}
+                <a href="{{ url_for('rt_empresa.editar_perfil') }}" class="btn-edit-profile">
+                    <i class="fas fa-edit"></i> Configurar Perfil
+                </a>
+                {% endif %}
             </div>
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Postulantes totales</h5>
-                        <p class="display-6">{{ postulantes_totales }}</p>
-                    </div>
+            <div class="company-details">
+                {% if usuario_empresa and usuario_empresa.correo %}
+                <div class="detail-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ usuario_empresa.correo }}</span>
+                </div>
+                {% endif %}
+                {% if empresa and empresa.telefono %}
+                <div class="detail-item">
+                    <i class="fas fa-phone"></i>
+                    <span>{{ empresa.telefono }}</span>
+                </div>
+                {% endif %}
+                {% if empresa and empresa.descripcion %}
+                <div class="detail-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>{{ empresa.descripcion[:100] }}{% if empresa.descripcion|length > 100 %}...{% endif %}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ ofertas_activas }}</h3>
+                    <p class="stat-label">Ofertas Activas</p>
+                    <p class="stat-trend">
+                        <i class="fas fa-arrow-up"></i> 2 este mes
+                    </p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Estadísticas</h5>
-                        <p class="text-muted">En construcción</p>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ postulantes_totales }}</h3>
+                    <p class="stat-label">Postulantes Totales</p>
+                    <p class="stat-trend">
+                        <i class="fas fa-arrow-up"></i> 15% este mes
+                    </p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Notificaciones</h5>
-                        <p class="text-muted">0 nuevas</p>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ tasa_conversion if tasa_conversion else 0 }}%</h3>
+                    <p class="stat-label">Tasa de Conversión</p>
+                    <p class="stat-trend">
+                        <i class="fas fa-arrow-down"></i> -2% este mes
+                    </p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">18d</h3>
+                    <p class="stat-label">Tiempo Promedio</p>
+                    <p class="stat-trend">
+                        <i class="fas fa-arrow-down"></i> -3 días
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Statistics Section -->
+        <div class="detailed-stats-section">
+            <h3 class="section-heading">
+                <i class="fas fa-chart-bar"></i> Estadísticas Detalladas
+            </h3>
+            
+            <div class="detailed-stats-grid">
+                <!-- Estados de Postulantes -->
+                <div class="stats-chart-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">
+                            <i class="fas fa-user-clock"></i> Estados de Postulantes
+                        </h4>
+                    </div>
+                    <div class="chart-content">
+                        {% set total_estados = total_con_estados if total_con_estados and total_con_estados > 0 else 1 %}
+                        {% set postulados_val = postulados if postulados else 0 %}
+                        {% set vistos_val = vistos if vistos else 0 %}
+                        {% set en_proceso_val = en_proceso if en_proceso else 0 %}
+                        {% set contratados_val = contratados if contratados else 0 %}
+                        {% set rechazados_val = rechazados if rechazados else 0 %}
+                        
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>Postulado</span>
+                                <span class="stat-number">{{ postulados_val }}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ (postulados_val / total_estados * 100)|round(1) }}%; background: #0ea5e9;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>Visto</span>
+                                <span class="stat-number">{{ vistos_val }}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ (vistos_val / total_estados * 100)|round(1) }}%; background: #3b82f6;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>En Proceso</span>
+                                <span class="stat-number">{{ en_proceso_val }}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ (en_proceso_val / total_estados * 100)|round(1) }}%; background: #f59e0b;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>Contratado</span>
+                                <span class="stat-number">{{ contratados_val }}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ (contratados_val / total_estados * 100)|round(1) }}%; background: #10b981;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-label-bar">
+                                <span>Rechazado</span>
+                                <span class="stat-number">{{ rechazados_val }}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ (rechazados_val / total_estados * 100)|round(1) }}%; background: #ef4444;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Métricas Clave -->
+                <div class="stats-chart-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">
+                            <i class="fas fa-key"></i> Métricas Clave
+                        </h4>
+                    </div>
+                    <div class="chart-content">
+                        {% if vacante_mas_vista %}
+                        <div class="metric-item">
+                            <i class="fas fa-star"></i>
+                            <div class="metric-content">
+                                <h5>Vacante más popular</h5>
+                                <p>{{ vacante_mas_vista.titulo }} - {{ vacante_mas_vista.total_postulaciones }} postulación{{ 'es' if vacante_mas_vista.total_postulaciones != 1 else '' }}</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="metric-item">
+                            <i class="fas fa-star"></i>
+                            <div class="metric-content">
+                                <h5>Vacante más popular</h5>
+                                <p>No hay postulaciones aún</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if mejor_tasa_respuesta %}
+                        <div class="metric-item">
+                            <i class="fas fa-users"></i>
+                            <div class="metric-content">
+                                <h5>Mejor tasa de respuesta</h5>
+                                <p>{{ mejor_tasa_respuesta.titulo }} - {{ mejor_tasa_respuesta.tasa }}% respuesta</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="metric-item">
+                            <i class="fas fa-users"></i>
+                            <div class="metric-content">
+                                <h5>Mejor tasa de respuesta</h5>
+                                <p>No hay datos disponibles</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="metric-item">
+                            <i class="fas fa-trophy"></i>
+                            <div class="metric-content">
+                                <h5>Contrataciones del mes</h5>
+                                <p>{{ contrataciones_mes if contrataciones_mes else 0 }} nuevo{{ 's' if contrataciones_mes != 1 else '' }} empleado{{ 's' if contrataciones_mes != 1 else '' }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-item">
+                            <i class="fas fa-calendar"></i>
+                            <div class="metric-content">
+                                <h5>En proceso de selección</h5>
+                                <p>{{ entrevistas_programadas if entrevistas_programadas else 0 }} candidato{{ 's' if entrevistas_programadas != 1 else '' }} en proceso</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reporte Descargable -->
+                <div class="stats-chart-card download-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">
+                            <i class="fas fa-file-pdf"></i> Ver Reporte
+                        </h4>
+            </div>
+                    <div class="chart-content">
+                        <p class="download-description">
+                            Visualiza un reporte completo con todas tus estadísticas, postulantes y métricas en formato PDF.
+                        </p>
+                <button onclick="verPDF()" class="btn-download-full">
+                    <i class="fas fa-file-pdf"></i> Ver Reporte PDF
+                </button>
+                        <div class="download-info">
+                            <i class="fas fa-info-circle"></i>
+                            Última actualización: hace 2 horas
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Botón publicar -->
-        <div class="text-end mb-3">
-            <a href="{{ url_for('rt_empresa.publicar_empleo') }}" class="btn btn-primary">
-                + Publicar empleo
+        <!-- Action Button -->
+        <div class="action-section">
+            <a href="{{ url_for('rt_empresa.publicar_empleo') }}" class="btn-primary-large">
+                <i class="fas fa-plus"></i> Publicar Empleo
             </a>
         </div>
 
-        <div class="row">
+        <!-- Content Grid -->
+        <div class="content-grid">
             <!-- Ofertas laborales -->
-            <div class="col-md-6">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-dark text-white">
-                        Mis ofertas laborales
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-briefcase"></i>
+                        Mis Ofertas Laborales
+                    </h3>
+                </div>
+                <div class="section-content">
+                    {% if ofertas %}
+                    <div class="list-container">
+                        {% for oferta in ofertas %}
+                        <div class="list-item">
+                            <div class="item-main">
+                                <h4 class="item-title">{{ oferta.titulo }}</h4>
+                                <p class="item-meta">{{ oferta.fecha_publicacion.strftime('%d/%m/%Y') if oferta.fecha_publicacion else 'Sin fecha' }} • {{ oferta.ubicacion }}</p>
+                            </div>
+                            <div class="item-actions">
+                                <a href="{{ url_for('rt_empresa.editar_vacante', id=oferta.id) }}" class="btn-action btn-edit" title="Editar oferta">
+                                    <i class="fas fa-pencil-alt"></i> Editar
+                                </a>
+                                <button onclick="mostrarModal({{ oferta.id }}, '{{ oferta.titulo }}')" class="btn-action btn-delete" title="Eliminar oferta">
+                                    <i class="far fa-trash-alt"></i> Eliminar
+                                </button>
+                                <span class="badge-status badge-{{ 'success' if oferta.estado == 'publicada' else 'warning' }}">
+                                    <i class="fas {{ 'fa-check-circle' if oferta.estado == 'publicada' else 'fa-pause-circle' }}"></i>
+                                    {{ 'Activa' if oferta.estado == 'publicada' else 'En pausa' }}
+                                </span>
+                            </div>
+                            
+                        </div>
+                        {% endfor %}
                     </div>
-                    <div class="card-body">
-                        {% if ofertas %}
-                        <ul class="list-group">
-                            {% for oferta in ofertas %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ oferta.titulo }}
-                                <span class="badge bg-success">{{ oferta.estado }}</span>
-                            </li>
-                            {% endfor %}
-                        </ul>
                         {% else %}
-                        <p class="text-muted">No tienes ofertas activas.</p>
-                        {% endif %}
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>No tienes ofertas activas.</p>
                     </div>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Candidatos -->
-            <div class="col-md-6">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-dark text-white">
-                        Postulantes recientes
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-user-check"></i>
+                        Postulantes Recientes
+                    </h3>
                     </div>
-                    <div class="card-body">
+                <div class="section-content">
                         {% if candidatos %}
-                        <ul class="list-group">
+                    <div class="list-container">
                             {% for c in candidatos %}
-                            <li class="list-group-item">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <div>
-                                        <strong>{{ c.empleado.usuario.nombre if c.empleado and c.empleado.usuario else 'Candidato' }}</strong>
-                                        <br>
-                                        <small class="text-muted">{{ c.vacante.titulo if c.vacante else 'Vacante' }}</small>
+                        <div class="candidate-item">
+                            <div class="candidate-info">
+                                <h4 class="candidate-name">
+                                    {{ c.empleado.usuario.nombre if c.empleado and c.empleado.usuario else 'Candidato' }}
+                                </h4>
+                                <p class="candidate-position">{{ c.vacante.titulo if c.vacante else 'Vacante' }}</p>
                                     </div>
-                                    <div>
+                            <div class="candidate-actions">
                                         {% if c.estado == 'postulado' %}
-                                            <span class="badge bg-info">📩 Postulado</span>
+                                    <span class="badge-status badge-info">Postulado</span>
                                         {% elif c.estado == 'visto' %}
-                                            <span class="badge bg-primary">👁️ Visto</span>
+                                    <span class="badge-status badge-primary">Visto</span>
                                         {% elif c.estado == 'en_proceso' %}
-                                            <span class="badge bg-warning">⏳ En proceso</span>
+                                    <span class="badge-status badge-warning">En proceso</span>
                                         {% elif c.estado == 'rechazado' %}
-                                            <span class="badge bg-danger">❌ Rechazado</span>
+                                    <span class="badge-status badge-danger">Rechazado</span>
                                         {% elif c.estado == 'contratado' %}
-                                            <span class="badge bg-success">✅ Contratado</span>
+                                    <span class="badge-status badge-success">Contratado</span>
                                         {% endif %}
+                                <a href="{{ url_for('rt_empresa.ver_candidato', candidato_id=c.empleado_id) }}" class="btn-view">
+                                    <i class="fas fa-eye"></i> Ver perfil
+                                </a>
                                     </div>
                                 </div>
-                                <div class="d-flex gap-2">
-                                    <a href="{{ url_for('rt_empresa.ver_candidato', candidato_id=c.empleado_id) }}"
-                                        class="btn btn-sm btn-outline-primary">Ver perfil completo</a>
+                        {% endfor %}
                                 </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
                         {% else %}
-                        <p class="text-muted">No tienes postulantes recientes.</p>
-                        {% endif %}
+                    <div class="empty-state">
+                        <i class="fas fa-user-slash"></i>
+                        <p>No tienes postulantes recientes.</p>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal de confirmación para eliminar -->
+    <div id="confirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px;">
+            <h3>Confirmar eliminación</h3>
+            <p>¿Estás seguro de que deseas eliminar esta oferta?</p>
+            <p id="ofertaTitulo" style="font-weight: bold; margin: 10px 0;"></p>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button id="btnCancelar" style="padding: 8px 16px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+                    Cancelar
+                </button>
+                <button id="btnEliminar" style="padding: 8px 16px; background: #ff4d4d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
+    
+    <script>
+        // Variable para guardar el ID de la oferta a eliminar
+        let ofertaAEliminarId = null;
+
+        // Función para mostrar el modal
+        function mostrarModal(id, titulo) {
+            console.log('Mostrando modal para oferta:', id, titulo);
+            ofertaAEliminarId = id;
+            document.getElementById('ofertaTitulo').textContent = titulo;
+            document.getElementById('confirmModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Función para cerrar el modal
+        function cerrarModal() {
+            console.log('Cerrando modal');
+            document.getElementById('confirmModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Función para eliminar la oferta
+        function eliminarOferta() {
+            if (!ofertaAEliminarId) {
+                console.error('No hay ID de oferta para eliminar');
+                return;
+            }
+            
+            console.log('Intentando eliminar oferta:', ofertaAEliminarId);
+            
+            // Mostrar indicador de carga
+            const btnEliminar = document.getElementById('btnEliminar');
+            btnEliminar.disabled = true;
+            btnEliminar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+            
+            fetch(`/empresa/empleos/eliminar/${ofertaAEliminarId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || 'Error en la respuesta del servidor');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Respuesta del servidor:', data);
+                if (data.success) {
+                    // Cerrar el modal y recargar la página
+                    cerrarModal();
+                    window.location.reload();
+                } else {
+                    throw new Error(data.message || 'No se pudo eliminar la oferta');
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar la oferta:', error);
+                alert('Error: ' + error.message);
+                // Restaurar el botón en caso de error
+                const btnEliminar = document.getElementById('btnEliminar');
+                if (btnEliminar) {
+                    btnEliminar.disabled = false;
+                    btnEliminar.innerHTML = 'Eliminar';
+                }
+            });
+        }
+
+        // Configurar los eventos cuando el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM cargado, configurando eventos...');
+            
+            // Configurar botón de eliminar
+            const btnEliminar = document.getElementById('btnEliminar');
+            if (btnEliminar) {
+                console.log('Botón eliminar encontrado');
+                btnEliminar.onclick = eliminarOferta;
+            } else {
+                console.error('No se encontró el botón de eliminar');
+            }
+
+            // Configurar botón de cancelar
+            const btnCancelar = document.getElementById('btnCancelar');
+            if (btnCancelar) {
+                console.log('Botón cancelar encontrado');
+                btnCancelar.onclick = cerrarModal;
+            } else {
+                console.error('No se encontró el botón de cancelar');
+            }
+
+            // Cerrar modal al hacer clic fuera del contenido
+            const modal = document.getElementById('confirmModal');
+            if (modal) {
+                modal.onclick = function(event) {
+                    if (event.target === modal) {
+                        cerrarModal();
+                    }
+                };
+            }
+        });
+
+        function verPDF() {
+            window.open("{{ url_for('rt_empresa.generar_reporte') }}", '_blank');
+        }
+    </script>
 </body>
 
 </html>

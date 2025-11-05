@@ -12,11 +12,12 @@ class EmpresaModel(db.Model):
     descripcion = Column(Text, nullable=True)
     direccion = Column(String(100), nullable=True)
     telefono = Column(String(10), nullable=True)
+    logo_url = Column(String(255), nullable=True)
 
     # Relación uno 
     usuario = relationship('UsuarioModel', backref='empresa', uselist=False)
 
-    def __init__(self, id, nombre_empresa=None, rfc=None, sector=None, descripcion=None, direccion=None, telefono=None):
+    def __init__(self, id, nombre_empresa=None, rfc=None, sector=None, descripcion=None, direccion=None, telefono=None, logo_url=None):
         self.id = id
         self.nombre_empresa = nombre_empresa
         self.rfc = rfc
@@ -24,6 +25,7 @@ class EmpresaModel(db.Model):
         self.descripcion = descripcion
         self.direccion = direccion
         self.telefono = telefono
+        self.logo_url = logo_url
 
     def to_json(self):
         return {
@@ -33,5 +35,6 @@ class EmpresaModel(db.Model):
             "sector": self.sector,
             "descripcion": self.descripcion,
             "direccion": self.direccion,
-            "telefono": self.telefono
+            "telefono": self.telefono,
+            "logo_url": self.logo_url
         }

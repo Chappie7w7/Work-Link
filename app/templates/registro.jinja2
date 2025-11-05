@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Formulario de Registro</title>
 
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+
     <!-- Fuentes y estilos externos -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
@@ -75,13 +82,24 @@
                                 title="Las contraseñas deben coincidir" required />
                         </label>
                     </div>
-                    <input type="submit" value="Registrarse" />
+                    <div class="privacy-policy">
+                        <div class="form-check">
+                            <input type="checkbox" id="privacyCheck" name="privacy_check" class="form-check-input" required>
+                            <label class="form-check-label" for="privacyCheck">
+                                He leído y acepto el <a href="{{ url_for('PrivacidadRoute.aviso_privacidad') }}" target="_blank" rel="noopener noreferrer">Aviso de Privacidad</a>
+                            </label>
+                        </div>
+                    </div>
+                    <input type="submit" value="Registrarse" class="mt-3" />
                 </form>
             </div>
         </div>
     </div>
 
-<script src="{{ url_for('static', filename='js/registro.js') }}"></script>
+
+    <!-- Bootstrap JS y dependencias -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/registro.js') }}"></script>
 
 </body>
 

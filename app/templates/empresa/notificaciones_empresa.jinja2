@@ -1,0 +1,120 @@
+{% import "components/flash_messages.jinja2" as flash %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones - Empresa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_notificaciones.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    {{ flash.render_flash_messages() }}
+    
+    <!-- Navigation Bar -->
+    <nav class="empresa-navbar">
+        <div class="nav-brand">
+            <h1>WorkLink</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('rt_empresa.dashboard') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="{{ url_for('rt_empresa.mensajes_empresa') }}" class="nav-link" style="position: relative;">
+                <i class="fas fa-envelope"></i> Mensajes
+                <span id="badge-mensajes-header" class="badge-header" style="display: none;"></span>
+            </a>
+            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h2 class="page-title">
+                <i class="fas fa-bell"></i> Notificaciones
+            </h2>
+            <p class="page-subtitle">Mantente al día con las actividades de tus vacantes</p>
+            
+            {% if notificaciones and no_leidas > 0 %}
+            <div class="notifications-header-actions">
+                <span class="unread-badge">
+                    <i class="fas fa-circle"></i> {{ no_leidas }} sin leer
+                </span>
+                <form action="{{ url_for('rt_empresa.marcar_todas_leidas_empresa') }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn-action-primary">
+                        <i class="fas fa-check-double"></i> Marcar todas como leídas
+                    </button>
+                </form>
+                <form action="{{ url_for('rt_empresa.eliminar_todas_notificaciones_empresa') }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar todas las notificaciones?');">
+                    <button type="submit" class="btn-action-danger">
+                        <i class="fas fa-trash"></i> Eliminar todas
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Notifications List -->
+        {% if notificaciones %}
+        <div class="notifications-list">
+            {% for notif in notificaciones %}
+            <div class="notification-card {% if not notif.leido %}notification-unread{% endif %}">
+                <div class="notification-content">
+                    <div class="notification-icon notification-icon-{{ notif.tipo }}">
+                        {% if notif.tipo == 'contratado' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif notif.tipo == 'en_proceso' %}
+                            <i class="fas fa-clock"></i>
+                        {% elif notif.tipo == 'visto' %}
+                            <i class="fas fa-eye"></i>
+                        {% elif notif.tipo == 'rechazado' %}
+                            <i class="fas fa-times-circle"></i>
+                        {% elif notif.tipo == 'mensaje' %}
+                            <i class="fas fa-envelope"></i>
+                        {% else %}
+                            <i class="fas fa-bell"></i>
+                        {% endif %}
+                    </div>
+                    <div class="notification-text">
+                        <p class="notification-message">{{ notif.mensaje }}</p>
+                        <span class="notification-date">
+                            <i class="fas fa-calendar-alt"></i> 
+                            {{ notif.fecha_envio.strftime('%d/%m/%Y %H:%M') if notif.fecha_envio else 'Fecha desconocida' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="notification-actions">
+                    {% if not notif.leido %}
+                    <form action="{{ url_for('rt_empresa.marcar_todas_leidas_empresa') }}" method="POST">
+                        <button type="submit" class="btn-mark-read" title="Marcar como leída">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </form>
+                    {% else %}
+                    <div class="read-indicator">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-notifications">
+            <div class="empty-icon">
+                <i class="fas fa-bell-slash"></i>
+            </div>
+            <h3>No tienes notificaciones</h3>
+            <p>Cuando haya actividad en tus vacantes, aparecerán aquí.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
+</body>
+</html>
