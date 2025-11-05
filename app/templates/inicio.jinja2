@@ -18,120 +18,100 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_inicio.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
 {{ navbar.navbar(current_user) }}
 {{ flash.render_flash_messages() }}
 
+    <!-- Hero Section -->
+    <section class="hero-section" data-aos="fade-up" data-aos-delay="50">
+        <div class="hero-content" data-aos="fade-up" data-aos-delay="100">
+            <h1 class="hero-title">Encuentra tu trabajo ideal en <span class="gradient-text">Ocosingo</span></h1>
+            <p class="hero-subtitle">Conectamos talento con oportunidades. Tu próximo paso profesional comienza aquí.</p>
+            <div class="hero-cta">
+                <a href="{{ url_for('EmpleosRoute.empleos') }}" class="btn-primary">
+                    <i class="fas fa-search"></i> Explorar Empleos
+                </a>
+                <a href="{{ url_for('PlanesRoute.planes') }}" class="btn-secondary">
+                    <i class="fas fa-rocket"></i> Ver Planes
+                </a>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="150">
+                <div class="stat-icon blue">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ total_empresas if total_empresas else 0 }}+</div>
+                    <div class="stat-label">Empresas</div>
+                </div>
+            </div>
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-icon green">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ total_usuarios if total_usuarios else 0 }}+</div>
+                    <div class="stat-label">Usuarios</div>
+                </div>
+            </div>
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="250">
+                <div class="stat-icon purple">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ total_vacantes if total_vacantes else 0 }}+</div>
+                    <div class="stat-label">Vacantes</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="inicio-p">
         <div class="main-content">
             <!-- Columna izquierda: perfil del usuario -->
             <div class="column left-column">
-                <div class="box perfil-box">
-                    {% if current_user and current_user.foto_perfil %}
-                        <img src="{{ current_user.foto_perfil }}" alt="Foto de perfil" class="profile-photo">
-                    {% else %}
-                        <div class="circle"></div>
-                    {% endif %}
-                    <h3>{{ current_user.nombre if current_user else '' }}</h3>
-                    <p>📧 {{ current_user.correo if current_user else '' }}</p>
-                </div>
-                <div class="box empty-box"></div>
-            </div>
-            <!-- Columna central: presentación -->
-            <div class="column center-column">
-                <div class="box" style="font-weight: bold;">
-                    🚀 Reduce tiempo y esfuerzo en la búsqueda de Trabajo y contratación en Ocosingo
-                </div>
-                <div class="box">
-                    <h4 class="section-title">📊 Estadísticas de la Plataforma</h4>
-                    <div class="stats-grid">
-                        <div class="stat-item blue">
-                            <div class="stat-number blue">{{ total_empresas if total_empresas else 0 }}+</div>
-                            <div class="stat-label">Empresas</div>
-                        </div>
-                        <div class="stat-item green">
-                            <div class="stat-number green">{{ total_usuarios if total_usuarios else 0 }}+</div>
-                            <div class="stat-label">Usuarios</div>
-                        </div>
-                        <div class="stat-item purple">
-                            <div class="stat-number purple">{{ total_vacantes if total_vacantes else 0 }}+</div>
-                            <div class="stat-label">Vacantes</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="box">
-                    <h4 class="section-title">🎯 ¿Por qué elegir WorkLink Ocosingo?</h4>
-                    <div class="features-grid">
-                        <div class="feature-item blue">
-                            <div class="feature-title">🏢 Empresas Locales</div>
-                            <div class="feature-description">Conexión directa con empresas de Ocosingo</div>
-                        </div>
-                        <div class="feature-item green">
-                            <div class="feature-title">⚡ Proceso Ágil</div>
-                            <div class="feature-description">Contratación rápida y eficiente</div>
-                        </div>
-                        <div class="feature-item purple">
-                            <div class="feature-title">🌍 Región Completa</div>
-                            <div class="feature-description">Oportunidades en toda Chiapas</div>
-                        </div>
-                        <div class="feature-item orange">
-                            <div class="feature-title">🎯 Soporte Personal</div>
-                            <div class="feature-description">Atención personalizada y local</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="box">
-                    <h4 class="section-title">🌟 Últimas Oportunidades</h4>
-                    <p class="opportunities-section">
-                        Descubre las nuevas vacantes disponibles en Ocosingo y alrededores.
-                        ¡Tu próximo empleo te está esperando!
-                    </p>
-                    <div class="opportunities-buttons">
-                        <a href="{{ url_for('EmpleosRoute.empleos') }}" class="opportunity-btn blue">
-                            Ver Empleos
-                        </a>
-                        <a href="{{ url_for('PlanesRoute.planes') }}" class="opportunity-btn green">
-                            Ver Planes
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Columna derecha -->
-            <div class="column right-column">
-                <div class="box">
-                    <h4 class="activity-title">📈 Actividad Reciente</h4>
-                    <div class="activity-list">
-                        {% if actividades %}
-                            {% for act in actividades %}
-                            <div class="activity-item {{ act.color }}">
-                                <div class="activity-title-text">{{ act.titulo }}</div>
-                                <div class="activity-description">{{ act.descripcion }}</div>
-                                <div class="activity-time">{{ act.tiempo }}</div>
-                            </div>
-                            {% endfor %}
+                <div class="card profile-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="profile-header">
+                        {% if current_user and current_user.foto_perfil %}
+                            <img src="{{ current_user.foto_perfil }}" alt="Foto de perfil" class="profile-photo">
                         {% else %}
-                            <div class="activity-item blue">
-                                <div class="activity-title-text">Sin actividad reciente</div>
-                                <div class="activity-description">Aún no hay actividades registradas</div>
-                                <div class="activity-time">Ahora</div>
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
                             </div>
                         {% endif %}
                     </div>
+                    <div class="profile-info">
+                        <h3 class="profile-name">{{ current_user.nombre if current_user else 'Invitado' }}</h3>
+                        <p class="profile-email">
+                            <i class="fas fa-envelope"></i>
+                            {{ current_user.correo if current_user else 'No disponible' }}
+                        </p>
+                    </div>
                 </div>
-                <div class="box">
-                    <h4 class="companies-title">🏆 Empresas Destacadas</h4>
+                <div class="card companies-card" data-aos="fade-up" data-aos-delay="150">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-trophy"></i> Empresas Destacadas
+                        </h3>
+                    </div>
                     <div class="companies-list">
                         {% if empresas_destacadas %}
                             {% set colores = ['blue', 'orange', 'green', 'purple'] %}
                             {% for empresa in empresas_destacadas %}
                             <div class="company-item">
-                                <div class="company-avatar {{ colores[loop.index0 % 4] }}">{{ empresa.inicial }}</div>
+                                <div class="company-avatar {{ colores[loop.index0 % 4] }}">
+                                    {{ empresa.inicial }}
+                                </div>
                                 <div class="company-info">
                                     <div class="company-name">{{ empresa.nombre }}</div>
-                                    <div class="company-vacancies">{{ empresa.vacantes }} vacante{{ 's' if empresa.vacantes != 1 else '' }} activa{{ 's' if empresa.vacantes != 1 else '' }}</div>
+                                    <div class="company-vacancies">
+                                        <i class="fas fa-briefcase"></i>
+                                        {{ empresa.vacantes }} vacante{{ 's' if empresa.vacantes != 1 else '' }} activa{{ 's' if empresa.vacantes != 1 else '' }}
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -146,6 +126,99 @@
                         {% endif %}
                     </div>
                 </div>
+            </div>
+
+            <!-- Columna central: contenido principal -->
+            <div class="column center-column">
+                <div class="card features-card" data-aos="fade-up" data-aos-delay="150">
+                    <h2 class="card-title">
+                        <i class="fas fa-star"></i> ¿Por qué elegir WorkLink?
+                    </h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon blue">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4 class="feature-title">Empresas Locales</h4>
+                                <p class="feature-text">Conexión directa con empresas de Ocosingo</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon green">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4 class="feature-title">Proceso Ágil</h4>
+                                <p class="feature-text">Contratación rápida y eficiente</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon purple">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4 class="feature-title">Región Completa</h4>
+                                <p class="feature-text">Oportunidades en toda Chiapas</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon orange">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4 class="feature-title">Soporte Personal</h4>
+                                <p class="feature-text">Atención personalizada y local</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card cta-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="cta-content">
+                        <h3 class="cta-title">¿Listo para encontrar tu próximo empleo?</h3>
+                        <p class="cta-text">Explora miles de oportunidades de trabajo en Ocosingo y alrededores</p>
+                        <a href="{{ url_for('EmpleosRoute.empleos') }}" class="cta-button">
+                            <i class="fas fa-arrow-right"></i> Ver Empleos Disponibles
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha -->
+            <div class="column right-column">
+                <div class="card activity-card" data-aos="fade-up" data-aos-delay="150">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-line"></i> Actividad Reciente
+                        </h3>
+                    </div>
+                    <div class="activity-list">
+                        {% if actividades %}
+                            {% for act in actividades %}
+                            <div class="activity-item {{ act.color }}">
+                                <div class="activity-icon"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title-text">{{ act.titulo }}</div>
+                                    <div class="activity-description">{{ act.descripcion }}</div>
+                                    <div class="activity-time">{{ act.tiempo }}</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="activity-item empty">
+                                <div class="activity-icon"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title-text">Sin actividad reciente</div>
+                                    <div class="activity-description">Aún no hay actividades registradas</div>
+                                    <div class="activity-time">Ahora</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                
             </div>
         </div>
 
