@@ -94,6 +94,59 @@
     background: linear-gradient(135deg, #af1e1e, #7f1414);
 }
 
+/* ========== ITEM ACTIONS ========== */
+.item-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1; /* Asegura que los botones estén por encima de otros elementos */
+}
+
+.btn-action {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.btn-edit {
+    background-color: #3b82f6;
+    color: white !important;
+}
+
+.btn-edit:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.btn-delete {
+    background-color: #ef4444;
+    color: white !important;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* Asegurar que los botones sean visibles */
+.list-item {
+    position: relative;
+    z-index: 1;
+}
+
 /* ========== MAIN CONTAINER ========== */
 .main-container {
     max-width: 1400px;

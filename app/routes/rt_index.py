@@ -29,17 +29,17 @@ def index():
     jobs = []
 
     if hay_internet():
-        # 🔹 Si hay internet, consulto DB
+        # Si hay internet, consulto DB
         jobs = (
             VacanteModel.query
             .options(joinedload(VacanteModel.empresa))
-            .filter_by(destacada=True, estado='publicada')
+            .filter_by(destacada=True, estado='publicada', eliminada=False)
             .order_by(VacanteModel.fecha_publicacion.desc())
-            .limit(3)
+            .limit(6)
             .all()
         )
 
-        # 🔹 Guardar en caché para usarse sin internet
+        # Guardar en caché para usarse sin internet
         try:
             data = []
             for v in jobs:
