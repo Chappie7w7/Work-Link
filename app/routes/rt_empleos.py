@@ -14,6 +14,7 @@ rt_empleos = Blueprint('EmpleosRoute', __name__)
 
 
 from sqlalchemy.orm import joinedload
+from sqlalchemy import or_, func
 
 @rt_empleos.route("/empleos")
 def empleos():
@@ -44,11 +45,177 @@ def empleos():
         db.session.commit()
     
     # Traer solo las vacantes publicadas (activas) y no eliminadas con la empresa cargada
-    vacantes = VacanteModel.query.options(joinedload(VacanteModel.empresa)) \
-                .filter_by(estado='publicada', eliminada=False) \
-                .order_by(VacanteModel.id.desc()).all()
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=9, type=int)
 
-    return render_template("empleos/empleos.jinja2", usuario=user, vacantes=vacantes)
+    base_query = (
+        VacanteModel.query
+        .options(joinedload(VacanteModel.empresa))
+        .filter_by(estado='publicada', eliminada=False)
+        .order_by(VacanteModel.id.desc())
+    )
+
+    # Filtros
+    def apply_filters(query):
+        q = request.args.get('q', type=str)
+        location = request.args.get('location', type=str)
+        job_type = request.args.get('job_type', type=str)
+        salary = request.args.get('salary', type=float)
+        salary_min = request.args.get('salary_min', type=float)
+        salary_max = request.args.get('salary_max', type=float)
+
+        # Lista para acumular condiciones (usaremos OR)
+        filter_conditions = []
+
+        if q:
+            like = f"%{q.strip()}%"
+            filter_conditions.append(
+                or_(
+                    VacanteModel.titulo.ilike(like),
+                    VacanteModel.descripcion.ilike(like),
+                    VacanteModel.ubicacion.ilike(like),
+                    VacanteModel.modalidad.ilike(like),
+                )
+            )
+
+        if location:
+            filter_conditions.append(VacanteModel.ubicacion == location)
+
+        if job_type:
+            filter_conditions.append(VacanteModel.modalidad == job_type)
+
+        if salary is not None:
+            filter_conditions.append(VacanteModel.salario_aprox >= salary)
+
+        if salary_min is not None:
+            filter_conditions.append(VacanteModel.salario_aprox >= salary_min)
+
+        if salary_max is not None:
+            filter_conditions.append(VacanteModel.salario_aprox <= salary_max)
+
+        # Aplicar los filtros combinados con OR (mostrar si cumple al menos uno)
+        if filter_conditions:
+            query = query.filter(or_(*filter_conditions))
+
+        return query
+
+
+    query = apply_filters(base_query)
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    # Valores distintos para filtros (derivados de base, sin filtros específicos)
+    distinct_locations = [
+        row[0] for row in db.session.query(func.distinct(VacanteModel.ubicacion))
+        .filter(VacanteModel.estado == 'publicada', VacanteModel.eliminada == False)
+        .order_by(VacanteModel.ubicacion.asc())
+        .all()
+        if row[0]
+    ]
+    distinct_job_types = [
+        row[0] for row in db.session.query(func.distinct(VacanteModel.modalidad))
+        .filter(VacanteModel.estado == 'publicada', VacanteModel.eliminada == False)
+        .order_by(VacanteModel.modalidad.asc())
+        .all()
+        if row[0]
+    ]
+    distinct_salaries = [
+        float(row[0]) for row in db.session.query(func.distinct(VacanteModel.salario_aprox))
+        .filter(VacanteModel.estado == 'publicada', VacanteModel.eliminada == False, VacanteModel.salario_aprox != None)
+        .order_by(VacanteModel.salario_aprox.asc())
+        .all()
+        if row[0] is not None
+    ]
+
+    return render_template(
+        "empleos/empleos.jinja2",
+        usuario=user,
+        current_user=user,
+        vacantes=pagination.items,
+        current_page=pagination.page,
+        total_pages=pagination.pages,
+        total_items=pagination.total,
+        per_page=per_page,
+        locations=distinct_locations,
+        job_types=distinct_job_types,
+        salaries=distinct_salaries,
+    )
+
+@rt_empleos.route("/empleos/page")
+def empleos_page():
+    """Devuelve el HTML de las tarjetas de una página específica (AJAX)."""
+    user = get_user_from_session(session)
+    if not user:
+        return redirect(url_for('IndexRoute.index'))
+
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=9, type=int)
+
+    base_query = (
+        VacanteModel.query
+        .options(joinedload(VacanteModel.empresa))
+        .filter_by(estado='publicada', eliminada=False)
+        .order_by(VacanteModel.id.desc())
+    )
+
+    def apply_filters(query):
+        q = request.args.get('q', type=str)
+        location = request.args.get('location', type=str)
+        job_type = request.args.get('job_type', type=str)
+        salary = request.args.get('salary', type=float)
+        salary_min = request.args.get('salary_min', type=float)
+        salary_max = request.args.get('salary_max', type=float)
+
+        # Lista para acumular condiciones (usaremos OR)
+        filter_conditions = []
+
+        if q:
+            like = f"%{q.strip()}%"
+            filter_conditions.append(
+                or_(
+                    VacanteModel.titulo.ilike(like),
+                    VacanteModel.descripcion.ilike(like),
+                    VacanteModel.ubicacion.ilike(like),
+                    VacanteModel.modalidad.ilike(like),
+                )
+            )
+
+        if location:
+            filter_conditions.append(VacanteModel.ubicacion == location)
+
+        if job_type:
+            filter_conditions.append(VacanteModel.modalidad == job_type)
+
+        if salary is not None:
+            filter_conditions.append(VacanteModel.salario_aprox >= salary)
+
+        if salary_min is not None:
+            filter_conditions.append(VacanteModel.salario_aprox >= salary_min)
+
+        if salary_max is not None:
+            filter_conditions.append(VacanteModel.salario_aprox <= salary_max)
+
+        # Aplicar los filtros combinados con OR (mostrar si cumple al menos uno)
+        if filter_conditions:
+            query = query.filter(or_(*filter_conditions))
+
+        return query
+
+    query = apply_filters(base_query)
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    # Render parcial con las tarjetas
+    from flask import render_template_string
+    html = render_template("empleos/cards_empleos.jinja2", vacantes=pagination.items)
+
+    return {
+        "html": html,
+        "current_page": pagination.page,
+        "total_pages": pagination.pages,
+        "total_items": pagination.total,
+        "per_page": per_page,
+    }
 
 
 @rt_empleos.route("/empleos/postular/<int:vacante_id>", methods=["GET", "POST"])
