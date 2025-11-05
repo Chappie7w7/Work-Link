@@ -145,15 +145,24 @@
                                 </select>
                             </div>
 
-                            <div class="checkbox-group">
-                                <label for="destacada" class="checkbox-label">
-                                    <input type="checkbox" id="destacada" name="destacada" value="true">
-                                    <span class="checkbox-custom"></span>
-                                    <span class="checkbox-text">
-                                        <i class="fas fa-star"></i> Marcar como destacada
-                                    </span>
+                            <div class="form-group">
+                                <label for="max_postulantes">
+                                    <i class="fas fa-users"></i> Límite de postulantes (opcional)
                                 </label>
+                                <input type="number" id="max_postulantes" name="max_postulantes" min="1" 
+                                       placeholder="Sin límite">
+                                <small class="form-hint">Deja vacío para no establecer un límite. La vacante se pausará automáticamente al alcanzar este número.</small>
                             </div>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <label for="destacada" class="checkbox-label">
+                                <input type="checkbox" id="destacada" name="destacada" value="true">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">
+                                    <i class="fas fa-star"></i> Marcar como destacada
+                                </span>
+                            </label>
                         </div>
                     </div>
 

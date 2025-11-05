@@ -1,3 +1,79 @@
+/* === Estilos para mensajes flash === */
+.flash-messages {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 90%;
+  max-width: 600px;
+  animation: slideInDown 0.5s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.alert {
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.alert-success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+.alert-danger {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.alert-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+.alert-info {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+
+.alert-dismissible .close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 0 0 15px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.alert-dismissible .close:hover {
+  opacity: 1;
+}
+
 /* === Estilos generales === */
 body {
   background-color: #ffffff;

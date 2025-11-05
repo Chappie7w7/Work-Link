@@ -10,10 +10,52 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empleos.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="{{ url_for('static', filename='js/script_empleos.js') }}"></script>
+  
+  <!-- Script para manejar el cierre automático de mensajes flash -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Cerrar mensajes flash al hacer clic en el botón de cerrar
+      document.querySelectorAll('.alert .close').forEach(button => {
+        button.addEventListener('click', function() {
+          this.closest('.alert').style.opacity = '0';
+          setTimeout(() => {
+            this.closest('.alert').remove();
+          }, 300);
+        });
+      });
+      
+      // Cerrar automáticamente los mensajes después de 5 segundos
+      setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(alert => {
+          alert.style.opacity = '0';
+          setTimeout(() => {
+            alert.remove();
+          }, 300);
+        });
+      }, 5000);
+    });
+  </script>
 </head>
 <body>
 
   {{ components.navbar( current_user) }}
+
+  <!-- Flash Messages -->
+  <div class="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
 
   <!-- Hero Section -->
   <section class="hero-section" data-aos="fade-up" data-aos-delay="50">

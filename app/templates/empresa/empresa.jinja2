@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Token CSRF eliminado temporalmente -->
     <title>Panel Empresa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -335,9 +336,21 @@
                         <div class="list-item">
                             <div class="item-main">
                                 <h4 class="item-title">{{ oferta.titulo }}</h4>
-                                <p class="item-meta">{{ oferta.fecha_publicacion.strftime('%d/%m/%Y') if oferta.fecha_publicacion else 'Sin fecha' }}</p>
+                                <p class="item-meta">{{ oferta.fecha_publicacion.strftime('%d/%m/%Y') if oferta.fecha_publicacion else 'Sin fecha' }} • {{ oferta.ubicacion }}</p>
                             </div>
-                            <span class="badge-status badge-success">Activa</span>
+                            <div class="item-actions">
+                                <a href="{{ url_for('rt_empresa.editar_vacante', id=oferta.id) }}" class="btn-action btn-edit" title="Editar oferta">
+                                    <i class="fas fa-pencil-alt"></i> Editar
+                                </a>
+                                <button onclick="mostrarModal({{ oferta.id }}, '{{ oferta.titulo }}')" class="btn-action btn-delete" title="Eliminar oferta">
+                                    <i class="far fa-trash-alt"></i> Eliminar
+                                </button>
+                                <span class="badge-status badge-{{ 'success' if oferta.estado == 'publicada' else 'warning' }}">
+                                    <i class="fas {{ 'fa-check-circle' if oferta.estado == 'publicada' else 'fa-pause-circle' }}"></i>
+                                    {{ 'Activa' if oferta.estado == 'publicada' else 'En pausa' }}
+                                </span>
+                            </div>
+                            
                         </div>
                         {% endfor %}
                     </div>
@@ -399,9 +412,129 @@
         </div>
     </div>
 
+    <!-- Modal de confirmación para eliminar -->
+    <div id="confirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px;">
+            <h3>Confirmar eliminación</h3>
+            <p>¿Estás seguro de que deseas eliminar esta oferta?</p>
+            <p id="ofertaTitulo" style="font-weight: bold; margin: 10px 0;"></p>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button id="btnCancelar" style="padding: 8px 16px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+                    Cancelar
+                </button>
+                <button id="btnEliminar" style="padding: 8px 16px; background: #ff4d4d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
     
     <script>
+        // Variable para guardar el ID de la oferta a eliminar
+        let ofertaAEliminarId = null;
+
+        // Función para mostrar el modal
+        function mostrarModal(id, titulo) {
+            console.log('Mostrando modal para oferta:', id, titulo);
+            ofertaAEliminarId = id;
+            document.getElementById('ofertaTitulo').textContent = titulo;
+            document.getElementById('confirmModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Función para cerrar el modal
+        function cerrarModal() {
+            console.log('Cerrando modal');
+            document.getElementById('confirmModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Función para eliminar la oferta
+        function eliminarOferta() {
+            if (!ofertaAEliminarId) {
+                console.error('No hay ID de oferta para eliminar');
+                return;
+            }
+            
+            console.log('Intentando eliminar oferta:', ofertaAEliminarId);
+            
+            // Mostrar indicador de carga
+            const btnEliminar = document.getElementById('btnEliminar');
+            btnEliminar.disabled = true;
+            btnEliminar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+            
+            fetch(`/empresa/empleos/eliminar/${ofertaAEliminarId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || 'Error en la respuesta del servidor');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Respuesta del servidor:', data);
+                if (data.success) {
+                    // Cerrar el modal y recargar la página
+                    cerrarModal();
+                    window.location.reload();
+                } else {
+                    throw new Error(data.message || 'No se pudo eliminar la oferta');
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar la oferta:', error);
+                alert('Error: ' + error.message);
+                // Restaurar el botón en caso de error
+                const btnEliminar = document.getElementById('btnEliminar');
+                if (btnEliminar) {
+                    btnEliminar.disabled = false;
+                    btnEliminar.innerHTML = 'Eliminar';
+                }
+            });
+        }
+
+        // Configurar los eventos cuando el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM cargado, configurando eventos...');
+            
+            // Configurar botón de eliminar
+            const btnEliminar = document.getElementById('btnEliminar');
+            if (btnEliminar) {
+                console.log('Botón eliminar encontrado');
+                btnEliminar.onclick = eliminarOferta;
+            } else {
+                console.error('No se encontró el botón de eliminar');
+            }
+
+            // Configurar botón de cancelar
+            const btnCancelar = document.getElementById('btnCancelar');
+            if (btnCancelar) {
+                console.log('Botón cancelar encontrado');
+                btnCancelar.onclick = cerrarModal;
+            } else {
+                console.error('No se encontró el botón de cancelar');
+            }
+
+            // Cerrar modal al hacer clic fuera del contenido
+            const modal = document.getElementById('confirmModal');
+            if (modal) {
+                modal.onclick = function(event) {
+                    if (event.target === modal) {
+                        cerrarModal();
+                    }
+                };
+            }
+        });
+
         function verPDF() {
             window.open("{{ url_for('rt_empresa.generar_reporte') }}", '_blank');
         }

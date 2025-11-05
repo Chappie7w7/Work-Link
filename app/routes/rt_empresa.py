@@ -28,8 +28,8 @@ def dashboard():
         if not user:
             return redirect(url_for("IndexRoute.index"))
 
-        #  Traer vacantes de la empresa logueada
-        vacantes_empresa = VacanteModel.query.filter_by(empresa_id=user["id"]).all()
+        #  Traer vacantes de la empresa logueada que no estén eliminadas
+        vacantes_empresa = VacanteModel.query.filter_by(empresa_id=user["id"], eliminada=False).all()
 
         #  Contar postulaciones de todas las vacantes de la empresa
         postulantes_totales = (
@@ -39,8 +39,8 @@ def dashboard():
             .count()
         )
 
-        #  Contar ofertas activas
-        ofertas_activas = VacanteModel.query.filter_by(empresa_id=user["id"], estado="publicada").count()
+        #  Contar ofertas activas que no estén eliminadas
+        ofertas_activas = VacanteModel.query.filter_by(empresa_id=user["id"], estado="publicada", eliminada=False).count()
 
         #  Traer lista de postulaciones con empleado y usuario cargados
         from sqlalchemy.orm import joinedload, outerjoin
@@ -249,14 +249,16 @@ def nueva_vacante():
             salario_aprox = request.form.get("salario_aprox")
             modalidad = request.form.get("modalidad")
             salario_aprox = float(salario_aprox) if salario_aprox else None
+            max_postulantes = request.form.get("max_postulantes")
+            max_postulantes = int(max_postulantes) if max_postulantes and max_postulantes.isdigit() else None
 
-            # 🔹 Obtener empresa logueada desde la BD
+            # Obtener empresa logueada desde la BD
             empresa = EmpresaModel.query.get(user["id"])
             if not empresa:
                 flash("❌ No se encontró la empresa logueada.")
                 return redirect(url_for("rt_empresa.dashboard"))
 
-            # 🔹 Crear vacante
+            # Crear vacante
             nueva_vacante = VacanteModel(
                 empresa_id=empresa.id,
                 titulo=titulo,
@@ -266,10 +268,12 @@ def nueva_vacante():
                 estado=estado,
                 destacada=destacada,
                 salario_aprox=salario_aprox,
-                modalidad=modalidad
+                modalidad=modalidad,
+                max_postulantes=max_postulantes,
+                postulantes_actuales=0  # Inicialmente no hay postulantes
             )
 
-            # 🔹 Guardar en la BD
+            # Guardar en la BD
             db.session.add(nueva_vacante)
             db.session.commit()
 
@@ -285,6 +289,84 @@ def nueva_vacante():
 
     # GET: renderizar formulario
     return render_template("empresa/publicar_empleo.jinja2", usuario=user)
+
+
+@rt_empresa.route("/empleos/editar/<int:id>", methods=["GET", "POST"])
+@login_role_required(Roles.EMPRESA)
+def editar_vacante(id):
+    user = get_user_from_session(session)
+    if not user:
+        return redirect(url_for('IndexRoute.index'))
+
+    # Obtener la vacante a editar (solo si no está eliminada)
+    vacante = VacanteModel.query.filter_by(id=id, eliminada=False).first_or_404()
+    
+    # Verificar que la vacante pertenezca a la empresa del usuario
+    if vacante.empresa_id != user["id"]:
+        flash("No tienes permiso para editar esta oferta", "error")
+        return redirect(url_for("rt_empresa.dashboard"))
+
+    if request.method == "POST":
+        try:
+            # Actualizar los datos de la vacante
+            vacante.titulo = request.form.get("titulo")
+            vacante.descripcion = request.form.get("descripcion")
+            vacante.requisitos = request.form.get("requisitos")
+            vacante.ubicacion = request.form.get("ubicacion")
+            vacante.estado = request.form.get("estado")
+            vacante.destacada = True if request.form.get("destacada") == "true" else False
+            salario_aprox = request.form.get("salario_aprox")
+            vacante.salario_aprox = float(salario_aprox) if salario_aprox else None
+            vacante.modalidad = request.form.get("modalidad")
+            
+            # Actualizar el límite de postulantes
+            max_postulantes = request.form.get("max_postulantes")
+            vacante.max_postulantes = int(max_postulantes) if max_postulantes and max_postulantes.isdigit() else None
+            
+            # Si la vacante estaba pausada por límite de postulantes, verificar si se puede reactivar
+            if vacante.estado == 'pausada' and vacante.max_postulantes is not None:
+                if vacante.postulantes_actuales < vacante.max_postulantes:
+                    vacante.estado = 'publicada'
+            
+            db.session.commit()
+            flash("✅ Oferta actualizada exitosamente", "success")
+            return redirect(url_for("rt_empresa.dashboard"))
+            
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error al actualizar la oferta: {str(e)}")
+            flash("❌ Ocurrió un error al actualizar la oferta", "error")
+
+    # Si es GET, mostrar el formulario de edición
+    return render_template("empresa/editar_vacante.jinja2", vacante=vacante, usuario=user)
+
+
+@rt_empresa.route("/empleos/eliminar/<int:id>", methods=["POST", "DELETE"])
+@login_role_required(Roles.EMPRESA)
+def eliminar_vacante(id):
+    try:
+        user = get_user_from_session(session)
+        if not user:
+            return jsonify({"success": False, "message": "Sesión no válida"}), 401
+
+        # Obtener la vacante a marcar como eliminada (solo si no está ya eliminada)
+        vacante = VacanteModel.query.filter_by(id=id, eliminada=False).first_or_404()
+        
+        # Verificar que la vacante pertenezca a la empresa del usuario
+        if vacante.empresa_id != user["id"]:
+            return jsonify({"success": False, "message": "No tienes permiso para eliminar esta oferta"}), 403
+
+        # Realizar borrado lógico
+        vacante.eliminada = True
+        vacante.estado = 'cerrada'  # Opcional: Cambiar el estado a 'cerrada'
+        db.session.commit()
+        
+        return jsonify({"success": True, "message": "Oferta marcada como eliminada exitosamente"})
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error al eliminar la oferta: {str(e)}")
+        return jsonify({"success": False, "message": "Ocurrió un error al eliminar la oferta"}), 500
 
 
 
@@ -851,9 +933,9 @@ def generar_reporte():
     if not user:
         return redirect(url_for("IndexRoute.index"))
     
-    # Obtener datos para el reporte
-    vacantes = VacanteModel.query.filter_by(empresa_id=user["id"]).all()
-    ofertas_activas = VacanteModel.query.filter_by(empresa_id=user["id"], estado="publicada").count()
+    # Obtener datos para el reporte (excluyendo eliminadas)
+    vacantes = VacanteModel.query.filter_by(empresa_id=user["id"], eliminada=False).all()
+    ofertas_activas = VacanteModel.query.filter_by(empresa_id=user["id"], estado="publicada", eliminada=False).count()
     
     postulaciones = db.session.query(PostulacionModel).join(VacanteModel).filter(
         VacanteModel.empresa_id == user["id"]

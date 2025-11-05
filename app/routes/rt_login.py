@@ -3,6 +3,7 @@ from app.controller.ctr_login import login_user, logout_user
 from app.utils.roles import Roles
 from flask_mail import Message
 from app.models.md_usuarios import UsuarioModel
+from app.models.md_empleados import EmpleadoModel
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.db.sql import db
 import secrets
@@ -207,6 +208,13 @@ def google_callback():
                     fecha_registro=datetime.utcnow()
                 )
                 db.session.add(usuario)
+                db.session.flush()  # Para obtener el ID del usuario recién creado
+                
+                # Crear perfil de empleado automáticamente si es empleado
+                if usuario.tipo_usuario == Roles.EMPLEADO:
+                    empleado = EmpleadoModel(id=usuario.id)
+                    db.session.add(empleado)
+                
                 db.session.commit()
                 current_app.logger.info(f"Nuevo usuario creado: {usuario.correo}")
 
