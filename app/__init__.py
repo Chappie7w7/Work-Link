@@ -13,8 +13,13 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     
-    # Inicializar extensiones (Flask-Mail, etc.)
+    # Inicializar extensiones (Flask-Mail, SocketIO, etc.)
     init_extensiones(app)
+    
+    # Registrar eventos de Socket.IO (después de inicializar extensiones)
+    from app.extensiones import socketio
+    from app.socketio_events import register_socketio_events
+    register_socketio_events(socketio)
 
     # Context processor para variables globales en templates
     @app.context_processor

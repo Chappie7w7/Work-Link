@@ -370,12 +370,17 @@
                         <i class="fas fa-user-check"></i>
                         Postulantes Recientes
                     </h3>
-                    </div>
+                    {% if candidatos %}
+                    <button type="button" class="btn-clear-all" onclick="eliminarTodasPostulaciones()" title="Eliminar todas las postulaciones">
+                        <i class="fas fa-trash-alt"></i> Limpiar todas
+                    </button>
+                    {% endif %}
+                </div>
                 <div class="section-content">
                         {% if candidatos %}
                     <div class="list-container">
                             {% for c in candidatos %}
-                        <div class="candidate-item">
+                        <div class="candidate-item" id="candidate-item-{{ c.id }}">
                             <div class="candidate-info">
                                 <h4 class="candidate-name">
                                     {{ c.empleado.usuario.nombre if c.empleado and c.empleado.usuario else 'Candidato' }}
@@ -397,6 +402,9 @@
                                 <a href="{{ url_for('rt_empresa.ver_candidato', candidato_id=c.empleado_id) }}" class="btn-view">
                                     <i class="fas fa-eye"></i> Ver perfil
                                 </a>
+                                <button type="button" class="btn-delete-postulacion" onclick="eliminarPostulacion({{ c.id }})" title="Eliminar postulación">
+                                    <i class="fas fa-times"></i>
+                                </button>
                                     </div>
                                 </div>
                         {% endfor %}
@@ -538,7 +546,167 @@
         function verPDF() {
             window.open("{{ url_for('rt_empresa.generar_reporte') }}", '_blank');
         }
+
+        // Función para eliminar una postulación individual
+        function eliminarPostulacion(postulacionId) {
+            if (!confirm('¿Estás seguro de que deseas eliminar esta postulación? Esta acción no se puede deshacer.')) {
+                return;
+            }
+
+            const candidateItem = document.getElementById(`candidate-item-${postulacionId}`);
+            if (candidateItem) {
+                candidateItem.style.opacity = '0.5';
+                candidateItem.style.pointerEvents = 'none';
+            }
+
+            fetch(`/empresa/postulacion/${postulacionId}/eliminar`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Eliminar el elemento del DOM
+                    if (candidateItem) {
+                        candidateItem.style.transition = 'opacity 0.3s';
+                        candidateItem.style.opacity = '0';
+                        setTimeout(() => {
+                            candidateItem.remove();
+                            // Si no quedan más candidatos, recargar la página
+                            const listContainer = document.querySelector('.list-container');
+                            if (listContainer && listContainer.children.length === 0) {
+                                window.location.reload();
+                            }
+                        }, 300);
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    alert('Error: ' + (data.message || 'No se pudo eliminar la postulación'));
+                    if (candidateItem) {
+                        candidateItem.style.opacity = '1';
+                        candidateItem.style.pointerEvents = 'auto';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar postulación:', error);
+                alert('Error al eliminar la postulación. Por favor, intenta de nuevo.');
+                if (candidateItem) {
+                    candidateItem.style.opacity = '1';
+                    candidateItem.style.pointerEvents = 'auto';
+                }
+            });
+        }
+
+        // Función para eliminar todas las postulaciones
+        function eliminarTodasPostulaciones() {
+            if (!confirm('¿Estás seguro de que deseas eliminar TODAS las postulaciones? Esta acción eliminará permanentemente todas las postulaciones de tus vacantes y no se puede deshacer.')) {
+                return;
+            }
+
+            if (!confirm('Esta acción es irreversible. ¿Continuar?')) {
+                return;
+            }
+
+            const btnClearAll = document.querySelector('.btn-clear-all');
+            if (btnClearAll) {
+                btnClearAll.disabled = true;
+                btnClearAll.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+            }
+
+            fetch('/empresa/postulaciones/eliminar_todas', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message || 'Todas las postulaciones han sido eliminadas correctamente.');
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + (data.message || 'No se pudieron eliminar las postulaciones'));
+                    if (btnClearAll) {
+                        btnClearAll.disabled = false;
+                        btnClearAll.innerHTML = '<i class="fas fa-trash-alt"></i> Limpiar todas';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar todas las postulaciones:', error);
+                alert('Error al eliminar las postulaciones. Por favor, intenta de nuevo.');
+                if (btnClearAll) {
+                    btnClearAll.disabled = false;
+                    btnClearAll.innerHTML = '<i class="fas fa-trash-alt"></i> Limpiar todas';
+                }
+            });
+        }
     </script>
+    <style>
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-clear-all {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-clear-all:hover {
+            background-color: #c82333;
+        }
+
+        .btn-clear-all:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .btn-delete-postulacion {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+            margin-left: 8px;
+        }
+
+        .btn-delete-postulacion:hover {
+            background-color: #c82333;
+        }
+
+        .candidate-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .candidate-item {
+            transition: opacity 0.3s;
+        }
+    </style>
 </body>
 
 </html>

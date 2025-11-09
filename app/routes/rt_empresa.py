@@ -43,28 +43,49 @@ def dashboard():
         ofertas_activas = VacanteModel.query.filter_by(empresa_id=user["id"], estado="publicada", eliminada=False).count()
 
         #  Traer lista de postulaciones con empleado y usuario cargados
+        # Mostrar solo una postulación por empleado (la más reciente)
         from sqlalchemy.orm import joinedload, outerjoin
+        from sqlalchemy import func, desc
         try:
-            postulantes = (
+            # Obtener todas las postulaciones ordenadas por fecha descendente
+            postulaciones_todas = (
                 db.session.query(PostulacionModel)
                 .join(VacanteModel)
                 .filter(VacanteModel.empresa_id == user["id"])
                 .options(joinedload(PostulacionModel.empleado).joinedload(EmpleadoModel.usuario))
                 .order_by(PostulacionModel.fecha_postulacion.desc())
-                .limit(10)
                 .all()
             )
+            
+            # Filtrar para obtener solo la más reciente por empleado
+            empleados_vistos = {}
+            postulantes = []
+            for post in postulaciones_todas:
+                if post.empleado_id and post.empleado_id not in empleados_vistos:
+                    empleados_vistos[post.empleado_id] = post
+                    postulantes.append(post)
+                if len(postulantes) >= 10:
+                    break
         except Exception as e:
             # Si hay error en la consulta con joins, intentar sin los joins
             print(f"⚠️ Advertencia en consulta de postulantes: {str(e)}")
-            postulantes = (
+            # Fallback: obtener postulaciones y luego filtrar por empleado único
+            postulaciones_todas = (
                 db.session.query(PostulacionModel)
                 .join(VacanteModel)
                 .filter(VacanteModel.empresa_id == user["id"])
                 .order_by(PostulacionModel.fecha_postulacion.desc())
-                .limit(10)
                 .all()
             )
+            # Filtrar para obtener solo la más reciente por empleado
+            empleados_vistos = {}
+            postulantes = []
+            for post in postulaciones_todas:
+                if post.empleado_id and post.empleado_id not in empleados_vistos:
+                    empleados_vistos[post.empleado_id] = post
+                    postulantes.append(post)
+                if len(postulantes) >= 10:
+                    break
         
         # Estadísticas de postulaciones por estado
         contratados = db.session.query(PostulacionModel).join(VacanteModel).filter(
@@ -427,8 +448,19 @@ def cambiar_estado_postulacion(postulacion_id):
     nuevo_estado = request.form.get("estado")
     notas = request.form.get("notas_empresa")
     estado_anterior = postulacion.estado
+    vacante = postulacion.vacante
     
     if nuevo_estado in ['postulado', 'visto', 'en_proceso', 'rechazado', 'contratado']:
+        # Manejar decremento del contador si se rechaza una postulación que no estaba rechazada
+        if nuevo_estado == 'rechazado' and estado_anterior != 'rechazado':
+            # Decrementar el contador de postulantes
+            if vacante.postulantes_actuales and vacante.postulantes_actuales > 0:
+                vacante.postulantes_actuales -= 1
+            # Si la vacante estaba pausada por límite de postulantes, reactivarla si hay espacio
+            if vacante.estado == 'pausada' and vacante.max_postulantes:
+                if vacante.postulantes_actuales < vacante.max_postulantes:
+                    vacante.estado = 'publicada'
+        
         postulacion.estado = nuevo_estado
         if notas:
             postulacion.notas_empresa = notas
@@ -439,7 +471,7 @@ def cambiar_estado_postulacion(postulacion_id):
             estados_info = {
                 'visto': {'emoji': '👁️', 'texto': 'ha revisado tu postulación'},
                 'en_proceso': {'emoji': '⏳', 'texto': 'te ha puesto en proceso de selección'},
-                'rechazado': {'emoji': '❌', 'texto': 'ha rechazado tu postulación'},
+                'rechazado': {'emoji': '❌', 'texto': 'ha cancelado/rechazado tu postulación. Puedes postularte nuevamente si lo deseas'},
                 'contratado': {'emoji': '🎉', 'texto': '¡te ha contratado! Felicidades'}
             }
             
@@ -455,15 +487,31 @@ def cambiar_estado_postulacion(postulacion_id):
                     fecha_envio=get_mexico_time()
                 )
                 db.session.add(notificacion)
+                db.session.flush()  # Para obtener el ID
+                
+                # Enviar notificación en tiempo real usando WebSockets
+                try:
+                    from app.socketio_events import enviar_notificacion_tiempo_real
+                    enviar_notificacion_tiempo_real(postulacion.empleado_id, {
+                        'id': notificacion.id,
+                        'usuario_id': postulacion.empleado_id,
+                        'mensaje': notificacion.mensaje,
+                        'tipo': nuevo_estado,
+                        'leido': False,
+                        'fecha_envio': notificacion.fecha_envio.isoformat()
+                    })
+                except Exception as e:
+                    print(f"Error al enviar notificación en tiempo real: {str(e)}")
             
             # Si se contrata alguien, cerrar automáticamente la vacante
             if nuevo_estado == 'contratado':
-                vacante = postulacion.vacante
                 if vacante and vacante.estado == 'publicada':
                     vacante.estado = 'cerrada'
                     flash(f"Estado actualizado a: {nuevo_estado}. La vacante ha sido cerrada automáticamente.", "success")
                 else:
                     flash(f"Estado actualizado a: {nuevo_estado}", "success")
+            elif nuevo_estado == 'rechazado':
+                flash(f"Postulación cancelada/rechazada. El candidato podrá postularse nuevamente si lo desea.", "success")
             else:
                 flash(f"Estado actualizado a: {nuevo_estado}", "success")
         
@@ -472,6 +520,87 @@ def cambiar_estado_postulacion(postulacion_id):
         flash("Estado inválido", "danger")
     
     return redirect(url_for("rt_empresa.ver_candidato", candidato_id=postulacion.empleado_id))
+
+
+# Ruta para eliminar una postulación individual
+@rt_empresa.route("/postulacion/<int:postulacion_id>/eliminar", methods=["POST", "DELETE"])
+@login_role_required(Roles.EMPRESA)
+def eliminar_postulacion(postulacion_id):
+    from flask import jsonify
+    
+    user = get_user_from_session(session)
+    if not user:
+        return jsonify({"success": False, "message": "No autorizado"}), 401
+    
+    postulacion = PostulacionModel.query.get(postulacion_id)
+    if not postulacion:
+        return jsonify({"success": False, "message": "Postulación no encontrada"}), 404
+    
+    # Verificar que la postulación pertenece a una vacante de esta empresa
+    if postulacion.vacante.empresa_id != user["id"]:
+        return jsonify({"success": False, "message": "No tienes permiso para eliminar esta postulación"}), 403
+    
+    try:
+        vacante = postulacion.vacante
+        
+        # Decrementar el contador de postulantes si la postulación no estaba rechazada
+        if postulacion.estado != 'rechazado' and vacante.postulantes_actuales and vacante.postulantes_actuales > 0:
+            vacante.postulantes_actuales -= 1
+        
+        # Eliminar la postulación de la base de datos
+        db.session.delete(postulacion)
+        db.session.commit()
+        
+        return jsonify({"success": True, "message": "Postulación eliminada correctamente"}), 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error al eliminar postulación: {str(e)}")
+        return jsonify({"success": False, "message": f"Error al eliminar: {str(e)}"}), 500
+
+
+# Ruta para eliminar todas las postulaciones de la empresa
+@rt_empresa.route("/postulaciones/eliminar_todas", methods=["POST", "DELETE"])
+@login_role_required(Roles.EMPRESA)
+def eliminar_todas_postulaciones():
+    from flask import jsonify
+    
+    user = get_user_from_session(session)
+    if not user:
+        return jsonify({"success": False, "message": "No autorizado"}), 401
+    
+    try:
+        # Obtener todas las postulaciones de las vacantes de esta empresa
+        postulaciones = (
+            db.session.query(PostulacionModel)
+            .join(VacanteModel)
+            .filter(VacanteModel.empresa_id == user["id"])
+            .all()
+        )
+        
+        # Actualizar contadores de postulantes en las vacantes
+        vacantes_afectadas = {}
+        for post in postulaciones:
+            if post.vacante_id not in vacantes_afectadas:
+                vacantes_afectadas[post.vacante_id] = post.vacante
+        
+        # Eliminar todas las postulaciones
+        for post in postulaciones:
+            db.session.delete(post)
+        
+        # Actualizar contadores de postulantes
+        for vacante in vacantes_afectadas.values():
+            vacante.postulantes_actuales = 0
+        
+        db.session.commit()
+        
+        return jsonify({
+            "success": True, 
+            "message": f"Se eliminaron {len(postulaciones)} postulaciones correctamente"
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error al eliminar todas las postulaciones: {str(e)}")
+        return jsonify({"success": False, "message": f"Error al eliminar: {str(e)}"}), 500
 
 
 # Ruta para mensajes de empresa
@@ -600,6 +729,29 @@ def enviar_mensaje_empresa():
         fecha_envio=get_mexico_time()
     )
     db.session.add(notificacion)
+    db.session.flush()  # Para obtener el ID
+    
+    # Enviar notificación y mensaje en tiempo real usando WebSockets
+    try:
+        from app.socketio_events import enviar_notificacion_tiempo_real, enviar_mensaje_tiempo_real
+        enviar_notificacion_tiempo_real(destinatario_id, {
+            'id': notificacion.id,
+            'usuario_id': destinatario_id,
+            'mensaje': notificacion.mensaje,
+            'tipo': 'mensaje',
+            'leido': False,
+            'fecha_envio': notificacion.fecha_envio.isoformat()
+        })
+        enviar_mensaje_tiempo_real(destinatario_id, {
+            'id': nuevo_mensaje.id,
+            'remitente_id': user['id'],
+            'destinatario_id': destinatario_id,
+            'contenido': nuevo_mensaje.contenido,
+            'fecha_envio': nuevo_mensaje.fecha_envio.isoformat(),
+            'leido': False
+        })
+    except Exception as e:
+        print(f"Error al enviar notificación/mensaje en tiempo real: {str(e)}")
     
     db.session.commit()
     

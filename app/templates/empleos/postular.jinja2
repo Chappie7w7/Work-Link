@@ -66,29 +66,36 @@
                     {% endif %}
                 </aside>
 
-                <form class="apply-form" method="POST" enctype="multipart/form-data" data-aos="fade-up" data-aos-delay="150">
+                <form class="apply-form" method="POST" enctype="multipart/form-data" data-aos="fade-up" data-aos-delay="150" id="formPostulacion" novalidate>
                     <div class="form-group">
-                        <label for="curriculum">Currículum (PDF/DOC)</label>
+                        <label for="curriculum">Currículum (PDF/DOC) <span class="required">*</span></label>
                         {% if empleado and empleado.curriculum_url %}
                             <p class="current-file">CV actual: <a href="{{ empleado.curriculum_url }}" target="_blank">Ver</a></p>
+                            <p class="help-text">Si no subes un nuevo CV, se usará el CV actual.</p>
+                        {% else %}
+                            <p class="help-text text-danger">Debes subir un currículum para postularte.</p>
                         {% endif %}
-                        <input type="file" name="curriculum" id="curriculum" accept=".pdf,.doc,.docx">
+                        <input type="file" name="curriculum" id="curriculum" accept=".pdf,.doc,.docx" {% if not empleado or not empleado.curriculum_url %}required{% endif %}>
+                        <small class="error-message" id="curriculum-error"></small>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="educacion">Educación</label>
-                            <textarea name="educacion" id="educacion" rows="3">{{ empleado.educacion if empleado else '' }}</textarea>
+                            <label for="educacion">Educación <span class="required">*</span></label>
+                            <textarea name="educacion" id="educacion" rows="3" required minlength="10">{{ empleado.educacion if empleado else '' }}</textarea>
+                            <small class="error-message" id="educacion-error"></small>
                         </div>
                         <div class="form-group">
-                            <label for="habilidades">Habilidades</label>
-                            <textarea name="habilidades" id="habilidades" rows="3">{{ empleado.habilidades if empleado else '' }}</textarea>
+                            <label for="habilidades">Habilidades <span class="required">*</span></label>
+                            <textarea name="habilidades" id="habilidades" rows="3" required minlength="10">{{ empleado.habilidades if empleado else '' }}</textarea>
+                            <small class="error-message" id="habilidades-error"></small>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="experiencia">Experiencia</label>
-                        <textarea name="experiencia" id="experiencia" rows="4">{{ empleado.experiencia if empleado else '' }}</textarea>
+                        <label for="experiencia">Experiencia <span class="required">*</span></label>
+                        <textarea name="experiencia" id="experiencia" rows="4" required minlength="10">{{ empleado.experiencia if empleado else '' }}</textarea>
+                        <small class="error-message" id="experiencia-error"></small>
                     </div>
 
                     <div class="form-group inline">
@@ -110,5 +117,131 @@
     {{ footer.footer() }}
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init();</script>
+    <script>
+        // Validación del formulario
+        document.getElementById('formPostulacion').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Limpiar mensajes de error anteriores
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+            document.querySelectorAll('.form-group').forEach(el => el.classList.remove('error'));
+            
+            let isValid = true;
+            const errors = {};
+            
+            // Validar Educación
+            const educacion = document.getElementById('educacion').value.trim();
+            if (!educacion || educacion.length < 10) {
+                isValid = false;
+                errors.educacion = 'La educación es requerida y debe tener al menos 10 caracteres.';
+                document.getElementById('educacion').parentElement.classList.add('error');
+                document.getElementById('educacion-error').textContent = errors.educacion;
+            }
+            
+            // Validar Habilidades
+            const habilidades = document.getElementById('habilidades').value.trim();
+            if (!habilidades || habilidades.length < 10) {
+                isValid = false;
+                errors.habilidades = 'Las habilidades son requeridas y deben tener al menos 10 caracteres.';
+                document.getElementById('habilidades').parentElement.classList.add('error');
+                document.getElementById('habilidades-error').textContent = errors.habilidades;
+            }
+            
+            // Validar Experiencia
+            const experiencia = document.getElementById('experiencia').value.trim();
+            if (!experiencia || experiencia.length < 10) {
+                isValid = false;
+                errors.experiencia = 'La experiencia es requerida y debe tener al menos 10 caracteres.';
+                document.getElementById('experiencia').parentElement.classList.add('error');
+                document.getElementById('experiencia-error').textContent = errors.experiencia;
+            }
+            
+            // Validar CV
+            const curriculum = document.getElementById('curriculum').files[0];
+            const tieneCvExistente = {% if empleado and empleado.curriculum_url %}true{% else %}false{% endif %};
+            
+            if (!curriculum && !tieneCvExistente) {
+                isValid = false;
+                errors.curriculum = 'Debes subir un currículum para postularte.';
+                document.getElementById('curriculum').parentElement.classList.add('error');
+                document.getElementById('curriculum-error').textContent = errors.curriculum;
+            }
+            
+            // Validar tipo de archivo si se sube uno
+            if (curriculum) {
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                const fileExtension = curriculum.name.split('.').pop().toLowerCase();
+                const allowedExtensions = ['pdf', 'doc', 'docx'];
+                
+                if (!allowedExtensions.includes(fileExtension)) {
+                    isValid = false;
+                    errors.curriculum = 'El archivo debe ser PDF, DOC o DOCX.';
+                    document.getElementById('curriculum').parentElement.classList.add('error');
+                    document.getElementById('curriculum-error').textContent = errors.curriculum;
+                }
+            }
+            
+            if (isValid) {
+                // Si todo es válido, enviar el formulario
+                this.submit();
+            } else {
+                // Mostrar mensaje general
+                const firstError = Object.values(errors)[0];
+                if (firstError) {
+                    alert('Por favor, completa correctamente todos los campos requeridos:\n\n' + Object.values(errors).join('\n'));
+                }
+            }
+        });
+        
+        // Validación en tiempo real
+        ['educacion', 'habilidades', 'experiencia'].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('blur', function() {
+                    const value = this.value.trim();
+                    const errorEl = document.getElementById(fieldId + '-error');
+                    if (!value || value.length < 10) {
+                        this.parentElement.classList.add('error');
+                        errorEl.textContent = 'Este campo es requerido y debe tener al menos 10 caracteres.';
+                    } else {
+                        this.parentElement.classList.remove('error');
+                        errorEl.textContent = '';
+                    }
+                });
+                
+                field.addEventListener('input', function() {
+                    const value = this.value.trim();
+                    if (value.length >= 10) {
+                        this.parentElement.classList.remove('error');
+                        document.getElementById(fieldId + '-error').textContent = '';
+                    }
+                });
+            }
+        });
+    </script>
+    <style>
+        .required {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+        .form-group.error textarea,
+        .form-group.error input {
+            border-color: #dc3545;
+        }
+        .help-text {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        .text-danger {
+            color: #dc3545;
+        }
+    </style>
 </body>
 </html>
