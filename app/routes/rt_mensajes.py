@@ -127,6 +127,29 @@ def enviar_mensaje():
         fecha_envio=get_mexico_time()
     )
     db.session.add(notificacion)
+    db.session.flush()  # Para obtener el ID
+    
+    # Enviar notificación y mensaje en tiempo real usando WebSockets
+    try:
+        from app.socketio_events import enviar_notificacion_tiempo_real, enviar_mensaje_tiempo_real
+        enviar_notificacion_tiempo_real(destinatario_id, {
+            'id': notificacion.id,
+            'usuario_id': destinatario_id,
+            'mensaje': notificacion.mensaje,
+            'tipo': 'mensaje',
+            'leido': False,
+            'fecha_envio': notificacion.fecha_envio.isoformat()
+        })
+        enviar_mensaje_tiempo_real(destinatario_id, {
+            'id': nuevo_mensaje.id,
+            'remitente_id': usuario['id'],
+            'destinatario_id': destinatario_id,
+            'contenido': nuevo_mensaje.contenido,
+            'fecha_envio': nuevo_mensaje.fecha_envio.isoformat(),
+            'leido': False
+        })
+    except Exception as e:
+        print(f"Error al enviar notificación/mensaje en tiempo real: {str(e)}")
     
     db.session.commit()
     

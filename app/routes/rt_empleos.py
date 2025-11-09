@@ -94,11 +94,6 @@ def postular(vacante_id: int):
 
     if request.method == "POST":
         try:
-            # Validar datos requeridos
-            if not all([request.form.get('educacion'), request.form.get('experiencia'), request.form.get('habilidades')]):
-                flash("Por favor completa todos los campos requeridos", "warning")
-                return redirect(url_for('EmpleosRoute.postular', vacante_id=vacante_id))
-
             # Datos del formulario
             educacion = request.form.get("educacion", "").strip()
             experiencia = request.form.get("experiencia", "").strip()
@@ -106,12 +101,43 @@ def postular(vacante_id: int):
             cv_destacado = request.form.get("cv_destacado") == "on"
             notas = request.form.get("notas", "").strip()
 
-            # Manejo de CV (archivo opcional)
+            # Validar datos requeridos - verificar que no estén vacíos después de strip()
+            errores_validacion = []
+            
+            if not educacion or len(educacion) < 10:
+                errores_validacion.append("La educación es requerida y debe tener al menos 10 caracteres.")
+            
+            if not experiencia or len(experiencia) < 10:
+                errores_validacion.append("La experiencia es requerida y debe tener al menos 10 caracteres.")
+            
+            if not habilidades or len(habilidades) < 10:
+                errores_validacion.append("Las habilidades son requeridas y deben tener al menos 10 caracteres.")
+            
+            # Validar CV - debe haber uno nuevo o uno existente
             cv_file = request.files.get("curriculum")
+            tiene_cv_nuevo = cv_file and cv_file.filename
+            tiene_cv_existente = empleado and empleado.curriculum_url
+            
+            if not tiene_cv_nuevo and not tiene_cv_existente:
+                errores_validacion.append("Debes subir un currículum para postularte.")
+            
+            # Si hay errores de validación, mostrar mensajes y redirigir
+            if errores_validacion:
+                for error in errores_validacion:
+                    flash(error, "warning")
+                return redirect(url_for('EmpleosRoute.postular', vacante_id=vacante_id))
             
             if cv_file and cv_file.filename:
+                # Validar extensión del archivo
+                allowed_extensions = ['pdf', 'doc', 'docx']
+                filename = secure_filename(cv_file.filename)
+                file_extension = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+                
+                if file_extension not in allowed_extensions:
+                    flash("El archivo debe ser PDF, DOC o DOCX.", "warning")
+                    return redirect(url_for('EmpleosRoute.postular', vacante_id=vacante_id))
+                
                 try:
-                    filename = secure_filename(cv_file.filename)
                     upload_dir = os.path.join("app", "static", "uploads", "cv")
                     os.makedirs(upload_dir, exist_ok=True)
                     filepath = os.path.join(upload_dir, filename)
@@ -129,14 +155,23 @@ def postular(vacante_id: int):
                 return redirect(url_for('EmpleosRoute.empleos'))
 
             # Verificar si el usuario ya se postuló a esta vacante
+            # Solo bloquear si la postulación existe y NO está rechazada
             postulacion_existente = PostulacionModel.query.filter_by(
                 empleado_id=user["id"],
                 vacante_id=vacante_id
             ).first()
             
-            if postulacion_existente:
+            if postulacion_existente and postulacion_existente.estado != 'rechazado':
                 flash("Ya te has postulado a esta vacante anteriormente.", "info")
                 return redirect(url_for('EmpleosRoute.empleos'))
+            
+            # Si existe una postulación rechazada, eliminarla para permitir una nueva postulación
+            if postulacion_existente and postulacion_existente.estado == 'rechazado':
+                # Decrementar el contador de postulantes antes de eliminar
+                if vacante.postulantes_actuales and vacante.postulantes_actuales > 0:
+                    vacante.postulantes_actuales -= 1
+                db.session.delete(postulacion_existente)
+                db.session.flush()  # Asegurar que se elimine antes de crear la nueva
 
             # Crear postulación
             try:
@@ -169,7 +204,7 @@ def postular(vacante_id: int):
                 try:
                     from app.models.md_notificacion import NotificacionModel
                     from app.utils.timezone_helper import get_mexico_time
-                    from app import socketio
+                    from app.socketio_events import enviar_notificacion_tiempo_real
                     
                     nombre_empleado = f"{user.get('nombre', '')} {user.get('apellido', '')}".strip() or 'Un candidato'
                     titulo_vacante = getattr(vacante, 'titulo', 'una vacante')
@@ -188,8 +223,8 @@ def postular(vacante_id: int):
                         db.session.add(notificacion)
                         db.session.flush()  # Para obtener el ID de la notificación
                         
-                        # Enviar notificación en tiempo real
-                        socketio.emit('nueva_notificacion', {
+                        # Enviar notificación en tiempo real usando WebSockets
+                        enviar_notificacion_tiempo_real(empresa_id, {
                             'id': notificacion.id,
                             'usuario_id': empresa_id,
                             'mensaje': notificacion.mensaje,
@@ -197,7 +232,7 @@ def postular(vacante_id: int):
                             'leido': False,
                             'fecha_envio': notificacion.fecha_envio.isoformat(),
                             'enlace': notificacion.enlace
-                        }, namespace='/notificaciones')
+                        })
                         
                 except Exception as e:
                     print(f"Error al crear notificación: {str(e)}")

@@ -135,7 +135,7 @@
                                             <option value="postulado" {% if post.estado == 'postulado' %}selected{% endif %}>📩 Postulado</option>
                                             <option value="visto" {% if post.estado == 'visto' %}selected{% endif %}>👁️ Visto</option>
                                             <option value="en_proceso" {% if post.estado == 'en_proceso' %}selected{% endif %}>⏳ En proceso</option>
-                                            <option value="rechazado" {% if post.estado == 'rechazado' %}selected{% endif %}>❌ Rechazado</option>
+                                            <option value="rechazado" {% if post.estado == 'rechazado' %}selected{% endif %}>❌ Rechazado/Cancelar</option>
                                             <option value="contratado" {% if post.estado == 'contratado' %}selected{% endif %}>✅ Contratado</option>
                                         </select>
                                     </div>
@@ -144,7 +144,14 @@
                                         <input type="text" name="notas_empresa" id="notas_{{ post.id }}" class="form-control form-control-sm" placeholder="Agregar notas..." value="{{ post.notas_empresa or '' }}">
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary btn-sm mt-2">Actualizar Estado</button>
+                                <div class="d-flex gap-2 mt-2">
+                                    <button type="submit" class="btn btn-primary btn-sm">Actualizar Estado</button>
+                                    {% if post.estado != 'rechazado' and post.estado != 'contratado' %}
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="cancelarPostulacion({{ post.id }})">
+                                        <i class="fas fa-times"></i> Cancelar Postulación
+                                    </button>
+                                    {% endif %}
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -175,5 +182,23 @@
             </div>
         {% endif %}
     {% endwith %}
+
+    <script>
+        function cancelarPostulacion(postulacionId) {
+            if (confirm('¿Estás seguro de que deseas cancelar/rechazar esta postulación? El candidato podrá postularse nuevamente si lo desea.')) {
+                // Encontrar el formulario correspondiente
+                const form = document.querySelector(`form[action*="/postulacion/${postulacionId}/cambiar_estado"]`);
+                if (form) {
+                    // Establecer el estado a "rechazado"
+                    const estadoSelect = form.querySelector('select[name="estado"]');
+                    if (estadoSelect) {
+                        estadoSelect.value = 'rechazado';
+                    }
+                    // Enviar el formulario
+                    form.submit();
+                }
+            }
+        }
+    </script>
 </body>
 </html>
