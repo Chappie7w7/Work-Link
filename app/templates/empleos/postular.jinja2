@@ -35,12 +35,33 @@
                     </div>
                     <div class="summary-info">
                         <div class="info-item"><i class="fas fa-location-dot"></i> {{ vacante.ubicacion or 'No especificada' }}</div>
-                        {% if vacante.modalidad %}<div class="info-item"><i class="fas fa-briefcase"></i> {{ vacante.modalidad }}</div>{% endif %}
-                        {% if vacante.salario_aprox %}<div class="info-item"><i class="fas fa-money-bill-wave"></i> ${{ "%.2f"|format(vacante.salario_aprox) }}</div>{% endif %}
+                        {% if vacante.modalidad %}<div class="info-item"><i class="fas fa-briefcase"></i>Modalidad: {{ vacante.modalidad }}</div>{% endif %}
+                        {% if vacante.salario_aprox %}<div class="info-item"><i class="fas fa-money-bill-wave"></i>Salario: ${{ "%.2f"|format(vacante.salario_aprox) }}</div>{% endif %}
+                        {% if vacante.estado %}<div class="info-item"><i class="fas fa-toggle-on"></i> Estado: {{ vacante.estado }}</div>{% endif %}
+                        {% if vacante.fecha_publicacion %}<div class="info-item"><i class="fas fa-calendar-day"></i> Publicada: {{ vacante.fecha_publicacion.strftime('%d/%m/%Y') }}</div>{% endif %}
+                        {% if vacante.postulantes_actuales is not none or vacante.max_postulantes is not none %}
+                        <div class="info-item"><i class="fas fa-user-check"></i>
+                          Postulantes: {{ vacante.postulantes_actuales or 0 }}
+                          {% if vacante.max_postulantes is not none %}/ {{ vacante.max_postulantes }}{% endif %}
+                        </div>
+                        {% endif %}
                     </div>
                     {% if vacante.descripcion %}
                     <div class="summary-description">
+                        <h4><i class="fas fa-list-check"></i> Descripción</h4>
                         <p>{{ vacante.descripcion }}</p>
+                    </div>
+                    {% endif %}
+                    {% if vacante.requisitos %}
+                    <div class="summary-section">
+                        <h4><i class="fas fa-list-check"></i> Requisitos</h4>
+                        <p>{{ vacante.requisitos }}</p>
+                    </div>
+                    {% endif %}
+                    {% if vacante.beneficios %}
+                    <div class="summary-section">
+                        <h4><i class="fas fa-gift"></i> Beneficios</h4>
+                        <p>{{ vacante.beneficios }}</p>
                     </div>
                     {% endif %}
                 </aside>
