@@ -425,6 +425,9 @@
                 .then(() => console.log("✅ Service Worker registrado"))
                 .catch(err => console.log("❌ Error registrando SW:", err));
         }
+
+        localStorage['jobs'] = JSON.stringify({{jobs_json}});
+        console.log('Datos Guardados');
     </script>
 
 </body>
