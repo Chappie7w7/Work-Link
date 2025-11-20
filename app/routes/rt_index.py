@@ -9,6 +9,16 @@ rt_index = Blueprint('IndexRoute', __name__)
 CACHE_FILE = "cache_vacantes.json"
 
 
+def get_obj_dict(obj):
+    """Convert SimpleNamespace or similar objects to dictionary for JSON serialization"""
+    if hasattr(obj, '__dict__'):
+        return obj.__dict__
+    elif isinstance(obj, dict):
+        return obj
+    else:
+        return str(obj)
+
+
 def hay_internet():
     try:
         requests.get("https://www.google.com", timeout=3)
@@ -70,7 +80,23 @@ def index():
         else:
             jobs = []  # No hay internet ni cache
 
-    return render_template('index.jinja2', current_user=current_user, jobs=jobs)
+    # Convertir jobs a JSON para pasar al template
+    jobs_json = json.dumps(jobs, default=get_obj_dict)
+    return render_template('index.jinja2', current_user=current_user, jobs=jobs, jobs_json=jobs_json)
 
 
-
+@rt_index.route('/offline')
+def offline():
+    """Página offline que muestra los trabajos cacheados"""
+    jobs = []
+    
+    # Leer datos del cache
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            jobs = [SimpleNamespace(**v) for v in data]
+        except Exception as e:
+            print("⚠️ Error leyendo cache en offline:", e)
+    
+    return render_template('offline.html', jobs=jobs)

@@ -68,6 +68,17 @@
                 <form method="post" action="{{ url_for('LoginRoute.login') }}" class="form">
                     <div>
                         <label>
+                            <i class='bx bx-user'></i>
+                            <select name="tipo_usuario" required style="width: 100%; padding: 10px; border: none; outline: none; background-color: #fff; color: #333; border-radius: 20px; font-family: 'Montserrat', sans-serif;">
+                                <option value="">Selecciona tipo de cuenta</option>
+                                <option value="empleado">Usuario</option>
+                                <option value="empresa">Empresa</option>
+                                <option value="superadmin">Administrador</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
                             <i class='bx bx-envelope'></i>
                             <input type="email" placeholder="Correo Electrónico" name="correo" required />
                         </label>

@@ -1,0 +1,178 @@
+{% import "components/flash_messages.jinja2" as flash %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administrador - WorkLink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_admin.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    {{ flash.render_flash_messages() }}
+    
+    <!-- Navigation Bar -->
+    <nav class="admin-navbar">
+        <div class="nav-brand">
+            <h1><i class="fas fa-shield-alt"></i> WorkLink Admin</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('AdminRoute.dashboard') }}" class="nav-link active">
+                <i class="fas fa-users"></i> 
+                <span>Usuarios</span>
+            </a>
+            <a href="{{ url_for('LoginRoute.logout') }}" class="btn-salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h2 class="page-title">Panel de Administración</h2>
+            <p class="page-subtitle">Gestiona usuarios y cuentas del sistema</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ total_usuarios }}</h3>
+                    <p>Total Usuarios</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ total_empresas }}</h3>
+                    <p>Empresas</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ total_empleados }}</h3>
+                    <p>Empleados</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="users-section">
+            <div class="section-header">
+                <h3>Lista de Usuarios</h3>
+            </div>
+            
+            {% if usuarios %}
+            <div class="table-container">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Tipo</th>
+                            <th>Fecha Registro</th>
+                            <th>Último Login</th>
+                            <th>Premium</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario.id }}</td>
+                            <td>
+                                <div class="user-info">
+                                    {% if usuario.foto_perfil %}
+                                    <img src="{{ usuario.foto_perfil }}" alt="{{ usuario.nombre }}" class="user-avatar">
+                                    {% else %}
+                                    <div class="user-avatar-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    {% endif %}
+                                    <span>{{ usuario.nombre }}</span>
+                                </div>
+                            </td>
+                            <td>{{ usuario.correo }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'empresa' if usuario.tipo_usuario == 'empresa' else 'empleado' }}">
+                                    {% if usuario.tipo_usuario == 'empresa' %}
+                                        <i class="fas fa-building"></i> Empresa
+                                    {% elif usuario.tipo_usuario == 'empleado' %}
+                                        <i class="fas fa-user-tie"></i> Empleado
+                                    {% else %}
+                                        {{ usuario.tipo_usuario }}
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                {% if usuario.fecha_registro %}
+                                    {{ usuario.fecha_registro.strftime('%d/%m/%Y') }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if usuario.ultimo_login %}
+                                    {{ usuario.ultimo_login.strftime('%d/%m/%Y %H:%M') }}
+                                {% else %}
+                                    Nunca
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if usuario.premium %}
+                                <span class="badge badge-premium">
+                                    <i class="fas fa-crown"></i> Premium
+                                </span>
+                                {% else %}
+                                <span class="badge badge-free">Gratis</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <form method="POST" action="{{ url_for('AdminRoute.dar_baja', usuario_id=usuario.id) }}" 
+                                          style="display: inline;" 
+                                          onsubmit="return confirm('¿Estás seguro de dar de baja a este usuario?');">
+                                        <button type="submit" class="btn-action btn-warning" title="Dar de baja">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('AdminRoute.eliminar', usuario_id=usuario.id) }}" 
+                                          style="display: inline;" 
+                                          onsubmit="return confirm('¿Estás seguro de ELIMINAR permanentemente este usuario? Esta acción no se puede deshacer.');">
+                                        <button type="submit" class="btn-action btn-danger" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-users-slash"></i>
+                <h3>No hay usuarios registrados</h3>
+                <p>No se han encontrado usuarios en el sistema.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
+

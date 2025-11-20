@@ -32,8 +32,13 @@ def form_empresa():
 def login():
     correo = request.form.get("correo", "").strip()
     password = request.form.get("password", "").strip()
+    tipo_usuario = request.form.get("tipo_usuario", "").strip()
 
-    user, error = login_user(correo, password)
+    if not tipo_usuario:
+        flash("Por favor selecciona el tipo de cuenta", "error")
+        return redirect(url_for("LoginRoute.login_form"))
+
+    user, error = login_user(correo, password, tipo_usuario)
 
     if not user:
         flash(error, "error")
@@ -53,7 +58,7 @@ def login():
     elif user.tipo_usuario == Roles.EMPLEADO:
         return redirect(url_for("InicioRoute.inicio"))
     elif user.tipo_usuario == Roles.SUPERADMIN:  
-        return redirect(url_for("InicioRoute.inicio"))
+        return redirect(url_for("AdminRoute.dashboard"))
     else:
         return redirect(url_for("IndexRoute.index"))
 
