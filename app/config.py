@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
 
-# 👇 carga las variables desde el archivo .env
+# 👇 carga variables desde .env.local (si existe) y luego desde .env
+load_dotenv('.env.local')
 load_dotenv()
 
 class Config:
@@ -22,3 +23,4 @@ class Config:
     MAIL_USERNAME = os.getenv("MAIL_USERNAME")
     MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
     MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER")
+    ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")

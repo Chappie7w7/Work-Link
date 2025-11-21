@@ -5,7 +5,7 @@ from app.models.md_empleados import EmpleadoModel
 from app.db.sql import db
 from app.utils.decorators import login_role_required
 from app.utils.roles import Roles
-from app.controller.ctr_usuarios import dar_baja_usuario, eliminar_usuario, get_all_usuarios
+from app.controller.ctr_usuarios import dar_baja_usuario, eliminar_usuario, get_all_usuarios, aprobar_usuario
 from app.controller.ctr_empleos import get_user_from_session
 
 rt_admin = Blueprint('AdminRoute', __name__, url_prefix='/admin')
@@ -30,10 +30,18 @@ def dashboard():
         total_usuarios = len(usuarios)
         total_empresas = sum(1 for u in usuarios if u.tipo_usuario == Roles.EMPRESA)
         total_empleados = sum(1 for u in usuarios if u.tipo_usuario == Roles.EMPLEADO)
+        total_solicitudes = sum(1 for u in usuarios if getattr(u, 'solicitud_eliminacion', False))
         
+        # Filtro opcional por solicitudes (usuarios deshabilitados)
+        current_filter = request.args.get('f', '').lower()
+        if current_filter == 'solicitudes':
+            usuarios_iter = [u for u in usuarios if getattr(u, 'solicitud_eliminacion', False)]
+        else:
+            usuarios_iter = usuarios
+
         # Obtener información adicional de empresas y empleados
         usuarios_data = []
-        for usuario in usuarios:
+        for usuario in usuarios_iter:
             try:
                 usuario_info = {
                     "id": usuario.id,
@@ -43,7 +51,9 @@ def dashboard():
                     "fecha_registro": usuario.fecha_registro,
                     "ultimo_login": usuario.ultimo_login,
                     "premium": usuario.premium,
-                    "foto_perfil": usuario.foto_perfil
+                    "aprobado": usuario.aprobado,
+                    "foto_perfil": usuario.foto_perfil,
+                    "solicitud_eliminacion": getattr(usuario, 'solicitud_eliminacion', False)
                 }
                 
                 # Agregar información específica según el tipo
@@ -63,7 +73,9 @@ def dashboard():
                              current_user=user,
                              total_usuarios=total_usuarios,
                              total_empresas=total_empresas,
-                             total_empleados=total_empleados)
+                             total_empleados=total_empleados,
+                             total_solicitudes=total_solicitudes,
+                             current_filter=current_filter)
     except Exception as e:
         import traceback
         print(f"Error en dashboard admin: {str(e)}")
@@ -91,15 +103,30 @@ def dar_baja(usuario_id):
 @rt_admin.route('/usuarios/eliminar/<int:usuario_id>', methods=['POST'])
 @login_role_required(Roles.SUPERADMIN)
 def eliminar(usuario_id):
-    """Elimina completamente un usuario"""
+    """Deshabilita un usuario (soft-delete)"""
     try:
         success, error = eliminar_usuario(usuario_id)
         if error:
             flash(error, "error")
         else:
-            flash("Usuario eliminado exitosamente", "success")
+            flash("Usuario deshabilitado exitosamente", "success")
     except Exception as e:
-        flash(f"Error al eliminar el usuario: {str(e)}", "error")
+        flash(f"Error al deshabilitar el usuario: {str(e)}", "error")
     
+    return redirect(url_for("AdminRoute.dashboard"))
+
+
+@rt_admin.route('/usuarios/aprobar/<int:usuario_id>', methods=['POST'])
+@login_role_required(Roles.SUPERADMIN)
+def aprobar(usuario_id):
+    """Aprueba (habilita) un usuario pendiente"""
+    try:
+        success, error = aprobar_usuario(usuario_id)
+        if error:
+            flash(error, "error")
+        else:
+            flash("Usuario habilitado exitosamente", "success")
+    except Exception as e:
+        flash(f"Error al aprobar al usuario: {str(e)}", "error")
     return redirect(url_for("AdminRoute.dashboard"))
 

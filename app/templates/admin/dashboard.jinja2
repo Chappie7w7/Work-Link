@@ -66,12 +66,32 @@
                     <p>Empleados</p>
                 </div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #f59e0b;">
+                    <i class="fas fa-user-slash"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ total_solicitudes }}</h3>
+                    <p>Solicitudes de eliminación</p>
+                </div>
+            </div>
         </div>
 
         <!-- Users Table -->
         <div class="users-section">
             <div class="section-header">
                 <h3>Lista de Usuarios</h3>
+                <div>
+                    {% if current_filter == 'solicitudes' %}
+                        <a href="{{ url_for('AdminRoute.dashboard') }}" class="btn-action" title="Ver todos" style="background:#334155;color:#fff;">
+                            <i class="fas fa-list"></i> Ver todos
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('AdminRoute.dashboard', f='solicitudes') }}" class="btn-action" title="Ver solicitudes de eliminación" style="background:#f59e0b;color:#fff;">
+                            <i class="fas fa-user-slash"></i> Ver solicitudes
+                        </a>
+                    {% endif %}
+                </div>
             </div>
             
             {% if usuarios %}
@@ -86,6 +106,7 @@
                             <th>Fecha Registro</th>
                             <th>Último Login</th>
                             <th>Premium</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -141,21 +162,36 @@
                                 {% endif %}
                             </td>
                             <td>
+                                {% if usuario.aprobado %}
+                                <span class="badge" style="background: #16a34a; color: white;">Aprobado</span>
+                                {% else %}
+                                <span class="badge" style="background: #f59e0b; color: white;">Deshabilitado</span>
+                                {% endif %}
+                                {% if usuario.solicitud_eliminacion %}
+                                <span class="badge" style="background: #ef4444; color: white; margin-left:6px;">
+                                    <i class="fas fa-user-slash"></i> Solicitud
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
                                 <div class="action-buttons">
-                                    <form method="POST" action="{{ url_for('AdminRoute.dar_baja', usuario_id=usuario.id) }}" 
+                                    {% if not usuario.aprobado %}
+                                    <form method="POST" action="{{ url_for('AdminRoute.aprobar', usuario_id=usuario.id) }}" 
                                           style="display: inline;" 
-                                          onsubmit="return confirm('¿Estás seguro de dar de baja a este usuario?');">
-                                        <button type="submit" class="btn-action btn-warning" title="Dar de baja">
-                                            <i class="fas fa-ban"></i>
+                                          onsubmit="return confirm('¿Habilitar esta cuenta?');">
+                                        <button type="submit" class="btn-action" title="Habilitar" style="background:#16a34a;color:#fff;">
+                                            <i class="fas fa-check"></i>
                                         </button>
                                     </form>
+                                    {% else %}
                                     <form method="POST" action="{{ url_for('AdminRoute.eliminar', usuario_id=usuario.id) }}" 
                                           style="display: inline;" 
-                                          onsubmit="return confirm('¿Estás seguro de ELIMINAR permanentemente este usuario? Esta acción no se puede deshacer.');">
-                                        <button type="submit" class="btn-action btn-danger" title="Eliminar">
+                                          onsubmit="return confirm('¿Deshabilitar este usuario? No se eliminará, solo quedará deshabilitado.');">
+                                        <button type="submit" class="btn-action btn-danger" title="Deshabilitar">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
@@ -173,6 +209,38 @@
         </div>
     </div>
 </body>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        (function(){
+            try {
+                const socket = io('/notificaciones', { transports: ['websocket', 'polling'] });
+                function showNotice(msg){
+                    const box = document.createElement('div');
+                    box.style.position = 'fixed';
+                    box.style.top = '20px';
+                    box.style.right = '20px';
+                    box.style.zIndex = '9999';
+                    box.style.background = '#f59e0b';
+                    box.style.color = '#fff';
+                    box.style.padding = '12px 16px';
+                    box.style.borderRadius = '8px';
+                    box.style.boxShadow = '0 8px 24px rgba(0,0,0,0.15)';
+                    box.style.fontFamily = 'Inter, system-ui, sans-serif';
+                    box.style.fontSize = '14px';
+                    box.innerHTML = '<i class="fas fa-user-slash"></i> ' + msg;
+                    document.body.appendChild(box);
+                    setTimeout(()=>{ box.remove(); }, 6000);
+                }
+                socket.on('connect', ()=>{ /* conectado */ });
+                socket.on('error', ()=>{ /* error de socket */ });
+                socket.on('solicitud_eliminacion', (data)=>{
+                    const nombre = data?.nombre || 'Usuario';
+                    const correo = data?.correo ? ' ('+data.correo+')' : '';
+                    showNotice('Nueva solicitud de eliminación de ' + nombre + correo);
+                });
+            } catch (e) { /* noop */ }
+        })();
+    </script>
 
 </html>
 

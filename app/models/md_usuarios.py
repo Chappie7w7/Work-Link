@@ -20,6 +20,8 @@ class UsuarioModel(db.Model):
     plan_id = Column(Integer, ForeignKey('planes.id'), nullable=True)
     ubicacion = Column(String(100), nullable=True)
     ultimo_login = Column(DateTime, nullable=True)
+    aprobado = Column(Boolean, default=True)  # Nuevo: control de aprobación por admin
+    solicitud_eliminacion = Column(Boolean, default=False)
     
     # Campos para autenticación
     google_id = Column(String(100), nullable=True, unique=True)
@@ -33,7 +35,7 @@ class UsuarioModel(db.Model):
 
     def __init__(self, nombre, correo, tipo_usuario, contraseña=None, foto_perfil=None,
             premium=False, plan_id=None, ubicacion=None, fecha_registro=None,
-            ultimo_login=None, google_id=None):
+            ultimo_login=None, google_id=None, aprobado=True, solicitud_eliminacion=False):
         self.nombre = nombre
         self.correo = correo
         self.contraseña = contraseña
@@ -45,6 +47,8 @@ class UsuarioModel(db.Model):
         self.fecha_registro = fecha_registro or datetime.utcnow()
         self.ultimo_login = ultimo_login
         self.google_id = google_id
+        self.aprobado = aprobado
+        self.solicitud_eliminacion = solicitud_eliminacion
 
     def to_json(self):
         return {
@@ -57,7 +61,9 @@ class UsuarioModel(db.Model):
             "premium": self.premium,
             "plan_id": self.plan_id,
             "ubicacion": self.ubicacion,
-            "ultimo_login": self.ultimo_login.isoformat() if self.ultimo_login else None
+            "ultimo_login": self.ultimo_login.isoformat() if self.ultimo_login else None,
+            "aprobado": self.aprobado,
+            "solicitud_eliminacion": self.solicitud_eliminacion
         }
 
 

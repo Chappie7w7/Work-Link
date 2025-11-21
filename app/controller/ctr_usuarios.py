@@ -54,24 +54,11 @@ def dar_baja_usuario(usuario_id: int):
         if usuario.tipo_usuario == Roles.SUPERADMIN:
             return None, "No se puede dar de baja a un administrador"
         
-        # Eliminar relaciones primero si existen
-        from app.models.md_empresas import EmpresaModel
-        from app.models.md_empleados import EmpleadoModel
-        
-        # Si es empresa, eliminar registro de empresa
-        if usuario.tipo_usuario == Roles.EMPRESA:
-            empresa = EmpresaModel.query.get(usuario_id)
-            if empresa:
-                db.session.delete(empresa)
-        
-        # Si es empleado, eliminar registro de empleado
-        if usuario.tipo_usuario == Roles.EMPLEADO:
-            empleado = EmpleadoModel.query.get(usuario_id)
-            if empleado:
-                db.session.delete(empleado)
-        
-        # Eliminar el usuario
-        db.session.delete(usuario)
+        # Deshabilitar al usuario usando el campo de aprobación
+        # y limpiar cualquier solicitud pendiente
+        usuario.aprobado = False
+        if hasattr(usuario, 'solicitud_eliminacion'):
+            usuario.solicitud_eliminacion = False
         db.session.commit()
         return True, None
     except Exception as e:
@@ -90,24 +77,11 @@ def eliminar_usuario(usuario_id: int):
         if usuario.tipo_usuario == Roles.SUPERADMIN:
             return None, "No se puede eliminar a un administrador"
         
-        # Eliminar relaciones primero si existen
-        from app.models.md_empresas import EmpresaModel
-        from app.models.md_empleados import EmpleadoModel
-        
-        # Si es empresa, eliminar registro de empresa
-        if usuario.tipo_usuario == Roles.EMPRESA:
-            empresa = EmpresaModel.query.get(usuario_id)
-            if empresa:
-                db.session.delete(empresa)
-        
-        # Si es empleado, eliminar registro de empleado
-        if usuario.tipo_usuario == Roles.EMPLEADO:
-            empleado = EmpleadoModel.query.get(usuario_id)
-            if empleado:
-                db.session.delete(empleado)
-        
-        # Eliminar el usuario
-        db.session.delete(usuario)
+        # Soft-delete: marcar como deshabilitado usando el campo de aprobación
+        # y limpiar cualquier solicitud pendiente
+        usuario.aprobado = False
+        if hasattr(usuario, 'solicitud_eliminacion'):
+            usuario.solicitud_eliminacion = False
         db.session.commit()
         return True, None
     except Exception as e:
@@ -123,4 +97,22 @@ def get_all_usuarios():
         ).all()
         return usuarios, None
     except Exception as e:
+        return None, str(e)
+
+
+def aprobar_usuario(usuario_id: int):
+    """Aprueba (habilita) la cuenta de un usuario"""
+    try:
+        usuario = UsuarioModel.query.get(usuario_id)
+        if not usuario:
+            return None, "Usuario no encontrado"
+        if usuario.aprobado:
+            return True, None
+        usuario.aprobado = True
+        if hasattr(usuario, 'solicitud_eliminacion'):
+            usuario.solicitud_eliminacion = False
+        db.session.commit()
+        return True, None
+    except Exception as e:
+        db.session.rollback()
         return None, str(e)

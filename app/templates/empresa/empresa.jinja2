@@ -370,6 +370,14 @@
                         <i class="fas fa-user-check"></i>
                         Postulantes Recientes
                     </h3>
+                    {% if candidatos and ofertas %}
+                    <select id="filtro-vacante" class="form-select" style="max-width: 280px; margin-left: auto; margin-right: 12px;">
+                        <option value="">Todas las vacantes</option>
+                        {% for oferta in ofertas %}
+                        <option value="{{ oferta.id }}">{{ oferta.titulo }}</option>
+                        {% endfor %}
+                    </select>
+                    {% endif %}
                     {% if candidatos %}
                     <button type="button" class="btn-clear-all" onclick="eliminarTodasPostulaciones()" title="Eliminar todas las postulaciones">
                         <i class="fas fa-trash-alt"></i> Limpiar todas
@@ -380,7 +388,7 @@
                         {% if candidatos %}
                     <div class="list-container">
                             {% for c in candidatos %}
-                        <div class="candidate-item" id="candidate-item-{{ c.id }}">
+                        <div class="candidate-item" id="candidate-item-{{ c.id }}" data-vacante-id="{{ c.vacante_id }}">
                             <div class="candidate-info">
                                 <h4 class="candidate-name">
                                     {{ c.empleado.usuario.nombre if c.empleado and c.empleado.usuario else 'Candidato' }}
@@ -540,6 +548,24 @@
                         cerrarModal();
                     }
                 };
+            }
+
+            const filtroVacante = document.getElementById('filtro-vacante');
+            if (filtroVacante) {
+                const aplicarFiltro = () => {
+                    const valor = filtroVacante.value;
+                    const items = document.querySelectorAll('.candidate-item');
+                    items.forEach(el => {
+                        const vid = el.getAttribute('data-vacante-id') || '';
+                        if (!valor || valor === '' || vid === valor) {
+                            el.style.display = '';
+                        } else {
+                            el.style.display = 'none';
+                        }
+                    });
+                };
+                filtroVacante.addEventListener('change', aplicarFiltro);
+                aplicarFiltro();
             }
         });
 

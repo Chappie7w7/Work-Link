@@ -1,4 +1,4 @@
-from flask import Flask, session
+from flask import Flask, session, flash, redirect, url_for
 from flask_migrate import Migrate
 from app.config import Config
 from app.db.sql import db, migrate
@@ -33,6 +33,23 @@ def create_app():
 
     # Registrar TODAS las rutas
     register_routes(app)
+
+    @app.before_request
+    def verificar_estado_usuario():
+        usuario = session.get('usuario')
+        if not usuario:
+            return None
+        try:
+            from app.models.md_usuarios import UsuarioModel
+            user = UsuarioModel.query.get(usuario['id'])
+            if not user or not getattr(user, 'aprobado', True):
+                session.pop('usuario', None)
+                session.pop('user_id', None)
+                session.pop('tipo_usuario', None)
+                flash('Tu cuenta ha sido deshabilitada. Inicia sesión con otra cuenta o contacta al administrador.', 'error')
+                return redirect(url_for('LoginRoute.login_form'))
+        except Exception:
+            return None
 
     with app.app_context():
         db.create_all()
