@@ -235,7 +235,7 @@
     <!-- Service Worker -->
     <script>
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
+            navigator.serviceWorker.register("/service-worker.js")
                 .then(() => console.log("✅ Service Worker registrado"))
                 .catch(err => console.log("❌ Error registrando SW:", err));
         }

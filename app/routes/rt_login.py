@@ -210,7 +210,8 @@ def google_callback():
                     tipo_usuario=Roles.EMPLEADO,
                     google_id=user_data["id"],
                     foto_perfil=user_data.get("picture"),
-                    fecha_registro=datetime.utcnow()
+                    fecha_registro=datetime.utcnow(),
+                    aprobado=False
                 )
                 db.session.add(usuario)
                 db.session.flush()  # Para obtener el ID del usuario recién creado
@@ -229,6 +230,11 @@ def google_callback():
                 usuario.foto_perfil = user_data.get("picture", usuario.foto_perfil)
                 db.session.commit()
                 current_app.logger.info(f"Usuario existente: {usuario.correo}")
+
+            # Bloquear acceso si no está aprobado
+            if not usuario.aprobado:
+                flash("Tu cuenta está pendiente de aprobación por un administrador.", "error")
+                return redirect(url_for("LoginRoute.login_form"))
 
             # Iniciar sesión
             session["user_id"] = usuario.id

@@ -18,6 +18,10 @@ def login_user(correo, password, tipo_usuario=None):
             tipo_nombre = "usuario" if tipo_usuario == "empleado" else tipo_usuario
             return None, f"Este correo no corresponde a una cuenta de {tipo_nombre}"
     
+    # Verificar si la cuenta está aprobada por el admin
+    if not usuario.aprobado:
+        return None, "Tu cuenta está pendiente de aprobación por un administrador."
+
     # Verificar si el usuario es una empresa
     es_empresa = usuario.tipo_usuario == Roles.EMPRESA
     

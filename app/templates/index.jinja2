@@ -420,14 +420,34 @@
     </script>
 
     <script>
+        // Refrescar rápidamente el cache del cliente con las últimas vacantes publicadas
+        (function refreshOfflineJobs() {
+            fetch('/api/offline_jobs', { headers: { 'Accept': 'application/json' } })
+                .then(resp => resp.ok ? resp.json() : [])
+                .then(data => {
+                    if (!Array.isArray(data)) return;
+                    try {
+                        localStorage.setItem('offline_jobs', JSON.stringify(data));
+                    } catch (e) {}
+                })
+                .catch(() => {});
+        })();
+    </script>
+
+    <script>
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
+            navigator.serviceWorker.register("/service-worker.js")
                 .then(() => console.log("✅ Service Worker registrado"))
                 .catch(err => console.log("❌ Error registrando SW:", err));
         }
 
-        localStorage['jobs'] = JSON.stringify({{jobs_json}});
-        console.log('Datos Guardados');
+        // Guardar en localStorage como JSON válido (string)
+        try {
+            localStorage.setItem('jobs', JSON.stringify({{ jobs_json|safe }}));
+        } catch (e) {}
+        try {
+            localStorage.setItem('offline_jobs', JSON.stringify({{ offline_jobs_json|safe }}));
+        } catch (e) {}
     </script>
 
 </body>
