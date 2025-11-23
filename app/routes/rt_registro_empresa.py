@@ -74,7 +74,8 @@ def registro_empresa():
         contraseña=generate_password_hash(password),
         tipo_usuario="empresa",
         fecha_registro=datetime.utcnow(),
-        ultimo_login=None
+        ultimo_login=None,
+        aprobado=False
     )
     db.session.add(nuevo_usuario)
     db.session.commit()
@@ -92,7 +93,7 @@ def registro_empresa():
     db.session.add(nueva_empresa)
     db.session.commit()
 
-    flash("Cuenta de empresa creada con éxito. Por favor inicia sesión.", "success")
+    flash("Cuenta de empresa creada con éxito. Un administrador debe aprobar tu cuenta antes de poder iniciar sesión.", "success")
     return redirect(url_for("LoginRoute.login_form"))
 
 @rt_registro_empresa.route("/verificar_correo", methods=["POST"])

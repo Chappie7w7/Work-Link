@@ -22,7 +22,8 @@ def registro():
         contraseña=generate_password_hash(password),
         fecha_registro=datetime.utcnow(),
         ultimo_login=None,
-        tipo_usuario="empleado"
+        tipo_usuario="empleado",
+        aprobado=False
     )
     db.session.add(nuevo_usuario)
     db.session.flush()  # Para obtener el ID del usuario recién creado
@@ -34,7 +35,7 @@ def registro():
     
     db.session.commit()
 
-    flash("Cuenta creada con éxito. Por favor inicia sesión.", "success")
+    flash("Cuenta creada con éxito. Un administrador debe aprobar tu cuenta antes de poder iniciar sesión.", "success")
     return redirect(url_for("LoginRoute.login_form"))
 
 @rt_registro.route("/verificar_correo", methods=["POST"])

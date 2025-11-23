@@ -14,6 +14,8 @@ email-validator
 reportlab
 flask-jwt-extended 
 python-dotenv
+flask-socketio
+python-socketio
 
 # Autenticación con Google
 google-auth==2.16.0

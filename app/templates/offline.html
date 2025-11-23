@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkLink - Modo Offline</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
+
+    <style>
+        .offline-banner {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        .offline-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-company {
+            color: #6366f1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-location {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-salary {
+            color: #059669;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .job-modalidad {
+            display: inline-block;
+            background: #f3f4f6;
+            color: #374151;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .no-jobs {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .no-jobs h2 {
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+
+        body {
+            background: #f9fafb;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="offline-banner">
+        📵 Modo Offline - Trabajos Cacheados
+    </div>
+
+    <div class="offline-container" data-jobs="{{ jobs|map(attribute='__dict__')|list|tojson|safe }}">
+
+        <h1 style="text-align: center; color: #1f2937; margin-bottom: 1rem;">
+            WorkLink - Trabajos Disponibles Offline
+        </h1>
+
+        {% if jobs %}
+        <div class="jobs-grid">
+            {% for job in jobs %}
+            <div class="job-card">
+                <div class="job-title">{{ job.titulo }}</div>
+                {% if job.empresa %}
+                <div class="job-company">{{ job.empresa }}</div>
+                {% endif %}
+                <div class="job-location">📍 {{ job.ubicacion }}</div>
+                {% if job.salario_aprox %}
+                <div class="job-salary">💰 ${{ "%.2f"|format(job.salario_aprox) }} MXN</div>
+                {% endif %}
+                <div class="job-modalidad">{{ job.modalidad }}</div>
+
+                {% if job.descripcion %}
+                <div style="margin-top: 1rem; color: #6b7280; font-size: 0.9rem; line-height: 1.5;">
+                    {{ job.descripcion[:150] }}{% if job.descripcion|length > 150 %}...{% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-jobs">
+            <h2>No hay trabajos cacheados</h2>
+            <p>Para ver trabajos offline, primero visita la página principal con conexión a internet.</p>
+            <p>Los trabajos se guardarán automáticamente para poderlos ver sin conexión.</p>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script>
+        // Cargar datos server-side (si los hay) y sincronizar con localStorage
+        const container = document.querySelector('.offline-container');
+        let jobsData = [];
+        try {
+            const jobsJson = container.getAttribute('data-jobs');
+            if (jobsJson && jobsJson !== '[]') {
+                jobsData = JSON.parse(jobsJson);
+            }
+        } catch (e) {
+            console.log('Error parsing jobs data:', e);
+            jobsData = [];
+        }
+
+        // Si no vino nada del servidor (porque estamos 100% offline), intentar desde localStorage
+        if (!jobsData || jobsData.length === 0) {
+            try {
+                const lsOffline = localStorage.getItem('offline_jobs');
+                const lsJobs = localStorage.getItem('jobs');
+                const parsed = lsOffline ? JSON.parse(lsOffline) : (lsJobs ? JSON.parse(lsJobs) : []);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    jobsData = parsed;
+                }
+            } catch (e) {
+                console.log('Error leyendo localStorage:', e);
+            }
+        }
+
+        // Persistir la última versión conocida
+        try {
+            localStorage.setItem('offline_jobs', JSON.stringify(jobsData || []));
+        } catch (e) {}
+        console.log('Trabajos offline disponibles:', (jobsData && jobsData.length) || 0, 'trabajos');
+
+        // Render dinámico si no se mostraron datos server-side
+        function renderJobs(list) {
+            const noJobs = document.querySelector('.no-jobs');
+            let grid = document.querySelector('.jobs-grid');
+            if (!grid) {
+                // Si no existe el grid (porque no hubo datos server-side), crearlo
+                grid = document.createElement('div');
+                grid.className = 'jobs-grid';
+                if (noJobs && noJobs.parentNode) {
+                    noJobs.parentNode.insertBefore(grid, noJobs);
+                    noJobs.remove();
+                } else {
+                    container.appendChild(grid);
+                }
+            }
+            grid.innerHTML = '';
+            list.forEach((job) => {
+                const card = document.createElement('div');
+                card.className = 'job-card';
+                card.innerHTML = `
+                    <div class="job-title">${job.titulo || ''}</div>
+                    ${job.empresa ? `<div class="job-company">${job.empresa}</div>` : ''}
+                    <div class="job-location">📍 ${job.ubicacion || ''}</div>
+                    ${job.salario_aprox ? `<div class="job-salary">💰 $${Number(job.salario_aprox).toFixed(2)} MXN</div>` : ''}
+                    <div class="job-modalidad">${job.modalidad || ''}</div>
+                    ${job.descripcion ? `<div style="margin-top:1rem;color:#6b7280;font-size:0.9rem;line-height:1.5;">${(job.descripcion || '').slice(0,150)}${(job.descripcion||'').length>150?'...':''}</div>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Decidir qué lista mostrar: si localStorage tiene más elementos que el server, usar la lista más completa
+        const serverJson = container.getAttribute('data-jobs') || '[]';
+        let serverList = [];
+        try { serverList = JSON.parse(serverJson); } catch {}
+
+        function dedupeById(list) {
+            const seen = new Set();
+            const out = [];
+            for (const item of list || []) {
+                const key = item && (item.id || `${item.titulo}|${item.empresa||''}|${item.ubicacion||''}`);
+                if (!seen.has(key)) { seen.add(key); out.push(item); }
+            }
+            return out;
+        }
+
+        // Unir server + localStorage y preferir el conjunto más grande
+        const merged = dedupeById([...(serverList||[]), ...(jobsData||[])]);
+        const pick = (jobsData && jobsData.length > serverList.length) ? jobsData : merged;
+
+        // Render siempre que la lista "pick" sea más representativa que lo renderizado por el servidor
+        if (pick && pick.length >= serverList.length) {
+            renderJobs(pick);
+        }
+
+        // Mostrar mensaje de conexión
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (event.data && event.data.type === 'ONLINE_STATUS_CHANGED') {
+                    if (event.data.isOnline) {
+                        console.log('🌐 Conexión restaurada');
+                        // Opcional: redirigir a la página principal
+                        // window.location.href = '/';
+                    } else {
+                        console.log('📵 Modo offline activado');
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

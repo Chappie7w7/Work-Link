@@ -12,6 +12,7 @@ from .rt_perfil import rt_perfil
 from .rt_desarrolladores import DesarrolladoresRoute
 from .rt_usuarios import usuarios_bp
 from .rt_privacidad import rt_privacidad
+from .rt_admin import rt_admin
 
 def register_routes(app):
     app.register_blueprint(rt_index)
@@ -29,6 +30,7 @@ def register_routes(app):
     app.register_blueprint(DesarrolladoresRoute)
     app.register_blueprint(usuarios_bp)
     app.register_blueprint(rt_privacidad)
+    app.register_blueprint(rt_admin)
 
 
 

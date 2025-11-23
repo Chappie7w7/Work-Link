@@ -14,6 +14,7 @@ rt_empleos = Blueprint('EmpleosRoute', __name__)
 
 
 from sqlalchemy.orm import joinedload
+from sqlalchemy import or_, func
 
 @rt_empleos.route("/empleos")
 def empleos():
@@ -44,11 +45,177 @@ def empleos():
         db.session.commit()
     
     # Traer solo las vacantes publicadas (activas) y no eliminadas con la empresa cargada
-    vacantes = VacanteModel.query.options(joinedload(VacanteModel.empresa)) \
-                .filter_by(estado='publicada', eliminada=False) \
-                .order_by(VacanteModel.id.desc()).all()
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=9, type=int)
 
-    return render_template("empleos/empleos.jinja2", usuario=user, vacantes=vacantes)
+    base_query = (
+        VacanteModel.query
+        .options(joinedload(VacanteModel.empresa))
+        .filter_by(estado='publicada', eliminada=False)
+        .order_by(VacanteModel.id.desc())
+    )
+
+    # Filtros
+    def apply_filters(query):
+        q = request.args.get('q', type=str)
+        location = request.args.get('location', type=str)
+        job_type = request.args.get('job_type', type=str)
+        salary = request.args.get('salary', type=float)
+        salary_min = request.args.get('salary_min', type=float)
+        salary_max = request.args.get('salary_max', type=float)
+
+        # Lista para acumular condiciones (usaremos OR)
+        filter_conditions = []
+
+        if q:
+            like = f"%{q.strip()}%"
+            filter_conditions.append(
+                or_(
+                    VacanteModel.titulo.ilike(like),
+                    VacanteModel.descripcion.ilike(like),
+                    VacanteModel.ubicacion.ilike(like),
+                    VacanteModel.modalidad.ilike(like),
+                )
+            )
+
+        if location:
+            filter_conditions.append(VacanteModel.ubicacion == location)
+
+        if job_type:
+            filter_conditions.append(VacanteModel.modalidad == job_type)
+
+        if salary is not None:
+            filter_conditions.append(VacanteModel.salario_aprox >= salary)
+
+        if salary_min is not None:
+            filter_conditions.append(VacanteModel.salario_aprox >= salary_min)
+
+        if salary_max is not None:
+            filter_conditions.append(VacanteModel.salario_aprox <= salary_max)
+
+        # Aplicar los filtros combinados con OR (mostrar si cumple al menos uno)
+        if filter_conditions:
+            query = query.filter(or_(*filter_conditions))
+
+        return query
+
+
+    query = apply_filters(base_query)
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    # Valores distintos para filtros (derivados de base, sin filtros específicos)
+    distinct_locations = [
+        row[0] for row in db.session.query(func.distinct(VacanteModel.ubicacion))
+        .filter(VacanteModel.estado == 'publicada', VacanteModel.eliminada == False)
+        .order_by(VacanteModel.ubicacion.asc())
+        .all()
+        if row[0]
+    ]
+    distinct_job_types = [
+        row[0] for row in db.session.query(func.distinct(VacanteModel.modalidad))
+        .filter(VacanteModel.estado == 'publicada', VacanteModel.eliminada == False)
+        .order_by(VacanteModel.modalidad.asc())
+        .all()
+        if row[0]
+    ]
+    distinct_salaries = [
+        float(row[0]) for row in db.session.query(func.distinct(VacanteModel.salario_aprox))
+        .filter(VacanteModel.estado == 'publicada', VacanteModel.eliminada == False, VacanteModel.salario_aprox != None)
+        .order_by(VacanteModel.salario_aprox.asc())
+        .all()
+        if row[0] is not None
+    ]
+
+    return render_template(
+        "empleos/empleos.jinja2",
+        usuario=user,
+        current_user=user,
+        vacantes=pagination.items,
+        current_page=pagination.page,
+        total_pages=pagination.pages,
+        total_items=pagination.total,
+        per_page=per_page,
+        locations=distinct_locations,
+        job_types=distinct_job_types,
+        salaries=distinct_salaries,
+    )
+
+@rt_empleos.route("/empleos/page")
+def empleos_page():
+    """Devuelve el HTML de las tarjetas de una página específica (AJAX)."""
+    user = get_user_from_session(session)
+    if not user:
+        return redirect(url_for('IndexRoute.index'))
+
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=9, type=int)
+
+    base_query = (
+        VacanteModel.query
+        .options(joinedload(VacanteModel.empresa))
+        .filter_by(estado='publicada', eliminada=False)
+        .order_by(VacanteModel.id.desc())
+    )
+
+    def apply_filters(query):
+        q = request.args.get('q', type=str)
+        location = request.args.get('location', type=str)
+        job_type = request.args.get('job_type', type=str)
+        salary = request.args.get('salary', type=float)
+        salary_min = request.args.get('salary_min', type=float)
+        salary_max = request.args.get('salary_max', type=float)
+
+        # Lista para acumular condiciones (usaremos OR)
+        filter_conditions = []
+
+        if q:
+            like = f"%{q.strip()}%"
+            filter_conditions.append(
+                or_(
+                    VacanteModel.titulo.ilike(like),
+                    VacanteModel.descripcion.ilike(like),
+                    VacanteModel.ubicacion.ilike(like),
+                    VacanteModel.modalidad.ilike(like),
+                )
+            )
+
+        if location:
+            filter_conditions.append(VacanteModel.ubicacion == location)
+
+        if job_type:
+            filter_conditions.append(VacanteModel.modalidad == job_type)
+
+        if salary is not None:
+            filter_conditions.append(VacanteModel.salario_aprox >= salary)
+
+        if salary_min is not None:
+            filter_conditions.append(VacanteModel.salario_aprox >= salary_min)
+
+        if salary_max is not None:
+            filter_conditions.append(VacanteModel.salario_aprox <= salary_max)
+
+        # Aplicar los filtros combinados con OR (mostrar si cumple al menos uno)
+        if filter_conditions:
+            query = query.filter(or_(*filter_conditions))
+
+        return query
+
+    query = apply_filters(base_query)
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    # Render parcial con las tarjetas
+    from flask import render_template_string
+    html = render_template("empleos/cards_empleos.jinja2", vacantes=pagination.items)
+
+    return {
+        "html": html,
+        "current_page": pagination.page,
+        "total_pages": pagination.pages,
+        "total_items": pagination.total,
+        "per_page": per_page,
+    }
 
 
 @rt_empleos.route("/empleos/postular/<int:vacante_id>", methods=["GET", "POST"])
@@ -94,11 +261,6 @@ def postular(vacante_id: int):
 
     if request.method == "POST":
         try:
-            # Validar datos requeridos
-            if not all([request.form.get('educacion'), request.form.get('experiencia'), request.form.get('habilidades')]):
-                flash("Por favor completa todos los campos requeridos", "warning")
-                return redirect(url_for('EmpleosRoute.postular', vacante_id=vacante_id))
-
             # Datos del formulario
             educacion = request.form.get("educacion", "").strip()
             experiencia = request.form.get("experiencia", "").strip()
@@ -106,12 +268,43 @@ def postular(vacante_id: int):
             cv_destacado = request.form.get("cv_destacado") == "on"
             notas = request.form.get("notas", "").strip()
 
-            # Manejo de CV (archivo opcional)
+            # Validar datos requeridos - verificar que no estén vacíos después de strip()
+            errores_validacion = []
+            
+            if not educacion or len(educacion) < 10:
+                errores_validacion.append("La educación es requerida y debe tener al menos 10 caracteres.")
+            
+            if not experiencia or len(experiencia) < 10:
+                errores_validacion.append("La experiencia es requerida y debe tener al menos 10 caracteres.")
+            
+            if not habilidades or len(habilidades) < 10:
+                errores_validacion.append("Las habilidades son requeridas y deben tener al menos 10 caracteres.")
+            
+            # Validar CV - debe haber uno nuevo o uno existente
             cv_file = request.files.get("curriculum")
+            tiene_cv_nuevo = cv_file and cv_file.filename
+            tiene_cv_existente = empleado and empleado.curriculum_url
+            
+            if not tiene_cv_nuevo and not tiene_cv_existente:
+                errores_validacion.append("Debes subir un currículum para postularte.")
+            
+            # Si hay errores de validación, mostrar mensajes y redirigir
+            if errores_validacion:
+                for error in errores_validacion:
+                    flash(error, "warning")
+                return redirect(url_for('EmpleosRoute.postular', vacante_id=vacante_id))
             
             if cv_file and cv_file.filename:
+                # Validar extensión del archivo
+                allowed_extensions = ['pdf', 'doc', 'docx']
+                filename = secure_filename(cv_file.filename)
+                file_extension = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+                
+                if file_extension not in allowed_extensions:
+                    flash("El archivo debe ser PDF, DOC o DOCX.", "warning")
+                    return redirect(url_for('EmpleosRoute.postular', vacante_id=vacante_id))
+                
                 try:
-                    filename = secure_filename(cv_file.filename)
                     upload_dir = os.path.join("app", "static", "uploads", "cv")
                     os.makedirs(upload_dir, exist_ok=True)
                     filepath = os.path.join(upload_dir, filename)
@@ -129,14 +322,23 @@ def postular(vacante_id: int):
                 return redirect(url_for('EmpleosRoute.empleos'))
 
             # Verificar si el usuario ya se postuló a esta vacante
+            # Solo bloquear si la postulación existe y NO está rechazada
             postulacion_existente = PostulacionModel.query.filter_by(
                 empleado_id=user["id"],
                 vacante_id=vacante_id
             ).first()
             
-            if postulacion_existente:
+            if postulacion_existente and postulacion_existente.estado != 'rechazado':
                 flash("Ya te has postulado a esta vacante anteriormente.", "info")
                 return redirect(url_for('EmpleosRoute.empleos'))
+            
+            # Si existe una postulación rechazada, eliminarla para permitir una nueva postulación
+            if postulacion_existente and postulacion_existente.estado == 'rechazado':
+                # Decrementar el contador de postulantes antes de eliminar
+                if vacante.postulantes_actuales and vacante.postulantes_actuales > 0:
+                    vacante.postulantes_actuales -= 1
+                db.session.delete(postulacion_existente)
+                db.session.flush()  # Asegurar que se elimine antes de crear la nueva
 
             # Crear postulación
             try:
@@ -169,7 +371,7 @@ def postular(vacante_id: int):
                 try:
                     from app.models.md_notificacion import NotificacionModel
                     from app.utils.timezone_helper import get_mexico_time
-                    from app import socketio
+                    from app.socketio_events import enviar_notificacion_tiempo_real
                     
                     nombre_empleado = f"{user.get('nombre', '')} {user.get('apellido', '')}".strip() or 'Un candidato'
                     titulo_vacante = getattr(vacante, 'titulo', 'una vacante')
@@ -188,8 +390,8 @@ def postular(vacante_id: int):
                         db.session.add(notificacion)
                         db.session.flush()  # Para obtener el ID de la notificación
                         
-                        # Enviar notificación en tiempo real
-                        socketio.emit('nueva_notificacion', {
+                        # Enviar notificación en tiempo real usando WebSockets
+                        enviar_notificacion_tiempo_real(empresa_id, {
                             'id': notificacion.id,
                             'usuario_id': empresa_id,
                             'mensaje': notificacion.mensaje,
@@ -197,7 +399,7 @@ def postular(vacante_id: int):
                             'leido': False,
                             'fecha_envio': notificacion.fecha_envio.isoformat(),
                             'enlace': notificacion.enlace
-                        }, namespace='/notificaciones')
+                        })
                         
                 except Exception as e:
                     print(f"Error al crear notificación: {str(e)}")

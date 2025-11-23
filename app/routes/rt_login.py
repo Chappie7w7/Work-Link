@@ -32,8 +32,13 @@ def form_empresa():
 def login():
     correo = request.form.get("correo", "").strip()
     password = request.form.get("password", "").strip()
+    tipo_usuario = request.form.get("tipo_usuario", "").strip()
 
-    user, error = login_user(correo, password)
+    if not tipo_usuario:
+        flash("Por favor selecciona el tipo de cuenta", "error")
+        return redirect(url_for("LoginRoute.login_form"))
+
+    user, error = login_user(correo, password, tipo_usuario)
 
     if not user:
         flash(error, "error")
@@ -53,7 +58,7 @@ def login():
     elif user.tipo_usuario == Roles.EMPLEADO:
         return redirect(url_for("InicioRoute.inicio"))
     elif user.tipo_usuario == Roles.SUPERADMIN:  
-        return redirect(url_for("InicioRoute.inicio"))
+        return redirect(url_for("AdminRoute.dashboard"))
     else:
         return redirect(url_for("IndexRoute.index"))
 
@@ -205,7 +210,8 @@ def google_callback():
                     tipo_usuario=Roles.EMPLEADO,
                     google_id=user_data["id"],
                     foto_perfil=user_data.get("picture"),
-                    fecha_registro=datetime.utcnow()
+                    fecha_registro=datetime.utcnow(),
+                    aprobado=False
                 )
                 db.session.add(usuario)
                 db.session.flush()  # Para obtener el ID del usuario recién creado
@@ -224,6 +230,11 @@ def google_callback():
                 usuario.foto_perfil = user_data.get("picture", usuario.foto_perfil)
                 db.session.commit()
                 current_app.logger.info(f"Usuario existente: {usuario.correo}")
+
+            # Bloquear acceso si no está aprobado
+            if not usuario.aprobado:
+                flash("Tu cuenta está pendiente de aprobación por un administrador.", "error")
+                return redirect(url_for("LoginRoute.login_form"))
 
             # Iniciar sesión
             session["user_id"] = usuario.id

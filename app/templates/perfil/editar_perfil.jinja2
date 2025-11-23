@@ -99,6 +99,18 @@
                                 <i class="fas fa-save"></i> Guardar Cambios
                             </button>
                         </div>
+
+                        <!-- Solicitar eliminación de cuenta -->
+                        <div class="form-actions-edit" style="margin-top: 12px;">
+                            <button type="submit"
+                                    class="btn-save-edit"
+                                    style="background:#dc2626;"
+                                    formaction="{{ url_for('PerfilRoute.solicitar_eliminacion') }}"
+                                    formmethod="post"
+                                    onclick="return confirm('¿Solicitar eliminación de tu cuenta? Se notificará al administrador y tu cuenta seguirá activa hasta que la procesen.');">
+                                <i class="fas fa-user-slash"></i> Solicitar eliminación de cuenta
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

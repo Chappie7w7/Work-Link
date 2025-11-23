@@ -1,0 +1,33 @@
+{% if vacantes %}
+  {% for v in vacantes %}
+  <div class="job-card" data-aos="fade-up" data-aos-delay="{{ (loop.index0 % 8) * 100 }}">
+    <div class="job-header">
+      <div class="company-logo">
+        <img src="{{ v.empresa.logo_url if v.empresa and v.empresa.logo_url else url_for('static', filename='img/default-company.png') }}" alt="{{ v.empresa.nombre_empresa if v.empresa else 'Empresa' }}">
+      </div>
+      <div class="job-title-section">
+        <h3>{{ v.titulo }}</h3>
+        <p class="company">{{ v.empresa.nombre_empresa if v.empresa else "Sin empresa" }}</p>
+      </div>
+    </div>
+    <div class="job-info">
+      <span class="location"><i class="fas fa-map-marker-alt"></i> {{ v.ubicacion or 'No especificada' }}</span>
+      <span class="job-type">{{ v.modalidad or v.estado or 'General' }}</span>
+    </div>
+    {% if v.salario_aprox %}
+    <div class="salary">
+      <span class="amount">Salario: ${{ "%.2f"|format(v.salario_aprox) }}</span>
+    </div>
+    {% endif %}
+    <p class="description">{{ v.descripcion[:160] }}...</p>
+    <div class="job-actions">
+      <!--a class="btn-view-more" href="#">Ver Más</a-->
+      <a class="btn-orange" href="{{ url_for('EmpleosRoute.postular', vacante_id=v.id) }}">Aplicar ahora</a>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <p>No hay vacantes registradas aún.</p>
+{% endif %}
+
+

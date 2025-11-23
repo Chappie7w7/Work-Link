@@ -5,13 +5,23 @@ from app.models.md_empresas import EmpresaModel
 from app.db.sql import db
 from app.utils.roles import Roles
 
-def login_user(correo, password):
+def login_user(correo, password, tipo_usuario=None):
     # Buscar usuario por correo
     usuario = UsuarioModel.query.filter_by(correo=correo).first()
 
     if not usuario:
         return None, "Usuario no encontrado"
     
+    # Si se especifica un tipo de usuario, verificar que coincida
+    if tipo_usuario:
+        if usuario.tipo_usuario != tipo_usuario:
+            tipo_nombre = "usuario" if tipo_usuario == "empleado" else tipo_usuario
+            return None, f"Este correo no corresponde a una cuenta de {tipo_nombre}"
+    
+    # Verificar si la cuenta está aprobada por el admin
+    if not usuario.aprobado:
+        return None, "Tu cuenta está pendiente de aprobación por un administrador."
+
     # Verificar si el usuario es una empresa
     es_empresa = usuario.tipo_usuario == Roles.EMPRESA
     

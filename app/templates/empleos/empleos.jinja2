@@ -76,82 +76,45 @@
   <!-- Filters Section -->
   <section class="filters-section" data-aos="fade-up" data-aos-delay="100">
     <div class="filters-container">
-      <input type="text" placeholder="Search keyword">
-      <select>
-        <option>Job Title</option>
+      <input id="filter-q" type="text" placeholder="Buscar por palabra clave" />
+      <select id="filter-location">
+        <option value="">Ubicación</option>
+        {% for loc in locations or [] %}
+        <option value="{{ loc }}">{{ loc }}</option>
+        {% endfor %}
       </select>
-      <select>
-        <option>Location</option>
+      <select id="filter-job-type">
+        <option value="">Tipo de empleo</option>
+        {% for jt in job_types or [] %}
+        <option value="{{ jt }}">{{ jt }}</option>
+        {% endfor %}
       </select>
-      <select>
-        <option>Job Type</option>
+      <select id="filter-salary">
+        <option value="">Salario</option>
+        {% for s in salaries or [] %}
+        <option value="{{ s }}">${{ '%.2f'|format(s) }}</option>
+        {% endfor %}
       </select>
-      <select>
-        <option>Salary Range</option>
-      </select>
-      <button class="btn-dark">Apply Filters</button>
+      <button id="apply-filters" class="btn-dark">Aplicar filtros</button>
+      <button id="clear-filters" class="btn-dark" style="background:#666">Limpiar</button>
     </div>
   </section>
 
   <!-- Job Listings -->
-  <section class="jobs-section" data-aos="fade-up" data-aos-delay="150">
+  <section class="jobs-section" data-aos="fade-up" data-aos-delay="150" data-current-page="{{ current_page|default(1) }}" data-total-pages="{{ total_pages|default(1) }}" data-per-page="{{ per_page|default(9) }}" data-total-items="{{ total_items|default(vacantes|length) }}">
     <h2>Empleos publicados recientemente</h2>
 
-    <div class="jobs-grid">
-      {% if vacantes %}
-      {% for v in vacantes %}
-      <div class="job-card" data-aos="fade-up" data-aos-delay="{{ (loop.index0 % 8) * 100 }}">
-        <div class="job-header">
-          <div class="company-logo">
-            <img src="{{ v.empresa.logo_url if v.empresa and v.empresa.logo_url else url_for('static', filename='img/default-company.png') }}" alt="{{ v.empresa.nombre_empresa if v.empresa else 'Empresa' }}">
-          </div>
-          <div class="job-title-section">
-            <h3>{{ v.titulo }}</h3>
-            <p class="company">{{ v.empresa.nombre_empresa if v.empresa else "Sin empresa" }}</p>
-          </div>
-        </div>
-        <div class="job-info">
-          <span class="location"><i class="fas fa-map-marker-alt"></i> {{ v.ubicacion or 'No especificada' }}</span>
-          <span class="job-type">{{ v.modalidad or v.estado or 'General' }}</span>
-        </div>
-        {% if v.salario_aprox %}
-        <div class="salary">
-          <span class="amount">Salario: ${{ "%.2f"|format(v.salario_aprox) }}</span>
-        </div>
-        {% endif %}
-        <p class="description">{{ v.descripcion[:160] }}...</p>
-        <div class="job-actions">
-          <a class="btn-view-more" href="#">Ver Más</a>
-          <a class="btn-orange" href="{{ url_for('EmpleosRoute.postular', vacante_id=v.id) }}">Aplicar ahora</a>
-        </div>
-      </div>
-      {% endfor %}
-      {% else %}
-      <p>No hay vacantes registradas aún.</p>
-      {% endif %}
+    <div class="jobs-grid" id="jobs-grid">
+      {% include 'empleos/cards_empleos.jinja2' with context %}
     </div>
 
     <!-- Paginado -->
     <div class="pagination-container" data-aos="fade-up" data-aos-delay="200">
-      <div class="pagination">
-        <button class="pagination-btn prev-btn" disabled>
-          <i class="fas fa-chevron-left"></i>
-          Anterior
-        </button>
-        <div class="pagination-numbers">
-          <button class="pagination-number active">1</button>
-          <button class="pagination-number">2</button>
-          <button class="pagination-number">3</button>
-          <span class="pagination-dots">...</span>
-          <button class="pagination-number">8</button>
-        </div>
-        <button class="pagination-btn next-btn">
-          Siguiente
-          <i class="fas fa-chevron-right"></i>
-        </button>
+      <div class="pagination" id="pagination">
+        <!-- Se llena dinámicamente con JS -->
       </div>
-      <div class="pagination-info">
-        <span>Mostrando 1-9 de 72 empleos</span>
+      <div class="pagination-info" id="pagination-info">
+        <!-- Se llena dinámicamente con JS -->
       </div>
     </div>
   </section>
@@ -161,6 +124,125 @@
   <!-- Inicializar AOS -->
   <script>
       AOS.init();
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const section = document.querySelector('.jobs-section');
+      const grid = document.getElementById('jobs-grid');
+      const paginationEl = document.getElementById('pagination');
+      const infoEl = document.getElementById('pagination-info');
+      let totalPages = parseInt(section.getAttribute('data-total-pages')) || 1;
+      const perPage = parseInt(section.getAttribute('data-per-page')) || 9;
+      let totalItems = parseInt(section.getAttribute('data-total-items')) || 0;
+      let currentPage = parseInt(section.getAttribute('data-current-page')) || 1;
+
+      // Filtros DOM
+      const qInput = document.getElementById('filter-q');
+      const locationSel = document.getElementById('filter-location');
+      const jobTypeSel = document.getElementById('filter-job-type');
+      const salarySel = document.getElementById('filter-salary');
+      const applyBtn = document.getElementById('apply-filters');
+      const clearBtn = document.getElementById('clear-filters');
+
+      function getFilterParams() {
+        const params = new URLSearchParams();
+        if (qInput.value.trim()) params.set('q', qInput.value.trim());
+        if (locationSel.value) params.set('location', locationSel.value);
+        if (jobTypeSel.value) params.set('job_type', jobTypeSel.value);
+        if (salarySel.value) params.set('salary', salarySel.value);
+        return params.toString();
+      }
+
+      function updateInfo() {
+        const start = totalItems === 0 ? 0 : (currentPage - 1) * perPage + 1;
+        const end = Math.min(currentPage * perPage, totalItems);
+        infoEl.innerHTML = `<span>Mostrando ${start}-${end} de ${totalItems} empleos</span>`;
+      }
+
+      function buildPagination() {
+        const createBtn = (label, page, disabled = false, active = false, cls = '') => {
+          const btn = document.createElement('button');
+          btn.className = `${cls} ${active ? 'active' : ''}`.trim();
+          btn.disabled = disabled;
+          btn.textContent = label;
+          if (!disabled) {
+            btn.addEventListener('click', () => loadPage(page));
+          }
+          return btn;
+        };
+
+        paginationEl.innerHTML = '';
+        const prev = createBtn('Anterior', Math.max(1, currentPage - 1), currentPage === 1, false, 'pagination-btn prev-btn');
+        const next = createBtn('Siguiente', Math.min(totalPages, currentPage + 1), currentPage === totalPages, false, 'pagination-btn next-btn');
+
+        const numbers = document.createElement('div');
+        numbers.className = 'pagination-numbers';
+
+        const pagesToShow = [];
+        const add = (p) => { if (p >= 1 && p <= totalPages && !pagesToShow.includes(p)) pagesToShow.push(p); };
+        add(1); add(2); add(totalPages); add(totalPages - 1); add(currentPage); add(currentPage - 1); add(currentPage + 1);
+        pagesToShow.sort((a,b)=>a-b);
+
+        let last = 0;
+        pagesToShow.forEach(p => {
+          if (p - last > 1) {
+            const span = document.createElement('span');
+            span.className = 'pagination-dots';
+            span.textContent = '...';
+            if (last !== 0) numbers.appendChild(span);
+          }
+          numbers.appendChild(createBtn(String(p), p, false, p === currentPage, 'pagination-number'));
+          last = p;
+        });
+
+        paginationEl.appendChild(prev);
+        paginationEl.appendChild(numbers);
+        paginationEl.appendChild(next);
+      }
+
+      async function loadPage(page, force = false) {
+        if (page === currentPage && !force) {
+          // Aun así recargar si filtros cambiaron, 'force' lo manejará el caller
+        }
+        const qp = getFilterParams();
+        const url = `{{ url_for('EmpleosRoute.empleos_page') }}?page=${page}&per_page=${perPage}${qp ? '&' + qp : ''}`;
+        try {
+          const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+          if (!res.ok) throw new Error('Error al cargar página');
+          const data = await res.json();
+          grid.innerHTML = data.html;
+          currentPage = data.current_page;
+          totalPages = data.total_pages;
+          totalItems = data.total_items;
+          section.setAttribute('data-current-page', currentPage);
+          buildPagination();
+          updateInfo();
+          // Re-inicializar AOS para nuevos elementos
+          if (window.AOS && AOS.refresh) { AOS.refresh(); }
+          // Scroll al inicio de la sección
+          section.scrollIntoView({ behavior: 'smooth' });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // Handlers filtros
+      applyBtn.addEventListener('click', () => {
+        loadPage(1, true);
+      });
+
+      clearBtn.addEventListener('click', () => {
+        qInput.value = '';
+        locationSel.value = '';
+        jobTypeSel.value = '';
+        salarySel.value = '';
+        loadPage(1, true);
+      });
+
+      buildPagination();
+      updateInfo();
+    });
   </script>
 
 </body>
