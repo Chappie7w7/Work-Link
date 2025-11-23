@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administrador - WorkLink</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_admin.css') }}?v=20.0">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -39,40 +39,48 @@
 
         <!-- Stats Cards -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon blue">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ total_usuarios }}</h3>
-                    <p>Total Usuarios</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon green">
-                    <i class="fas fa-building"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ total_empresas }}</h3>
-                    <p>Empresas</p>
+            <div class="stat-card blue-card">
+                <div class="stat-icon-wrapper">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ total_usuarios }}</h3>
+                        <p>Total Usuarios</p>
+                    </div>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon orange">
-                    <i class="fas fa-user-tie"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ total_empleados }}</h3>
-                    <p>Empleados</p>
+            <div class="stat-card green-card">
+                <div class="stat-icon-wrapper">
+                    <div class="stat-icon green">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ total_empresas }}</h3>
+                        <p>Empresas</p>
+                    </div>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #f59e0b;">
-                    <i class="fas fa-user-slash"></i>
+            <div class="stat-card orange-card">
+                <div class="stat-icon-wrapper">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ total_empleados }}</h3>
+                        <p>Empleados</p>
+                    </div>
                 </div>
-                <div class="stat-info">
-                    <h3>{{ total_solicitudes }}</h3>
-                    <p>Solicitudes de eliminación</p>
+            </div>
+            <div class="stat-card purple-card">
+                <div class="stat-icon-wrapper">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ total_solicitudes }}</h3>
+                        <p>Solicitudes de eliminación</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,14 +88,14 @@
         <!-- Users Table -->
         <div class="users-section">
             <div class="section-header">
-                <h3>Lista de Usuarios</h3>
+                <h3><i class="fas fa-users"></i> Lista de Usuarios</h3>
                 <div>
                     {% if current_filter == 'solicitudes' %}
-                        <a href="{{ url_for('AdminRoute.dashboard') }}" class="btn-action" title="Ver todos" style="background:#334155;color:#fff;">
+                        <a href="{{ url_for('AdminRoute.dashboard') }}" class="btn-action" title="Ver todos">
                             <i class="fas fa-list"></i> Ver todos
                         </a>
                     {% else %}
-                        <a href="{{ url_for('AdminRoute.dashboard', f='solicitudes') }}" class="btn-action" title="Ver solicitudes de eliminación" style="background:#f59e0b;color:#fff;">
+                        <a href="{{ url_for('AdminRoute.dashboard', f='solicitudes') }}" class="btn-action" title="Ver solicitudes de eliminación">
                             <i class="fas fa-user-slash"></i> Ver solicitudes
                         </a>
                     {% endif %}
@@ -95,109 +103,102 @@
             </div>
             
             {% if usuarios %}
-            <div class="table-container">
-                <table class="users-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Correo</th>
-                            <th>Tipo</th>
-                            <th>Fecha Registro</th>
-                            <th>Último Login</th>
-                            <th>Premium</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for usuario in usuarios %}
-                        <tr>
-                            <td>{{ usuario.id }}</td>
-                            <td>
-                                <div class="user-info">
-                                    {% if usuario.foto_perfil %}
-                                    <img src="{{ usuario.foto_perfil }}" alt="{{ usuario.nombre }}" class="user-avatar">
-                                    {% else %}
-                                    <div class="user-avatar-placeholder">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    {% endif %}
-                                    <span>{{ usuario.nombre }}</span>
-                                </div>
-                            </td>
-                            <td>{{ usuario.correo }}</td>
-                            <td>
-                                <span class="badge badge-{{ 'empresa' if usuario.tipo_usuario == 'empresa' else 'empleado' }}">
-                                    {% if usuario.tipo_usuario == 'empresa' %}
-                                        <i class="fas fa-building"></i> Empresa
-                                    {% elif usuario.tipo_usuario == 'empleado' %}
-                                        <i class="fas fa-user-tie"></i> Empleado
-                                    {% else %}
-                                        {{ usuario.tipo_usuario }}
-                                    {% endif %}
-                                </span>
-                            </td>
-                            <td>
+            <div class="users-grid">
+                {% for usuario in usuarios %}
+                <div class="user-card">
+                    <div class="user-card-header">
+                        {% if usuario.foto_perfil %}
+                        <img src="{{ usuario.foto_perfil }}" alt="{{ usuario.nombre }}" class="user-avatar-large">
+                        {% else %}
+                        <div class="user-avatar-placeholder-large">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        {% endif %}
+                        <div class="user-name-email">
+                            <div class="user-name">{{ usuario.nombre }}</div>
+                            <div class="user-email">{{ usuario.correo }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="user-card-body">
+                        <div class="user-info-row">
+                            <span class="user-info-label"><i class="fas fa-id-card"></i></span>
+                            <span class="user-info-value">#{{ usuario.id }}</span>
+                        </div>
+                        
+                        <div class="user-info-row">
+                            <span class="badge badge-{{ 'empresa' if usuario.tipo_usuario == 'empresa' else 'empleado' }}">
+                                {% if usuario.tipo_usuario == 'empresa' %}
+                                    <i class="fas fa-building"></i> Empresa
+                                {% elif usuario.tipo_usuario == 'empleado' %}
+                                    <i class="fas fa-user-tie"></i> Empleado
+                                {% else %}
+                                    {{ usuario.tipo_usuario }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="user-info-row">
+                            <span class="user-info-label"><i class="fas fa-calendar"></i></span>
+                            <span class="user-info-value">
                                 {% if usuario.fecha_registro %}
                                     {{ usuario.fecha_registro.strftime('%d/%m/%Y') }}
                                 {% else %}
                                     N/A
                                 {% endif %}
-                            </td>
-                            <td>
-                                {% if usuario.ultimo_login %}
-                                    {{ usuario.ultimo_login.strftime('%d/%m/%Y %H:%M') }}
-                                {% else %}
-                                    Nunca
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if usuario.premium %}
-                                <span class="badge badge-premium">
-                                    <i class="fas fa-crown"></i> Premium
-                                </span>
-                                {% else %}
-                                <span class="badge badge-free">Gratis</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if usuario.aprobado %}
-                                <span class="badge" style="background: #16a34a; color: white;">Aprobado</span>
-                                {% else %}
-                                <span class="badge" style="background: #f59e0b; color: white;">Deshabilitado</span>
-                                {% endif %}
-                                {% if usuario.solicitud_eliminacion %}
-                                <span class="badge" style="background: #ef4444; color: white; margin-left:6px;">
-                                    <i class="fas fa-user-slash"></i> Solicitud
-                                </span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    {% if not usuario.aprobado %}
-                                    <form method="POST" action="{{ url_for('AdminRoute.aprobar', usuario_id=usuario.id) }}" 
-                                          style="display: inline;" 
-                                          onsubmit="return confirm('¿Habilitar esta cuenta?');">
-                                        <button type="submit" class="btn-action" title="Habilitar" style="background:#16a34a;color:#fff;">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                    </form>
-                                    {% else %}
-                                    <form method="POST" action="{{ url_for('AdminRoute.eliminar', usuario_id=usuario.id) }}" 
-                                          style="display: inline;" 
-                                          onsubmit="return confirm('¿Deshabilitar este usuario? No se eliminará, solo quedará deshabilitado.');">
-                                        <button type="submit" class="btn-action btn-danger" title="Deshabilitar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            </span>
+                        </div>
+                        
+                        <div class="user-badges-row">
+                            {% if usuario.premium %}
+                            <span class="badge badge-premium">
+                                <i class="fas fa-crown"></i> Premium
+                            </span>
+                            {% else %}
+                            <span class="badge badge-free">Gratis</span>
+                            {% endif %}
+                            
+                            {% if usuario.aprobado %}
+                            <span class="badge badge-aprobado">
+                                <i class="fas fa-check-circle"></i> Aprobado
+                            </span>
+                            {% else %}
+                            <span class="badge badge-deshabilitado">
+                                <i class="fas fa-times-circle"></i> Deshabilitado
+                            </span>
+                            {% endif %}
+                            
+                            {% if usuario.solicitud_eliminacion %}
+                            <span class="badge badge-solicitud">
+                                <i class="fas fa-user-slash"></i> Solicitud
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="user-card-footer">
+                        <div class="action-buttons">
+                            {% if not usuario.aprobado %}
+                            <form method="POST" action="{{ url_for('AdminRoute.aprobar', usuario_id=usuario.id) }}" 
+                                  class="inline-form" 
+                                  onsubmit="return confirm('¿Habilitar esta cuenta?');">
+                                <button type="submit" class="btn-action btn-blue" title="Habilitar">
+                                    <i class="fas fa-check"></i> Habilitar
+                                </button>
+                            </form>
+                            {% else %}
+                            <form method="POST" action="{{ url_for('AdminRoute.eliminar', usuario_id=usuario.id) }}" 
+                                  class="inline-form" 
+                                  onsubmit="return confirm('¿Deshabilitar este usuario? No se eliminará, solo quedará deshabilitado.');">
+                                <button type="submit" class="btn-action btn-danger" title="Deshabilitar">
+                                    <i class="fas fa-trash"></i> Deshabilitar
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
             {% else %}
             <div class="empty-state">

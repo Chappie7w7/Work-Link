@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Token CSRF eliminado temporalmente -->
     <title>Panel Empresa</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}?v=5.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -371,17 +371,36 @@
                         Postulantes Recientes
                     </h3>
                     {% if candidatos and ofertas %}
-                    <select id="filtro-vacante" class="form-select" style="max-width: 280px; margin-left: auto; margin-right: 12px;">
-                        <option value="">Todas las vacantes</option>
-                        {% for oferta in ofertas %}
-                        <option value="{{ oferta.id }}">{{ oferta.titulo }}</option>
-                        {% endfor %}
-                    </select>
-                    {% endif %}
-                    {% if candidatos %}
-                    <button type="button" class="btn-clear-all" onclick="eliminarTodasPostulaciones()" title="Eliminar todas las postulaciones">
-                        <i class="fas fa-trash-alt"></i> Limpiar todas
-                    </button>
+                    <div class="section-header-filter">
+                        <div class="filter-container-premium">
+                            <div class="filter-premium-header">
+                                <div class="filter-icon-premium">
+                                    <i class="fas fa-filter"></i>
+                                </div>
+                                <div class="filter-title-premium">
+                                    <span class="filter-label-text">Filtrar por vacante</span>
+                                    <span class="filter-subtitle">Selecciona una oferta</span>
+                                </div>
+                            </div>
+                            <div class="filter-select-premium-wrapper">
+                                <select id="filtro-vacante" class="filter-select-premium">
+                                    <option value="">✨ Todas las vacantes</option>
+                                    {% for oferta in ofertas %}
+                                    <option value="{{ oferta.id }}">{{ oferta.titulo }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="filter-arrow-premium">
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        {% if candidatos %}
+                        <button type="button" class="filter-clear-premium" onclick="eliminarTodasPostulaciones()" title="Eliminar todas las postulaciones">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Limpiar todas</span>
+                        </button>
+                        {% endif %}
+                    </div>
                     {% endif %}
                 </div>
                 <div class="section-content">
