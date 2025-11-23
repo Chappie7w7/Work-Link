@@ -419,12 +419,16 @@
         }
     </script>
 
-    <script>
+    <script type="text/javascript">
+        console.log('trabajando en el serviceworker');
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
                 .then(() => console.log("✅ Service Worker registrado"))
                 .catch(err => console.log("❌ Error registrando SW:", err));
         }
+
+        localStorage['jobs'] = JSON.stringify({{ jobs_json }});
+        console.log('Datos guardados'); 
     </script>
 
 </body>

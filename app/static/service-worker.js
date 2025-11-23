@@ -8,7 +8,9 @@ self.addEventListener("install", (event) => {
         "/static/css/style_login.css",
         "/static/icons/icon-192x192.png",
         "/static/icons/icon-512x512.png",
-        "/static/manifest.json"
+        "/static/manifest.json",
+        "/offline",
+        "/static/js/jquery-3.6.0.min.js"
       ]);
     })
   );

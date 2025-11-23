@@ -70,7 +70,12 @@ def index():
         else:
             jobs = []  # No hay internet ni cache
 
-    return render_template('index.jinja2', current_user=current_user, jobs=jobs)
+    def get_obj_dict(obj):
+            return obj.__dict__
+        
+    
+    jobs_json = json.dumps(jobs,default=get_obj_dict)
+    return render_template('index.jinja2', current_user=current_user, jobs=jobs, jobs_json=jobs_json)
 
 
 
