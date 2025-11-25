@@ -31,7 +31,7 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
-  const NAV_TIMEOUT_MS = 1200;
+  const NAV_TIMEOUT_MS = 8000;
 
   async function fetchWithTimeout(request, ms) {
     if (typeof AbortController === 'undefined') {
@@ -55,8 +55,15 @@ self.addEventListener("fetch", (event) => {
           // No cacheamos HTML de navegación para evitar mostrar páginas viejas
           return networkResp;
         })
-        .catch(async () => {
-          // Siempre ir a la vista offline en caso de fallo/timeout
+        .catch(async (err) => {
+          // Si parecemos estar online, intenta un último fetch sin timeout antes de caer a offline
+          try {
+            if (typeof navigator !== 'undefined' && navigator.onLine) {
+              const retry = await fetch(req);
+              if (retry) return retry;
+            }
+          } catch (e) {}
+          // Fallback a la página offline si realmente no hay red o sigue fallando
           return caches.match('/offline');
         })
     );
