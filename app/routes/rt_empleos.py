@@ -447,6 +447,7 @@ def postular(vacante_id: int):
     # Asegurarse de que los campos tengan valores por defecto si están vacíos
     context = {
         'usuario': user,
+        'current_user': user,
         'vacante': vacante,
         'empleado': empleado,
         'educacion': empleado.educacion or '',

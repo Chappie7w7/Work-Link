@@ -49,6 +49,7 @@ def mensajes():
     return render_template(
         "mensajes/mensajes.jinja2",
         usuario=usuario,
+        current_user=usuario,
         conversaciones=conversaciones,
         empresas_disponibles=empresas_disponibles
     )
