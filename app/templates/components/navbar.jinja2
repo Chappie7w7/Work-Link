@@ -9,44 +9,6 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <!-- Tus estilos -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_navbar.css') }}">
-<style>
-    /* Estilos para badges de notificación */
-    .nav-badge {
-        position: absolute;
-        top: -8px;
-        right: -12px;
-        background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
-        color: white;
-        border-radius: 50%;
-        width: 22px;
-        height: 22px;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        font-weight: bold;
-        box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
-        border: 2px solid white;
-        z-index: 10;
-    }
-    
-    .pulse-animation {
-        animation: pulse 0.6s ease-in-out;
-    }
-    
-    @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.2);
-        }
-    }
-    
-    .nav-links a {
-        position: relative;
-    }
-</style>
 
 <!-- NAVBAR -->
 <header class="navbar">
@@ -69,9 +31,22 @@
         </a>
         <a href="{{ url_for('PlanesRoute.planes') }}">Planes</a>
 
-        <a href="{{ url_for('PerfilRoute.editar') }}">Perfil</a>
         <a href="{{ url_for('LoginRoute.logout') }}" class="btn-logout">Salir</a>
 
+        <a href="{{ url_for('PerfilRoute.editar') }}" class="nav-profile">
+            <div class="nav-profile-photo">
+                {% if current_user and current_user.foto_perfil %}
+                    <img src="{{ current_user.foto_perfil }}" alt="Foto de perfil" class="profile-photo">
+                {% else %}
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="nav-profile-info">
+                <span class="profile-name">{{ current_user.nombre if current_user else 'Invitado' }}</span>
+            </div>
+        </a>
     </nav>
 </header>
 

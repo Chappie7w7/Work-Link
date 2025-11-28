@@ -74,24 +74,6 @@
         <div class="main-content">
             <!-- Columna izquierda: perfil del usuario -->
             <div class="column left-column">
-                <div class="card profile-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="profile-header">
-                        {% if current_user and current_user.foto_perfil %}
-                            <img src="{{ current_user.foto_perfil }}" alt="Foto de perfil" class="profile-photo">
-                        {% else %}
-                            <div class="profile-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="profile-info">
-                        <h3 class="profile-name">{{ current_user.nombre if current_user else 'Invitado' }}</h3>
-                        <p class="profile-email">
-                            <i class="fas fa-envelope"></i>
-                            {{ current_user.correo if current_user else 'No disponible' }}
-                        </p>
-                    </div>
-                </div>
                 <div class="card companies-card" data-aos="fade-up" data-aos-delay="150">
                     <div class="card-header">
                         <h3 class="card-title">

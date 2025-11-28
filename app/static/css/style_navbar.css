@@ -23,7 +23,7 @@
     border-radius: 50px;
     background: rgba(15, 14, 14, 0.95);
     backdrop-filter: blur(15px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Ocultar navbar cuando hace scroll hacia abajo */
@@ -46,6 +46,47 @@
     display: flex;
     align-items: center;
     gap: 30px;
+}
+
+.nav-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-profile-photo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-profile-photo .profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nav-profile-photo .profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e5e7eb;
+    font-size: 0.8rem;
+}
+
+.nav-profile-info .profile-name {
+    font-size: 0.85rem;
+    color: #e5e7eb;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
 .actions {
@@ -101,7 +142,7 @@
     background: linear-gradient(135deg, #3b82f6, #1e40af);
     color: white !important;
     padding: 12px 25px;
-    border-radius: 25px;
+    border-radius: 15px;
     font-weight: 600;
     box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
     transition: all 0.3s ease;
@@ -117,7 +158,7 @@
     background: linear-gradient(135deg, #f63b3b, #af1e1e);
     color: white !important;
     padding: 12px 25px;
-    border-radius: 25px;
+    border-radius: 15px;
     font-weight: 600;
     box-shadow: 0 4px 15px rgba(246, 59, 59, 0.3);
     transition: all 0.3s ease;
@@ -178,6 +219,7 @@
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -210,4 +252,44 @@
 
 .dropdown:hover .btn-register {
     background: linear-gradient(135deg, #059669, #047857);
+}
+
+/* Estilos para badges de notificación */
+.nav-badge {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+    color: white;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
+    border: 2px solid white;
+    z-index: 10;
+}
+
+.pulse-animation {
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.nav-links a {
+    position: relative;
 }
