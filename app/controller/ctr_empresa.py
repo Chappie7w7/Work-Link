@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 import os
+import re
 
 
 def get_empresa_by_id(empresa_id: int):
@@ -38,6 +39,14 @@ def update_empresa(empresa_id: int, nombre_empresa: str, sector: str = None,
 
         if not nombre_empresa:
             return None, "El nombre de la empresa es obligatorio"
+
+        # Validación: solo letras (incluye acentos) y espacios
+        if not re.fullmatch(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]{2,100}", nombre_empresa):
+            return None, "El nombre de la empresa solo debe contener letras y espacios"
+
+        # Validación opcional de sector
+        if sector and not re.fullmatch(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]{2,50}", sector):
+            return None, "El sector solo debe contener letras y espacios"
 
         # Actualizar campos de empresa
         empresa.nombre_empresa = nombre_empresa

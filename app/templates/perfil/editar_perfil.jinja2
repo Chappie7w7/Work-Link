@@ -69,7 +69,10 @@
                                     <i class="fas fa-user"></i> Nombre
                                 </label>
                                 <input type="text" name="nombre" id="nombre" class="form-input-edit"
-                                    value="{{ current_user.nombre if current_user else '' }}" required>
+                                    value="{{ current_user.nombre if current_user else '' }}" required
+                                    pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]{2,50}"
+                                    inputmode="text" maxlength="50"
+                                    title="Solo letras y espacios, 2 a 50 caracteres">
                             </div>
                         </div>
                     </div>
