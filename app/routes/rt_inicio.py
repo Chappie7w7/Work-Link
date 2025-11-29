@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for
+from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from app.utils.decorators import login_role_required
 from app.utils.roles import Roles
 from app.db.sql import db
@@ -6,6 +6,7 @@ from app.models.md_usuarios import UsuarioModel
 from app.models.md_empresas import EmpresaModel
 from app.models.md_vacantes import VacanteModel
 from app.models.md_postulacion import PostulacionModel
+from app.models.md_testimonios import TestimonioModel
 from sqlalchemy import func, desc
 from datetime import datetime, timedelta
 from app.utils.timezone_helper import get_mexico_time
@@ -111,6 +112,40 @@ def inicio():
         actividades=actividades,
         empresas_destacadas=empresas
     )
+
+
+@rt_inicio.route("/testimonio", methods=["POST"])
+@login_role_required(Roles.EMPLEADO)
+def guardar_testimonio():
+    usuario = session.get("usuario")
+    if not usuario:
+        flash("Debes iniciar sesión para compartir tu historia.", "error")
+        return redirect(url_for("LoginRoute.login_form"))
+
+    mensaje = request.form.get("mensaje", "").strip()
+    cargo = request.form.get("cargo", "").strip()
+    empresa = request.form.get("empresa", "").strip()
+
+    if not mensaje:
+        flash("Describe brevemente tu experiencia antes de enviar el testimonio.", "error")
+        return redirect(url_for("InicioRoute.inicio"))
+
+    user_db = UsuarioModel.query.get(usuario["id"])
+    nombre = user_db.nombre if user_db else usuario.get("nombre")
+
+    testimonio = TestimonioModel(
+        nombre=nombre,
+        mensaje=mensaje,
+        cargo=cargo or None,
+        empresa=empresa or None,
+        usuario_id=user_db.id if user_db else None,
+        aprobado=True
+    )
+    db.session.add(testimonio)
+    db.session.commit()
+
+    flash("Gracias por compartir tu testimonio. Ya aparece en la sección de testimonios.", "success")
+    return redirect(url_for("InicioRoute.inicio"))
 
 def calcular_tiempo_transcurrido(fecha):
     """Calcula el tiempo transcurrido desde una fecha"""

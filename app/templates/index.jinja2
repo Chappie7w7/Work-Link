@@ -1,5 +1,6 @@
 {% import "components/navbar_index.jinja2" as navbar_inicio %}
 {% import "components/footer.jinja2" as footer %}
+{% import "components/flash_messages.jinja2" as flash %}
 
 <!DOCTYPE html>
 <html lang="es">
@@ -25,6 +26,7 @@
 
     <!-- NAVBAR -->
     {{ navbar_inicio.navbar() }}
+    {{ flash.render_flash_messages() }}
 
     <!-- HERO -->
     <section id="informacion" class="hero">
@@ -233,100 +235,96 @@
                 <p>Conoce las experiencias de quienes han encontrado su empleo ideal en Ocosingo</p>
             </div>
 
-            <div class="testimonios-showcase">
-                <div class="testimonio-featured" data-aos="fade-left" data-aos-delay="200">
-                    <div class="testimonio-content">
-                        <div class="quote-icon">
-                            <i class="fas fa-quote-left"></i>
-                        </div>
-                        <blockquote>
-                            "WorkLink me cambió la vida. Encontré mi trabajo ideal como desarrollador en Ocosingo en
-                            solo 3 días.
-                            El proceso fue súper fácil y la empresa es excelente. ¡Recomiendo totalmente la plataforma!"
-                        </blockquote>
-                        <div class="testimonio-author">
-                            <div class="author-avatar">
-                                <img src="{{ url_for('static', filename='img/profile_picture.png') }}"
-                                    alt="María González">
+            {% if testimonios %}
+                {% set destacado = testimonios[0] %}
+                <div class="testimonios-showcase">
+                    <div class="testimonio-featured" data-aos="fade-left" data-aos-delay="200">
+                        <div class="testimonio-content">
+                            <div class="quote-icon">
+                                <i class="fas fa-quote-left"></i>
                             </div>
-                            <div class="author-info">
-                                <h4>María González</h4>
-                                <p>Desarrolladora Web - Tech Solutions Ocosingo</p>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
+                            <blockquote>
+                                {{ destacado.mensaje }}
+                            </blockquote>
+                            <div class="testimonio-author">
+                                <div class="author-avatar">
+                                    {% if destacado.usuario and destacado.usuario.foto_perfil %}
+                                        <img src="{{ destacado.usuario.foto_perfil }}" alt="{{ destacado.nombre }}">
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='img/profile_picture.png') }}" alt="{{ destacado.nombre }}">
+                                    {% endif %}
+                                </div>
+                                <div class="author-info">
+                                    <h4>{{ destacado.nombre }}</h4>
+                                    <p>
+                                        {% if destacado.usuario and destacado.usuario.tipo_usuario %}
+                                            {{ destacado.usuario.tipo_usuario }}
+                                        {% else %}
+                                            {{ destacado.cargo if destacado.cargo else 'Miembro de WorkLink' }}
+                                        {% endif %}
+                                        {% if destacado.empresa %}- {{ destacado.empresa }}{% endif %}
+                                    </p>
+                                    <div class="rating">
+                                        {% for _ in range(5) %}
+                                            <i class="fas fa-star"></i>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="testimonios-grid" data-aos="fade-up" data-aos-delay="400">
-                    <div class="testimonio-item">
-                        <div class="testimonio-text">
-                            <p>"Excelente plataforma. Como empresario, pude encontrar el candidato perfecto para mi
-                                empresa en menos de una semana."</p>
+                    {% if testimonios|length > 1 %}
+                        <div class="testimonios-grid" data-aos="fade-up" data-aos-delay="400">
+                            {% for testimonio in testimonios[1:4] %}
+                                <div class="testimonio-item">
+                                    <div class="testimonio-text">
+                                        <p>{{ testimonio.mensaje }}</p>
+                                    </div>
+                                    <div class="testimonio-meta">
+                                        <div class="author-avatar-small">
+                                            {% if testimonio.usuario and testimonio.usuario.foto_perfil %}
+                                                <img src="{{ testimonio.usuario.foto_perfil }}" alt="{{ testimonio.nombre }}">
+                                            {% else %}
+                                                <img src="{{ url_for('static', filename='img/profile_picture.png') }}" alt="{{ testimonio.nombre }}">
+                                            {% endif %}
+                                        </div>
+                                        <div class="author-details">
+                                            <h5>{{ testimonio.nombre }}</h5>
+                                            <span>
+                                                {% if testimonio.usuario and testimonio.usuario.tipo_usuario %}
+                                                    {{ testimonio.usuario.tipo_usuario }}
+                                                {% else %}
+                                                    {{ testimonio.cargo if testimonio.cargo else 'Usuario registrado' }}
+                                                {% endif %}
+                                                {% if testimonio.empresa %}- {{ testimonio.empresa }}{% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
-                        <div class="testimonio-meta">
-                            <div class="author-avatar-small">
-                                <img src="{{ url_for('static', filename='img/profile_picture.png') }}" alt="Juan Pérez">
-                            </div>
-                            <div class="author-details">
-                                <h5>Juan Pérez</h5>
-                                <span>CEO - Construcciones del Sur</span>
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
 
-                    <div class="testimonio-item">
-                        <div class="testimonio-text">
-                            <p>"La mejor plataforma de empleos de Ocosingo. Interface súper fácil de usar y resultados
-                                garantizados."</p>
-                        </div>
-                        <div class="testimonio-meta">
-                            <div class="author-avatar-small">
-                                <img src="{{ url_for('static', filename='img/profile_picture.png') }}"
-                                    alt="Ana Martínez">
-                            </div>
-                            <div class="author-details">
-                                <h5>Ana Martínez</h5>
-                                <span>Diseñadora - Creative Agency</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="testimonio-item">
-                        <div class="testimonio-text">
-                            <p>"WorkLink me ayudó a conseguir mi primer empleo. El soporte al cliente es excepcional."
-                            </p>
-                        </div>
-                        <div class="testimonio-meta">
-                            <div class="author-avatar-small">
-                                <img src="{{ url_for('static', filename='img/profile_picture.png') }}"
-                                    alt="Carlos Ruiz">
-                            </div>
-                            <div class="author-details">
-                                <h5>Carlos Ruiz</h5>
-                                <span>Asistente Administrativo</span>
-                            </div>
+                    <div class="testimonios-cta" data-aos="fade-up" data-aos-delay="600">
+                        <div class="cta-content">
+                            <h3>¿Listo para escribir tu historia de éxito?</h3>
+                            <p>Comparte tu experiencia desde tu panel de usuario</p>
+                            <a href="{{ url_for('InicioRoute.inicio') }}" class="btn-main">
+                                <i class="fas fa-user-plus"></i>
+                                Compartir testimonio
+                            </a>
                         </div>
                     </div>
                 </div>
-
-                <div class="testimonios-cta" data-aos="fade-up" data-aos-delay="600">
+            {% else %}
+                <div class="testimonios-showcase">
                     <div class="cta-content">
-                        <h3>¿Listo para escribir tu historia de éxito?</h3>
-                        <p>Únete a miles de profesionales que ya encontraron su empleo ideal</p>
-                        <a href="{{ url_for('LoginRoute.form_usuario') }}" class="btn-main">
-                            <i class="fas fa-user-plus"></i>
-                            Crear mi perfil
-                        </a>
+                        <h3>¿Quieres inspirar a otros con tu historia?</h3>
+                        <p>Aún no hay testimonios publicados, sé el primero en redactar el tuyo desde el pie de página.</p>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </section>
 

@@ -10,3 +10,5 @@ from .md_postulacion import PostulacionModel
 from .md_reporte import ReporteModel
 from .md_usuarios import UsuarioModel
 from .md_vacantes import VacanteModel
+from .md_testimonios import TestimonioModel
+from .md_contacto import ContactoModel

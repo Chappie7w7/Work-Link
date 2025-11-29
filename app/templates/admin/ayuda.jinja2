@@ -1,0 +1,146 @@
+{% import "components/flash_messages.jinja2" as flash %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes de Ayuda - Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_admin.css') }}?v=20.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .mensajes-grid {
+            display: grid;
+            gap: 16px;
+            padding: 8px 0;
+        }
+        .mensaje-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.12);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .mensaje-card.mensaje-no-leido {
+            border-color: #f97316;
+            box-shadow: 0 25px 45px rgba(249, 115, 22, 0.15);
+        }
+        .mensaje-card header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .mensaje-card header strong {
+            font-size: 1rem;
+        }
+        .mensaje-card footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .mensaje-card form {
+            margin: 0;
+        }
+        .mensaje-card button {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .mensaje-card button:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+        .mensaje-card button:not(:disabled):hover {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+    {{ flash.render_flash_messages() }}
+    <nav class="admin-navbar">
+        <div class="nav-brand">
+            <h1><i class="fas fa-shield-alt"></i> WorkLink Admin</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('AdminRoute.dashboard') }}" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Usuarios</span>
+            </a>
+            <a href="{{ url_for('AdminRoute.ayuda') }}" class="nav-link active">
+                <i class="fas fa-envelope"></i>
+                <span>Ayuda</span>
+            </a>
+            <a href="{{ url_for('LoginRoute.logout') }}" class="btn-salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h2 class="page-title">Mensajes de Ayuda</h2>
+            <p class="page-subtitle">Solicitudes recibidas desde el pie de página.</p>
+            <form method="post" action="{{ url_for('AdminRoute.limpiar_ayuda') }}" onsubmit="return confirm('¿Eliminar todos los mensajes de ayuda? Esta acción no se puede deshacer.');">
+                <button type="submit" class="btn-action" style="background:#ef4444; border-radius:999px; padding:8px 16px; color:#fff; font-weight:600;">
+                    <i class="fas fa-broom"></i>
+                    Limpiar mensajes
+                </button>
+            </form>
+        </div>
+
+        <section class="mensajes-ayuda">
+            {% if mensajes %}
+            <div class="mensajes-grid">
+                {% for mensaje in mensajes %}
+                <article class="mensaje-card {{ 'mensaje-no-leido' if not mensaje.leido else '' }}">
+                    <header>
+                        <strong>{{ mensaje.nombre }}</strong>
+                        <span>{{ mensaje.correo }}</span>
+                        <small>{{ mensaje.fecha_envio.strftime('%d/%m/%Y %H:%M') if mensaje.fecha_envio else '' }}</small>
+                    </header>
+                    <p>{{ mensaje.mensaje }}</p>
+                    <footer>
+                        <form method="post" action="{{ url_for('AdminRoute.marcar_ayuda_leido', contacto_id=mensaje.id) }}">
+                            <button type="submit" class="btn-action btn-small"{% if mensaje.leido %} disabled{% endif %}>
+                                <i class="fas fa-check"></i>
+                                Marcar como leído
+                            </button>
+                        </form>
+                    </footer>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-envelope-open-text"></i>
+                <h3>No hay mensajes de ayuda aún</h3>
+                <p>Los mensajes enviados recientemente aparecerán aquí.</p>
+            </div>
+            {% endif %}
+        </section>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        (function(){
+            try {
+                const socket = io('/notificaciones', { transports: ['websocket', 'polling'] });
+                socket.on('connect', ()=>{});
+                socket.on('nuevo_contacto', (data)=>{
+                    alert('Nuevo mensaje de ayuda de ' + (data?.nombre || 'alguien'));
+                });
+            } catch (e) {}
+        })();
+    </script>
+</body>
+
+</html>

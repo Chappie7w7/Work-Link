@@ -27,15 +27,24 @@
             </div>
         </div>
         <div class="footer-section" data-aos="fade-up" data-aos-delay="200">
-            <h4>Enlaces Rápidos</h4>
-            <ul class="footer-links">
-                <li><a href="#servicios"><i class="fas fa-chevron-right"></i> Servicios</a></li>
-                <li><a href="#vacantes"><i class="fas fa-chevron-right"></i> Vacantes</a></li>
-                <li><a href="#empresas"><i class="fas fa-chevron-right"></i> Empresas</a></li>
-                <li><a href="#testimonios"><i class="fas fa-chevron-right"></i> Testimonios</a></li>
-                <li><a href="{{ url_for('LoginRoute.login_form') }}"><i class="fas fa-chevron-right"></i> Iniciar
-                        Sesión</a></li>
-            </ul>
+            <h4>Testimonios</h4>
+            <p>¿Quieres que tu historia aparezca en la sección principal? Cuéntanos qué tal te fue con WorkLink.</p>
+            {% if session.get('usuario') %}
+            <form action="{{ url_for('InicioRoute.guardar_testimonio') }}" method="post" class="testimonial-form-footer">
+                <textarea name="mensaje" rows="3" maxlength="500" placeholder="Escribe tu testimonio" required></textarea>
+                <input type="text" name="cargo" maxlength="100" placeholder="Cargo / rol (opcional)">
+                <input type="text" name="empresa" maxlength="120" placeholder="Empresa (opcional)">
+                <button type="submit" class="btn-main">
+                    <i class="fas fa-share"></i>
+                    Enviar testimonio
+                </button>
+            </form>
+            {% else %}
+            <p class="testimonial-cta">Inicia sesión para compartir tu historia y que se muestre aquí.</p>
+            <a href="{{ url_for('LoginRoute.login_form') }}" class="btn-outline">
+                <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+            </a>
+            {% endif %}
         </div>
         <div class="footer-section" data-aos="fade-up" data-aos-delay="300">
             <h4>Contacto</h4>
@@ -61,15 +70,15 @@
         <div class="footer-section footer-contact" data-aos="fade-up" data-aos-delay="400">
             <h4>¿Necesitas ayuda?</h4>
             <p>Escríbenos y te responderemos en menos de 24 horas.</p>
-            <form class="contact-form-footer">
+            <form class="contact-form-footer" action="{{ url_for('IndexRoute.contacto') }}" method="post">
                 <div class="form-group">
-                    <input type="text" placeholder="Tu nombre" required>
+                    <input type="text" name="nombre" placeholder="Tu nombre" required>
                 </div>
                 <div class="form-group">
-                    <input type="email" placeholder="Tu correo" required>
+                    <input type="email" name="correo" placeholder="Tu correo" required>
                 </div>
                 <div class="form-group">
-                    <textarea placeholder="Tu mensaje" rows="3" required></textarea>
+                    <textarea name="mensaje" placeholder="Tu mensaje" rows="3" required></textarea>
                 </div>
                 <button type="submit" class="btn-main">
                     <i class="fas fa-paper-plane"></i>
@@ -80,7 +89,7 @@
     </div>
     <div class="footer-bottom">
         <div class="footer-bottom-content">
-            <p class="copy">© 2025 WorkLink Ocosingo. Todos los derechos reservados.</p>
+            <p class="copy"> 2025 WorkLink Ocosingo. Todos los derechos reservados.</p>
             <div class="footer-bottom-links">
                 <a href="#">Política de Privacidad</a>
                 <a href="#">Términos y Condiciones</a>

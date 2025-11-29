@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session, jsonify
 from app.models.md_usuarios import UsuarioModel
 from app.models.md_empresas import EmpresaModel
 from app.models.md_empleados import EmpleadoModel
+from app.models.md_contacto import ContactoModel
 from app.db.sql import db
 from app.utils.decorators import login_role_required
 from app.utils.roles import Roles
@@ -75,13 +76,80 @@ def dashboard():
                              total_empresas=total_empresas,
                              total_empleados=total_empleados,
                              total_solicitudes=total_solicitudes,
-                             current_filter=current_filter)
+                             current_filter=current_filter,
+                             active_page='dashboard')
     except Exception as e:
         import traceback
         print(f"Error en dashboard admin: {str(e)}")
         print(traceback.format_exc())
         flash(f"Error al cargar el dashboard: {str(e)}", "error")
         return redirect(url_for("IndexRoute.index"))
+
+
+@rt_admin.route('/ayuda')
+@login_role_required(Roles.SUPERADMIN)
+def ayuda():
+    try:
+        user = get_user_from_session(session)
+        if not user:
+            flash("Sesión no válida", "error")
+            return redirect(url_for("LoginRoute.login_form"))
+        mensajes = (
+            ContactoModel.query
+            .order_by(ContactoModel.fecha_envio.desc())
+            .all()
+        )
+        return render_template('admin/ayuda.jinja2', 
+                               current_user=user,
+                               mensajes=mensajes,
+                               active_page='ayuda')
+    except Exception as e:
+        print(f"Error cargando mensajes de ayuda: {str(e)}")
+        flash("No se pudieron cargar los mensajes de ayuda.", "error")
+        return redirect(url_for('AdminRoute.dashboard'))
+
+
+@rt_admin.route('/ayuda/limpiar', methods=['POST'])
+@login_role_required(Roles.SUPERADMIN)
+def limpiar_ayuda():
+    try:
+        ContactoModel.query.delete()
+        db.session.commit()
+        flash("Mensajes de ayuda eliminados.", "success")
+    except Exception as e:
+        print(f"Error eliminando mensajes de ayuda: {e}")
+        db.session.rollback()
+        flash("No se pudieron eliminar los mensajes.", "error")
+    return redirect(url_for('AdminRoute.ayuda'))
+
+
+@rt_admin.route('/api/ayuda/contador')
+@login_role_required(Roles.SUPERADMIN)
+def contador_ayuda():
+    try:
+        count = ContactoModel.query.filter_by(leido=False).count()
+        return jsonify({"count": count})
+    except Exception as e:
+        print(f"Error obteniendo contador de ayuda: {e}")
+        return jsonify({"count": 0})
+
+
+@rt_admin.route('/ayuda/marcar-leido/<int:contacto_id>', methods=['POST'])
+@login_role_required(Roles.SUPERADMIN)
+def marcar_ayuda_leido(contacto_id):
+    try:
+        contacto = ContactoModel.query.get(contacto_id)
+        if not contacto:
+            flash("Mensaje no encontrado.", "error")
+            return redirect(url_for('AdminRoute.ayuda'))
+        contacto.leido = True
+        db.session.commit()
+        flash("Mensaje marcado como leído.", "success")
+        return redirect(url_for('AdminRoute.ayuda'))
+    except Exception as e:
+        print(f"Error marcando mensaje como leído: {e}")
+        flash("No se pudo actualizar el mensaje.", "error")
+        return redirect(url_for('AdminRoute.ayuda'))
 
 
 @rt_admin.route('/usuarios/dar-baja/<int:usuario_id>', methods=['POST'])

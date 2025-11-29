@@ -8,6 +8,41 @@ import re
 
 rt_registro_empresa = Blueprint('RegistroEmpresaRoute', __name__)
 
+# ------------------------------------------------------
+# VALIDACIÓN AVANZADA RFC (FORMATO SAT + FECHA REAL)
+# ------------------------------------------------------
+def validar_rfc(rfc: str) -> bool:
+    """
+    Valida RFC de Persona Física y Moral incluyendo:
+    - estructura oficial SAT
+    - validación de fecha real (YY-MM-DD)
+    """
+    rfc = rfc.upper().strip()
+
+    # Expresión oficial SAT (Personas Físicas y Morales)
+    patron = r"^([A-ZÑ&]{3,4})(\d{2})(\d{2})(\d{2})([A-Z\d]{3})$"
+    match = re.match(patron, rfc)
+
+    if not match:
+        return False
+
+    letras, yy, mm, dd, homoclave = match.groups()
+
+    # Validar fecha interna
+    try:
+        year = int(yy)
+        # RFC usa regla: >=30 es 1900, <30 es 2000
+        year += 1900 if year >= 30 else 2000
+
+        month = int(mm)
+        day = int(dd)
+
+        datetime(year, month, day)  # Error = fecha inválida
+    except ValueError:
+        return False
+
+    return True
+
 @rt_registro_empresa.route("/registro/empresa", methods=["POST"])
 def registro_empresa():
     nombre_empresa = request.form.get('nombre_empresa', '').strip()
@@ -18,6 +53,20 @@ def registro_empresa():
     telefono = request.form.get('telefono', '').strip()
     correo = request.form.get('email', '').strip()
     password = request.form.get('password', '').strip()
+
+     # ------------------------------------------------------
+    # Validación avanzada de RFC
+    # ------------------------------------------------------
+    if not validar_rfc(rfc):
+        flash("El RFC no es válido. Verifica que cumpla la estructura del SAT y contenga una fecha real.", "danger")
+        return redirect(url_for("LoginRoute.form_empresa"))
+
+        # ------------------------------------------------------
+    # Validar si el correo ya existe
+    # ------------------------------------------------------
+    if UsuarioModel.query.filter_by(correo=correo).first():
+        flash("Este correo ya está registrado. Usa otro o recupera tu cuenta.", "warning")
+        return redirect(url_for("LoginRoute.form_empresa"))
 
     # Crear usuario base
     nuevo_usuario = UsuarioModel(
