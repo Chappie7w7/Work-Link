@@ -19,10 +19,43 @@
         <div class="nav-brand">
             <h1><i class="fas fa-shield-alt"></i> WorkLink Admin</h1>
         </div>
+        <style>
+            .nav-badge {
+                position: absolute;
+                top: -6px;
+                right: -10px;
+                background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+                color: white;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                font-weight: bold;
+                box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
+                border: 2px solid white;
+                z-index: 10;
+            }
+            .pulse-animation {
+                animation: pulse 0.6s ease-in-out;
+            }
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+            }
+            .nav-link { position: relative; }
+        </style>
         <div class="nav-links">
-            <a href="{{ url_for('AdminRoute.dashboard') }}" class="nav-link active">
-                <i class="fas fa-users"></i> 
+            <a href="{{ url_for('AdminRoute.dashboard') }}" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">
+                <i class="fas fa-users"></i>
                 <span>Usuarios</span>
+            </a>
+            <a href="{{ url_for('AdminRoute.ayuda') }}" class="nav-link {% if active_page == 'ayuda' %}active{% endif %}">
+                <i class="fas fa-envelope"></i>
+                <span>Ayuda</span>
+                <span id="badge-ayuda" class="nav-badge"></span>
             </a>
             <a href="{{ url_for('LoginRoute.logout') }}" class="btn-salir">
                 <i class="fas fa-sign-out-alt"></i> Salir
@@ -209,39 +242,43 @@
             {% endif %}
         </div>
     </div>
-</body>
+
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script>
-        (function(){
+        async function actualizarBadgeAyuda() {
             try {
-                const socket = io('/notificaciones', { transports: ['websocket', 'polling'] });
-                function showNotice(msg){
-                    const box = document.createElement('div');
-                    box.style.position = 'fixed';
-                    box.style.top = '20px';
-                    box.style.right = '20px';
-                    box.style.zIndex = '9999';
-                    box.style.background = '#f59e0b';
-                    box.style.color = '#fff';
-                    box.style.padding = '12px 16px';
-                    box.style.borderRadius = '8px';
-                    box.style.boxShadow = '0 8px 24px rgba(0,0,0,0.15)';
-                    box.style.fontFamily = 'Inter, system-ui, sans-serif';
-                    box.style.fontSize = '14px';
-                    box.innerHTML = '<i class="fas fa-user-slash"></i> ' + msg;
-                    document.body.appendChild(box);
-                    setTimeout(()=>{ box.remove(); }, 6000);
+                const res = await fetch('{{ url_for('AdminRoute.contador_ayuda') }}');
+                if (!res.ok) return;
+                const data = await res.json();
+                const badge = document.getElementById('badge-ayuda');
+                if (!badge) return;
+                if (data.count > 0) {
+                    badge.textContent = data.count;
+                    badge.style.display = 'flex';
+                    badge.classList.add('pulse-animation');
+                    setTimeout(() => badge.classList.remove('pulse-animation'), 1200);
+                } else {
+                    badge.style.display = 'none';
                 }
-                socket.on('connect', ()=>{ /* conectado */ });
-                socket.on('error', ()=>{ /* error de socket */ });
-                socket.on('solicitud_eliminacion', (data)=>{
-                    const nombre = data?.nombre || 'Usuario';
-                    const correo = data?.correo ? ' ('+data.correo+')' : '';
-                    showNotice('Nueva solicitud de eliminación de ' + nombre + correo);
+            } catch (e) {
+                console.warn('No se pudo actualizar badge de ayuda', e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            actualizarBadgeAyuda();
+            const socket = typeof io !== 'undefined' ? io('/notificaciones', { transports: ['websocket', 'polling'] }) : null;
+            if (socket) {
+                socket.on('nuevo_contacto', () => {
+                    actualizarBadgeAyuda();
+                    const badge = document.getElementById('badge-ayuda');
+                    if (badge) {
+                        badge.classList.add('pulse-animation');
+                        setTimeout(() => badge.classList.remove('pulse-animation'), 1200);
+                    }
                 });
-            } catch (e) { /* noop */ }
-        })();
+            }
+        });
     </script>
-
+</body>
 </html>
-

@@ -59,9 +59,11 @@
                     <div>
                         <label>
                             <i class='bx bx-barcode'></i>
-                            <input type="text" placeholder="RFC" name="rfc" pattern="[A-Za-z0-9]{13}" maxlength="13"
-                                title="El RFC debe tener 13 caracteres, solo letras y números" required />
+                            <input type="text" placeholder="RFC" name="rfc" pattern="^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$"
+                                maxlength="13" minlength="12" title="Ingresa un RFC válido (Personas Físicas o Morales)"
+                                required />
                         </label>
+
                     </div>
                     <div>
                         <label>
@@ -111,9 +113,11 @@
                     </div>
                     <div class="privacy-policy">
                         <div class="form-check">
-                            <input type="checkbox" id="privacyCheckEmpresa" name="privacy_check" class="form-check-input" required>
+                            <input type="checkbox" id="privacyCheckEmpresa" name="privacy_check"
+                                class="form-check-input" required>
                             <label class="form-check-label" for="privacyCheckEmpresa">
-                                He leído y acepto el <a href="{{ url_for('PrivacidadRoute.aviso_privacidad') }}" target="_blank" rel="noopener noreferrer">Aviso de Privacidad</a>
+                                He leído y acepto el <a href="{{ url_for('PrivacidadRoute.aviso_privacidad') }}"
+                                    target="_blank" rel="noopener noreferrer">Aviso de Privacidad</a>
                             </label>
                         </div>
                     </div>

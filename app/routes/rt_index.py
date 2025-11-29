@@ -1,9 +1,14 @@
 # rt_index.py
 import os, json, requests
 from types import SimpleNamespace
-from flask import Blueprint, render_template, session, send_from_directory, current_app, jsonify
+from flask import Blueprint, render_template, session, send_from_directory, current_app, jsonify, request, flash, redirect, url_for
 
+from app.db.sql import db
 from app.models.md_vacantes import VacanteModel
+from app.models.md_testimonios import TestimonioModel
+from app.models.md_contacto import ContactoModel
+from app.extensiones import socketio
+
 from sqlalchemy.orm import joinedload
 
 rt_index = Blueprint('IndexRoute', __name__)
@@ -38,6 +43,7 @@ def index():
         current_user = None
 
     jobs = []
+    testimonios = []
 
     if hay_internet():
         # Si hay internet, consulto DB
@@ -96,7 +102,43 @@ def index():
 
     # Convertir jobs a JSON para pasar al template
     jobs_json = json.dumps(jobs, default=get_obj_dict)
-    return render_template('index.jinja2', current_user=current_user, jobs=jobs, jobs_json=jobs_json, offline_jobs_json=offline_jobs_json)
+    try:
+        testimonios = (
+            TestimonioModel.query
+            .options(joinedload(TestimonioModel.usuario))
+            .filter_by(aprobado=True)
+            .order_by(TestimonioModel.fecha_publicacion.desc())
+            .limit(4)
+            .all()
+        )
+    except Exception as e:
+        print("⚠️ Error cargando testimonios:", e)
+        testimonios = []
+    return render_template('index.jinja2', current_user=current_user, jobs=jobs, jobs_json=jobs_json, offline_jobs_json=offline_jobs_json, testimonios=testimonios)
+
+
+@rt_index.route('/contacto', methods=['POST'])
+def contacto():
+    nombre = request.form.get('nombre', '').strip()
+    correo = request.form.get('correo', '').strip()
+    mensaje = request.form.get('mensaje', '').strip()
+    if not nombre or not correo or not mensaje:
+        flash('Todos los campos del formulario de ayuda son obligatorios.', 'error')
+        return redirect(url_for('IndexRoute.index'))
+    try:
+        contacto = ContactoModel(nombre=nombre, correo=correo, mensaje=mensaje)
+        db.session.add(contacto)
+        db.session.commit()
+        flash('Gracias por escribirnos. El administrador ya recibió tu mensaje.', 'success')
+        socketio.emit('nuevo_contacto', {
+            'nombre': nombre,
+            'correo': correo,
+            'mensaje': mensaje
+        }, namespace='/notificaciones')
+    except Exception as exc:
+        print('⚠️ Error guardando contacto:', exc)
+        flash('No fue posible enviar tu mensaje en este momento.', 'error')
+    return redirect(url_for('IndexRoute.index'))
 
 
 @rt_index.route('/offline')
