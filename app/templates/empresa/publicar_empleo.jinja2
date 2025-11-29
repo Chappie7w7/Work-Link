@@ -1,6 +1,7 @@
 {% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
     {{ flash.render_flash_messages() }}
-    
+
     <!-- Navigation Bar -->
     <nav class="empresa-navbar">
         <div class="nav-brand">
@@ -55,18 +57,18 @@
 
                 <form action="{{ url_for('rt_empresa.nueva_vacante') }}" method="POST" id="vacanteForm">
                     <input type="hidden" name="empresa_id" value="{{ usuario.id }}">
-                    
+
                     <div class="form-section">
                         <h3 class="section-title">
                             <i class="fas fa-info-circle"></i> Información Básica
                         </h3>
-                        
+
                         <div class="form-group">
                             <label for="titulo">
                                 <i class="fas fa-briefcase"></i> Título de la vacante *
                             </label>
                             <input type="text" id="titulo" name="titulo" maxlength="150" required
-                                   placeholder="Ej: Desarrollador Full Stack">
+                                placeholder="Ej: Desarrollador Full Stack">
                         </div>
 
                         <div class="form-group">
@@ -74,7 +76,7 @@
                                 <i class="fas fa-align-left"></i> Descripción *
                             </label>
                             <textarea id="descripcion" name="descripcion" rows="4" required
-                                      placeholder="Describe las responsabilidades principales del puesto..."></textarea>
+                                placeholder="Describe las responsabilidades principales del puesto..."></textarea>
                         </div>
 
                         <div class="form-group">
@@ -82,7 +84,7 @@
                                 <i class="fas fa-check-circle"></i> Requisitos
                             </label>
                             <textarea id="requisitos" name="requisitos" rows="3"
-                                      placeholder="Lista los requisitos o habilidades necesarias..."></textarea>
+                                placeholder="Lista los requisitos o habilidades necesarias..."></textarea>
                         </div>
                     </div>
 
@@ -90,14 +92,14 @@
                         <h3 class="section-title">
                             <i class="fas fa-map-marker-alt"></i> Ubicación y Modalidad
                         </h3>
-                        
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="ubicacion">
                                     <i class="fas fa-location-dot"></i> Ubicación
                                 </label>
                                 <input type="text" id="ubicacion" name="ubicacion" maxlength="255"
-                                       placeholder="Ciudad, País">
+                                    placeholder="Ciudad, País">
                             </div>
 
                             <div class="form-group">
@@ -117,22 +119,25 @@
                         <h3 class="section-title">
                             <i class="fas fa-dollar-sign"></i> Compensación
                         </h3>
-                        
+
                         <div class="form-group">
                             <label for="salario_aprox">
-                                <i class="fas fa-money-bill-wave"></i> Salario aproximado
+                                <i class="fas fa-money-bill-wave"></i> Salario mensual aproximado
                             </label>
-                            <input type="number" step="1500" id="salario_aprox" name="salario_aprox"
-                                   placeholder="Ej: 45000">
-                            <small class="form-hint">Ingresa el monto anual aproximado</small>
+
+                            <input type="number" id="salario_aprox" name="salario_aprox" placeholder="Ej: 4500" min="0"
+                                step="any">
+
+                            <small class="form-hint">Ingresa el monto mensual aproximado</small>
                         </div>
+
                     </div>
 
                     <div class="form-section">
                         <h3 class="section-title">
                             <i class="fas fa-cog"></i> Configuración
                         </h3>
-                        
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="estado">
@@ -149,9 +154,10 @@
                                 <label for="max_postulantes">
                                     <i class="fas fa-users"></i> Límite de postulantes (opcional)
                                 </label>
-                                <input type="number" id="max_postulantes" name="max_postulantes" min="1" 
-                                       placeholder="Sin límite">
-                                <small class="form-hint">Deja vacío para no establecer un límite. La vacante se pausará automáticamente al alcanzar este número.</small>
+                                <input type="number" id="max_postulantes" name="max_postulantes" min="1"
+                                    placeholder="Sin límite">
+                                <small class="form-hint">Deja vacío para no establecer un límite. La vacante se pausará
+                                    automáticamente al alcanzar este número.</small>
                             </div>
                         </div>
 
@@ -181,4 +187,5 @@
 
     <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
 </body>
+
 </html>

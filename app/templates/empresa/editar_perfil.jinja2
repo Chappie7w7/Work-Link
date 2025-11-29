@@ -81,7 +81,10 @@
                                     <i class="fas fa-building"></i> Nombre de la Empresa
                                 </label>
                                 <input type="text" name="nombre_empresa" id="nombre_empresa" class="form-input-edit"
-                                    value="{{ empresa.nombre_empresa if empresa else '' }}" required>
+                                    value="{{ empresa.nombre_empresa if empresa else '' }}" required
+                                    pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]{2,100}"
+                                    inputmode="text" maxlength="100"
+                                    title="Solo letras y espacios, 2 a 100 caracteres">
                             </div>
 
                             <!-- Sector -->
@@ -91,7 +94,10 @@
                                 </label>
                                 <input type="text" name="sector" id="sector" class="form-input-edit"
                                     value="{{ empresa.sector if empresa else '' }}"
-                                    placeholder="Ej: Tecnología, Retail, Servicios...">
+                                    placeholder="Ej: Tecnología, Retail, Servicios..."
+                                    pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]{2,50}"
+                                    inputmode="text" maxlength="50"
+                                    title="Solo letras y espacios, 2 a 50 caracteres">
                             </div>
 
                             <!-- Descripción -->

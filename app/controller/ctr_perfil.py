@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 import os
+import re
 
 
 def get_user_by_id(user_id: int):
@@ -36,6 +37,10 @@ def update_user(user_id: int, nombre: str, correo: str, ubicacion: str = None):
         if not nombre or not correo:
             return None, "Nombre y correo son obligatorios"
 
+        # Validación: solo letras (incluye acentos) y espacios
+        if not re.fullmatch(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]{2,50}", nombre):
+            return None, "El nombre solo debe contener letras y espacios"
+
         # Actualizar campos
         user.nombre = nombre
         user.correo = correo
@@ -64,6 +69,10 @@ def update_user_with_photo(user_id: int, nombre: str, correo: str, foto_perfil_f
 
         if not nombre or not correo:
             return None, "Nombre y correo son obligatorios"
+
+        # Validación: solo letras (incluye acentos) y espacios
+        if not re.fullmatch(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]{2,50}", nombre):
+            return None, "El nombre solo debe contener letras y espacios"
 
         # Actualizar campos básicos
         user.nombre = nombre

@@ -20,25 +20,33 @@
                 <p>Conectando talento local con las mejores oportunidades laborales de la región.</p>
             </div>
             <div class="social-links">
-                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/share/1H2WGcdC24/?mibextid=wwXIfr" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://x.com/felixalexi5655?s=21" class="social-link"><i class="fab fa-twitter"></i></a>
             </div>
         </div>
         <div class="footer-section" data-aos="fade-up" data-aos-delay="200">
             <h4>Testimonios</h4>
             <p>¿Quieres que tu historia aparezca en la sección principal? Cuéntanos qué tal te fue con WorkLink.</p>
             {% if session.get('usuario') %}
-            <form action="{{ url_for('InicioRoute.guardar_testimonio') }}" method="post" class="testimonial-form-footer">
-                <textarea name="mensaje" rows="3" maxlength="500" placeholder="Escribe tu testimonio" required></textarea>
-                <input type="text" name="cargo" maxlength="100" placeholder="Cargo / rol (opcional)">
-                <input type="text" name="empresa" maxlength="120" placeholder="Empresa (opcional)">
-                <button type="submit" class="btn-main">
+            <form action="{{ url_for('InicioRoute.guardar_testimonio') }}" method="post" class="testimonial-form-clean">
+
+                <h3 class="form-title-clean">Comparte tu experiencia</h3>
+
+                <textarea name="mensaje" rows="3" maxlength="500" placeholder="Escribe tu testimonio..."
+                    required></textarea>
+
+                <div class="form-row-clean">
+                    <input type="text" name="cargo" maxlength="100" placeholder="Cargo / rol (opcional)">
+                    <input type="text" name="empresa" maxlength="120" placeholder="Empresa (opcional)">
+                </div>
+
+                <button type="submit" class="btn-main-clean">
                     <i class="fas fa-share"></i>
                     Enviar testimonio
                 </button>
+
             </form>
+
             {% else %}
             <p class="testimonial-cta">Inicia sesión para compartir tu historia y que se muestre aquí.</p>
             <a href="{{ url_for('LoginRoute.login_form') }}" class="btn-outline">
@@ -55,11 +63,11 @@
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-phone"></i>
-                    <span>+52 919 123 4567</span>
+                    <span>+52 919 1727276</span>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
-                    <span>contacto@worklinkocosingo.com</span>
+                    <span>worklinkOco@gmail.com</span>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-clock"></i>

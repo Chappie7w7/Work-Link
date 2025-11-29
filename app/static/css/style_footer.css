@@ -241,3 +241,66 @@
         justify-content: center;
     }
 }
+
+/* === Estilo limpio sin fondo === */
+
+.testimonial-form-clean {
+    width: 100%;
+    max-width: 450px;
+}
+
+.form-title-clean {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+/* Inputs */
+.testimonial-form-clean textarea,
+.testimonial-form-clean input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    border: 1.8px solid #d5d5d5;
+    background: #fff;
+    font-size: 16px;
+    outline: none;
+    transition: 0.15s ease;
+}
+
+/* Efecto cuando el usuario hace focus */
+.testimonial-form-clean textarea:focus,
+.testimonial-form-clean input[type="text"]:focus {
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.15);
+}
+
+/* Inputs lado a lado */
+.form-row-clean {
+    display: flex;
+    gap: 10px;
+}
+
+/* Botón estilo igual al de “Enviar mensaje” */
+.btn-main-clean {
+    width: 100%;
+    padding: 14px;
+    border-radius: 50px;
+    border: none;
+    background: #1544d3;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.btn-main-clean:hover {
+    background: #0f37b0;
+}
+
+.btn-main-clean i {
+    margin-right: 6px;
+}
