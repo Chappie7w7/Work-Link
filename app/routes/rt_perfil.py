@@ -33,6 +33,9 @@ def editar():
         # Actualizar sesión
         session["usuario"]["nombre"] = user_db.nombre
         session["usuario"]["correo"] = user_db.correo
+        # Asegurar que la nueva foto de perfil también se refleje en todas las páginas
+        if hasattr(user_db, "foto_perfil"):
+            session["usuario"]["foto_perfil"] = user_db.foto_perfil
 
         flash("Perfil actualizado correctamente", "success")
         return redirect(url_for("PerfilRoute.editar"))

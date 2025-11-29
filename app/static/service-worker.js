@@ -87,7 +87,17 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 3) Assets estáticos: Cache First
+  // 3) Assets estáticos
+  //    - CSS y JS: network-first SIN cachear (para evitar estilos y scripts obsoletos en desarrollo)
+  //    - Otros (imágenes, íconos, etc.): Cache First
+  if (req.destination === 'style' || req.destination === 'script') {
+    event.respondWith(
+      fetchWithTimeout(req, NAV_TIMEOUT_MS)
+        .catch(() => caches.match(req).then((cached) => cached || fetch(req)))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;
