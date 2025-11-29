@@ -289,31 +289,54 @@ body {
 }
 
 .btn-secondary {
-    background-color: #ffffff;
+    background: #94a3b840; /* mismo gris base que el botón Limpiar */
     color: #1f2937;
-    border: 2px solid #1f2937;
+    border: 2px solid #ffffff33;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-secondary:hover {
-    background-color: #cbd5e1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #6b728080; /* gris más oscuro al hacer hover, igual que Limpiar */
+    transform: translateY(-3px);
+    box-shadow: none;
 }
 
 .btn-primary {
     background: linear-gradient(135deg, #f97316, #ea580c);
-    color: white;
-    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    background: linear-gradient(135deg, #ea580c, #dc2626);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
 }
 
 .btn-primary:active,
 .btn-secondary:active {
     transform: translateY(0);
+}
+
+/* Brillo animado estilo planes/empleos */
+.btn-secondary::before,
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-secondary:hover::before,
+.btn-primary:hover::before {
+    left: 100%;
 }
 
 /* Estilo para el input de archivo */

@@ -186,7 +186,7 @@ body {
 }
 
 /* === Botones de filtros (mismo estilo que botones de inicio) === */
-.filters-btn {
+ .filters-btn {
   padding: 16px 32px;
   border-radius: 12px;
   text-decoration: none;
@@ -198,31 +198,48 @@ body {
   transition: all 0.3s ease;
   border: 2px solid transparent;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+ .filters-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #ffffff33, transparent);
+  transition: left 0.5s ease;
+}
+
+ .filters-btn:hover::before {
+  left: 100%;
 }
 
 .filters-btn-primary {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: #1d4ed8;
   color: #ffffff;
-  border-color: #2563eb;
-  box-shadow: none;
-}
-
-.filters-btn-primary:hover {
-  background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
-  transform: translateY(-3px);
   border-color: #1d4ed8;
   box-shadow: none;
 }
 
+.filters-btn-primary:hover {
+  background: #1e3a8a;
+  transform: translateY(-3px);
+  border-color: #1e3a8a;
+  box-shadow: none;
+}
+
 .filters-btn-secondary {
-  background: rgba(255, 255, 255, 0.15);
+  background: #94a3b840; /* gris un poco más oscuro para mejor contraste */
   color: #1f2937;
-  border-color: rgba(148, 163, 184, 0.5);
+  border-color: #ffffff33;
   backdrop-filter: blur(10px);
 }
 
 .filters-btn-secondary:hover {
-  background: rgba(148, 163, 184, 0.5); /* mismo color que el borde */
+  background: #6b728080; /* gris más oscuro al hacer hover */
   transform: translateY(-3px);
 }
 
@@ -521,15 +538,32 @@ body {
   font-weight: 700;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   text-decoration: none;
   box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
 .job-card .btn-orange:hover {
   background: linear-gradient(135deg, #ea580c, #dc2626);
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+}
+
+ .job-card .btn-orange::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transition: left 0.5s ease;
+}
+
+ .job-card .btn-orange:hover::before {
+  left: 100%;
 }
 
 /* === Paginado === */
