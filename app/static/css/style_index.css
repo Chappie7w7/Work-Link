@@ -10,6 +10,7 @@ body {
     line-height: 1.6;
     color: #1e293b;
     overflow-x: hidden;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
 .container {
@@ -267,7 +268,6 @@ body {
 /* ===== VACANTES SECTION ===== */
 .vacantes-section {
     padding: 100px 0;
-    background: white;
 }
 
 .vacantes-grid {
@@ -547,7 +547,6 @@ body {
 /* ===== TESTIMONIOS SECTION ===== */
 .testimonios-section {
     padding: 100px 0;
-    background: white;
 }
 
 .testimonios-showcase {

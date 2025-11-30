@@ -230,14 +230,14 @@
     <!-- TESTIMONIOS -->
     <section id="testimonios" class="testimonios-section">
         <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2>Historias de éxito reales</h2>
-                <p>Conoce las experiencias de quienes han encontrado su empleo ideal en Ocosingo</p>
-            </div>
 
             {% if testimonios %}
                 {% set destacado = testimonios[0] %}
                 <div class="testimonios-showcase">
+                    <div class="section-header" data-aos="fade-up">
+                        <h2>Historias de éxito reales</h2>
+                        <p>Conoce las experiencias de quienes han encontrado su empleo ideal en Ocosingo</p>
+                    </div>
                     <div class="testimonio-featured" data-aos="fade-left" data-aos-delay="200">
                         <div class="testimonio-content">
                             <div class="quote-icon">
@@ -319,6 +319,10 @@
                 </div>
             {% else %}
                 <div class="testimonios-showcase">
+                    <div class="section-header" data-aos="fade-up">
+                        <h2>Historias de éxito reales</h2>
+                        <p>Conoce las experiencias de quienes han encontrado su empleo ideal en Ocosingo</p>
+                    </div>
                     <div class="cta-content">
                         <h3>¿Quieres inspirar a otros con tu historia?</h3>
                         <p>Aún no hay testimonios publicados, sé el primero en redactar el tuyo desde el pie de página.</p>
