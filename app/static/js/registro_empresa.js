@@ -7,6 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
         mensajeArea.innerHTML = ""; // limpiar mensajes
 
         const correo = form.email.value.trim();
+        const password = form.password.value.trim();
+        const confirmar = form.confirmar.value.trim();
+
+        // 🟥 Validar coincidencia de contraseñas
+        if (password !== confirmar) {
+            mensajeArea.innerHTML = `<p style="color:red;">Las contraseñas no coinciden</p>`;
+            return;
+        }
 
         // 🟥 Validar existencia del correo (consulta al servidor)
         const respuesta = await fetch("/verificar_correo", {

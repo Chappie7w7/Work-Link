@@ -53,8 +53,20 @@ def registro_empresa():
     telefono = request.form.get('telefono', '').strip()
     correo = request.form.get('email', '').strip()
     password = request.form.get('password', '').strip()
+    confirmar = request.form.get('confirmar', '').strip()
 
-     # ------------------------------------------------------
+    # ------------------------------------------------------
+    # Validar que las contraseñas coincidan
+    # ------------------------------------------------------
+    if not password or not confirmar:
+        flash("La contraseña y su confirmación son obligatorias.", "danger")
+        return redirect(url_for("LoginRoute.form_empresa"))
+
+    if password != confirmar:
+        flash("Las contraseñas no coinciden.", "danger")
+        return redirect(url_for("LoginRoute.form_empresa"))
+
+    # ------------------------------------------------------
     # Validación avanzada de RFC
     # ------------------------------------------------------
     if not validar_rfc(rfc):
