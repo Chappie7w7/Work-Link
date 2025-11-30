@@ -17,7 +17,7 @@ body {
     display: flex;
     border-radius: 20px;
     box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
-    height: 750px;      /* un poco más alto para que no se sature */
+    height: 500px;      /* un poco más alto para que no se sature */
     max-width: 900px;   /* un poco más ancho para dar aire al contenido */
     transition: all 1s ease;
     margin: 10px;
@@ -225,7 +225,7 @@ body {
     text-decoration: underline;
 }
 
-/* Estilos para el modal */
+/* Estilos para el modal (si el registro de usuario lo usa) */
 .modal-content {
     border-radius: 15px;
     border: none;

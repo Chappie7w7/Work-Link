@@ -76,7 +76,7 @@
 
 /* === Estilos generales === */
 body {
-  background-color: #ffffff;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   color: #2d2d2d;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
