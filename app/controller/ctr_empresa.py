@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 import os
 import re
+from flask import current_app
 
 
 def get_empresa_by_id(empresa_id: int):
@@ -67,8 +68,8 @@ def update_empresa(empresa_id: int, nombre_empresa: str, sector: str = None,
             allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
             filename = logo_file.filename
             if '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions:
-                # Crear directorio si no existe
-                upload_dir = os.path.join("app", "static", "uploads", "company_logos")
+                # Crear directorio ABSOLUTO si no existe (dentro de app/static)
+                upload_dir = os.path.join(current_app.root_path, "static", "uploads", "company_logos")
                 os.makedirs(upload_dir, exist_ok=True)
                 
                 # Generar nombre único para el archivo
@@ -82,7 +83,8 @@ def update_empresa(empresa_id: int, nombre_empresa: str, sector: str = None,
                 
                 # Eliminar logo anterior si existe
                 if empresa.logo_url:
-                    old_filepath = os.path.join("app", "static", empresa.logo_url.lstrip('/'))
+                    # empresa.logo_url almacena una URL como /static/uploads/company_logos/xxx
+                    old_filepath = os.path.join(current_app.root_path, empresa.logo_url.lstrip('/'))
                     if os.path.exists(old_filepath):
                         try:
                             os.remove(old_filepath)
