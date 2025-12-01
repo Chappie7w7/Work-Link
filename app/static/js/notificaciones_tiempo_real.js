@@ -7,18 +7,19 @@ class NotificacionesTiempoReal {
     constructor() {
         this.socketNotificaciones = null;
         this.socketMensajes = null;
+        this._notifSinceId = 0;
+        this._pollingActivo = true;
         this.init();
     }
 
     init() {
         // Cargar Socket.IO desde CDN si no está disponible
         if (typeof io === 'undefined') {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.socket.io/4.5.4/socket.io.min.js';
-            script.onload = () => this.conectarWebSockets();
-            document.head.appendChild(script);
+            // Migrado a long polling: iniciar bucles de polling
+            this.iniciarPolling();
         } else {
-            this.conectarWebSockets();
+            // Migrado a long polling: iniciar bucles de polling
+            this.iniciarPolling();
         }
         
         // Cargar contadores iniciales
@@ -26,50 +27,50 @@ class NotificacionesTiempoReal {
     }
 
     conectarWebSockets() {
-        // Conectar a notificaciones
-        this.socketNotificaciones = io('/notificaciones', {
-            transports: ['websocket', 'polling']
-        });
+        // Migrado a long polling: sin conexión de sockets, usado para compatibilidad
+        this.iniciarPolling();
+    }
 
-        this.socketNotificaciones.on('connect', () => {
-            console.log('✅ Conectado a notificaciones en tiempo real');
-        });
+    iniciarPolling() {
+        const pollNotificaciones = async () => {
+            if (!this._pollingActivo) return;
+            try {
+                const resp = await fetch(`/api/poll/notificaciones?since_id=${this._notifSinceId}&timeout=25`, { credentials: 'same-origin' });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (Array.isArray(data.notificaciones) && data.notificaciones.length) {
+                        data.notificaciones.forEach(n => this.mostrarNotificacionPopup(n));
+                        this._notifSinceId = data.last_id || this._notifSinceId;
+                        // Actualizar badges al recibir novedades
+                        this.actualizarBadgeNotificaciones();
+                        this.actualizarBadgeMensajes();
+                    }
+                }
+            } catch (e) {
+                // Silencio errores intermitentes
+            } finally {
+                // Reintentar inmediatamente (el endpoint espera hasta 25s)
+                if (this._pollingActivo) pollNotificaciones();
+            }
+        };
 
-        this.socketNotificaciones.on('nueva_notificacion', (data) => {
-            console.log('Nueva notificación recibida:', data);
-            this.actualizarBadgeNotificaciones();
-            this.mostrarNotificacionPopup(data);
-        });
+        const pollContadores = async () => {
+            if (!this._pollingActivo) return;
+            try {
+                await Promise.all([
+                    this.actualizarMensajes(),
+                    this.actualizarNotificaciones()
+                ]);
+            } catch (e) {
+                // noop
+            } finally {
+                setTimeout(pollContadores, 10000);
+            }
+        };
 
-        this.socketNotificaciones.on('conectado', (data) => {
-            console.log('Notificaciones:', data.mensaje);
-        });
-
-        this.socketNotificaciones.on('disconnect', () => {
-            console.log('Desconectado de notificaciones');
-        });
-
-        // Conectar a mensajes
-        this.socketMensajes = io('/mensajes', {
-            transports: ['websocket', 'polling']
-        });
-
-        this.socketMensajes.on('connect', () => {
-            console.log('✅ Conectado a mensajes en tiempo real');
-        });
-
-        this.socketMensajes.on('nuevo_mensaje', (data) => {
-            console.log('Nuevo mensaje recibido:', data);
-            this.actualizarBadgeMensajes();
-        });
-
-        this.socketMensajes.on('conectado', (data) => {
-            console.log('Mensajes:', data.mensaje);
-        });
-
-        this.socketMensajes.on('disconnect', () => {
-            console.log('Desconectado de mensajes');
-        });
+        // Iniciar loops
+        pollNotificaciones();
+        pollContadores();
     }
 
     async actualizarContadoresIniciales() {
@@ -176,6 +177,7 @@ class NotificacionesTiempoReal {
         if (this.socketMensajes) {
             this.socketMensajes.disconnect();
         }
+        this._pollingActivo = false;
     }
 }
 
