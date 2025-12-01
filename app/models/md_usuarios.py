@@ -2,6 +2,7 @@ from app.db.sql import db
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey
 from datetime import datetime
 from sqlalchemy.orm import relationship
+from app.utils.timezone_helper import get_mexico_time
 
 
 from flask_login import UserMixin
@@ -15,7 +16,7 @@ class UsuarioModel(db.Model):
     contraseña = Column(String(255), nullable=True)  # Hacer opcional para usuarios de Google
     tipo_usuario = Column(String(50), nullable=False)
     foto_perfil = Column(String(255), nullable=True)
-    fecha_registro = Column(DateTime, default=datetime.utcnow)
+    fecha_registro = Column(DateTime, default=get_mexico_time)
     premium = Column(Boolean, default=False)
     plan_id = Column(Integer, ForeignKey('planes.id'), nullable=True)
     ubicacion = Column(String(100), nullable=True)
@@ -44,7 +45,7 @@ class UsuarioModel(db.Model):
         self.premium = premium
         self.plan_id = plan_id
         self.ubicacion = ubicacion
-        self.fecha_registro = fecha_registro or datetime.utcnow()
+        self.fecha_registro = fecha_registro or get_mexico_time()
         self.ultimo_login = ultimo_login
         self.google_id = google_id
         self.aprobado = aprobado

@@ -125,6 +125,8 @@
     
     <script>
         let destinatarioActual = null;
+        let msgSinceId = 0;
+        let pollingActivo = false;
         
         function cargarConversacion(userId, nombre) {
             destinatarioActual = userId;
@@ -168,7 +170,14 @@
                             chatMessages.appendChild(messageDiv);
                         });
                         chatMessages.scrollTop = chatMessages.scrollHeight;
+                        // Inicializar since_id con el último id recibido
+                        try {
+                            const ult = data.mensajes[data.mensajes.length - 1];
+                            msgSinceId = ult.id || 0;
+                        } catch(e) { msgSinceId = 0; }
                     }
+                    // Iniciar polling para esta conversación
+                    iniciarPollingMensajes();
                 })
                 .catch(error => console.error('Error:', error));
         }
@@ -212,6 +221,32 @@
                 }
             })
             .catch(error => console.error('Error:', error));
+        }
+
+        async function iniciarPollingMensajes() {
+            pollingActivo = true;
+            const localDest = destinatarioActual;
+            while (pollingActivo && localDest === destinatarioActual && destinatarioActual) {
+                try {
+                    const resp = await fetch(`/api/poll/mensajes?destinatario_id=${destinatarioActual}&since_id=${msgSinceId}&timeout=25`, { credentials: 'same-origin' });
+                    if (!resp.ok) { continue; }
+                    const data = await resp.json();
+                    if (Array.isArray(data.mensajes) && data.mensajes.length) {
+                        const chatMessages = document.getElementById('chatMessages');
+                        data.mensajes.forEach(m => {
+                            const div = document.createElement('div');
+                            div.className = m.es_mio ? 'message sent' : 'message received';
+                            const hora = m.fecha_envio ? new Date(m.fecha_envio).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+                            div.innerHTML = `<p>${m.contenido}</p><span class="time">${hora}</span>`;
+                            chatMessages.appendChild(div);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        msgSinceId = data.last_id || msgSinceId;
+                    }
+                } catch(e) {
+                    // ignorar errores intermitentes
+                }
+            }
         }
     </script>
 </body>

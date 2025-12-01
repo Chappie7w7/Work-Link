@@ -129,16 +129,26 @@
         </section>
     </div>
 
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script>
         (function(){
-            try {
-                const socket = io('/notificaciones', { transports: ['websocket', 'polling'] });
-                socket.on('connect', ()=>{});
-                socket.on('nuevo_contacto', (data)=>{
-                    alert('Nuevo mensaje de ayuda de ' + (data?.nombre || 'alguien'));
-                });
-            } catch (e) {}
+            let lastCount = 0;
+            async function checkAyuda() {
+                try {
+                    const res = await fetch('{{ url_for('AdminRoute.contador_ayuda') }}');
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    const count = data.count || 0;
+                    if (count > lastCount) {
+                        alert('Nuevo mensaje de ayuda recibido');
+                    }
+                    lastCount = count;
+                } catch(e) {
+                    // noop
+                } finally {
+                    setTimeout(checkAyuda, 10000);
+                }
+            }
+            checkAyuda();
         })();
     </script>
 </body>

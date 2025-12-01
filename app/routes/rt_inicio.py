@@ -39,7 +39,7 @@ def inicio():
         .limit(3).all()
     
     for v in vacantes_recientes:
-        tiempo = calcular_tiempo_transcurrido(v.fecha_publicacion)
+        tiempo = formatear_fecha_mx(v.fecha_publicacion)
         actividades.append({
             'tipo': 'vacante',
             'titulo': 'Nueva vacante publicada',
@@ -55,7 +55,7 @@ def inicio():
         .limit(2).all()
     
     for u in usuarios_recientes:
-        tiempo = calcular_tiempo_transcurrido(u.fecha_registro)
+        tiempo = formatear_fecha_mx(u.fecha_registro)
         actividades.append({
             'tipo': 'usuario',
             'titulo': 'Usuario registrado',
@@ -72,7 +72,7 @@ def inicio():
     
     for c in contrataciones:
         if c.empleado and c.empleado.usuario and c.vacante:
-            tiempo = calcular_tiempo_transcurrido(c.fecha_postulacion)
+            tiempo = formatear_fecha_mx(c.fecha_postulacion)
             actividades.append({
                 'tipo': 'contratacion',
                 'titulo': 'Contratación exitosa',
@@ -147,27 +147,18 @@ def guardar_testimonio():
     flash("Gracias por compartir tu testimonio. Ya aparece en la sección de testimonios.", "success")
     return redirect(url_for("InicioRoute.inicio"))
 
-def calcular_tiempo_transcurrido(fecha):
-    """Calcula el tiempo transcurrido desde una fecha"""
+def formatear_fecha_mx(fecha):
+    """Devuelve la fecha en formato dd/mm/YYYY HH:MM normalizada a hora de México.
+    Si la fecha viene en UTC (más adelantada que ahora en MX), se ajusta restando 6 horas.
+    """
     if not fecha:
-        return "Hace un momento"
-    
-    ahora = get_mexico_time()
-    diferencia = ahora - fecha
-    
-    if diferencia.days > 365:
-        años = diferencia.days // 365
-        return f"Hace {años} año{'s' if años > 1 else ''}"
-    elif diferencia.days > 30:
-        meses = diferencia.days // 30
-        return f"Hace {meses} mes{'es' if meses > 1 else ''}"
-    elif diferencia.days > 0:
-        return f"Hace {diferencia.days} día{'s' if diferencia.days > 1 else ''}"
-    elif diferencia.seconds > 3600:
-        horas = diferencia.seconds // 3600
-        return f"Hace {horas} hora{'s' if horas > 1 else ''}"
-    elif diferencia.seconds > 60:
-        minutos = diferencia.seconds // 60
-        return f"Hace {minutos} minuto{'s' if minutos > 1 else ''}"
-    else:
-        return "Hace un momento"
+        return "Ahora"
+
+    ahora_mx = get_mexico_time()
+    f = fecha
+
+    # Normaliza posibles fechas guardadas en UTC (naive) comparándolas con MX
+    if f > ahora_mx + timedelta(minutes=1):
+        f = f - timedelta(hours=6)
+
+    return f.strftime('%d/%m/%Y %H:%M')

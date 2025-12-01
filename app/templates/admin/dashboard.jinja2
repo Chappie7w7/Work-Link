@@ -243,7 +243,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script>
         async function actualizarBadgeAyuda() {
             try {
@@ -267,17 +266,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             actualizarBadgeAyuda();
-            const socket = typeof io !== 'undefined' ? io('/notificaciones', { transports: ['websocket', 'polling'] }) : null;
-            if (socket) {
-                socket.on('nuevo_contacto', () => {
-                    actualizarBadgeAyuda();
-                    const badge = document.getElementById('badge-ayuda');
-                    if (badge) {
-                        badge.classList.add('pulse-animation');
-                        setTimeout(() => badge.classList.remove('pulse-animation'), 1200);
-                    }
-                });
-            }
+            // Reemplazado por polling periódico
+            setInterval(actualizarBadgeAyuda, 10000);
         });
     </script>
 </body>
