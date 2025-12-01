@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 import os
 import re
+from flask import current_app
 
 
 def get_user_by_id(user_id: int):
@@ -84,8 +85,8 @@ def update_user_with_photo(user_id: int, nombre: str, correo: str, foto_perfil_f
             allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
             filename = foto_perfil_file.filename
             if '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions:
-                # Crear directorio si no existe
-                upload_dir = os.path.join("app", "static", "uploads", "profile_pics")
+                # Crear directorio absoluto si no existe (dentro de app/static)
+                upload_dir = os.path.join(current_app.root_path, "static", "uploads", "profile_pics")
                 os.makedirs(upload_dir, exist_ok=True)
                 
                 # Generar nombre único para el archivo
@@ -101,7 +102,9 @@ def update_user_with_photo(user_id: int, nombre: str, correo: str, foto_perfil_f
                 
                 # Eliminar foto anterior si existe
                 if user.foto_perfil:
-                    old_filepath = os.path.join("app", "static", user.foto_perfil.lstrip('/'))
+                    # user.foto_perfil almacena una URL como /static/uploads/profile_pics/xxx
+                    # Construir ruta absoluta en el filesystem
+                    old_filepath = os.path.join(current_app.root_path, user.foto_perfil.lstrip('/'))
                     if os.path.exists(old_filepath):
                         try:
                             os.remove(old_filepath)
