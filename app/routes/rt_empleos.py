@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request, flash
+from flask import Blueprint, render_template, session, redirect, url_for, request, flash, current_app
 from app.controller.ctr_empleos import get_user_from_session
 from app.utils.decorators import login_role_required
 from app.utils.roles import Roles
@@ -305,12 +305,31 @@ def postular(vacante_id: int):
                     return redirect(url_for('EmpleosRoute.postular', vacante_id=vacante_id))
                 
                 try:
-                    upload_dir = os.path.join("app", "static", "uploads", "cv")
+                    # Directorio absoluto dentro de app/static
+                    upload_dir = os.path.join(current_app.root_path, "static", "uploads", "cv")
                     os.makedirs(upload_dir, exist_ok=True)
-                    filepath = os.path.join(upload_dir, filename)
+
+                    # Generar nombre único y seguro
+                    base_name = os.path.splitext(filename)[0]
+                    ext = os.path.splitext(filename)[1].lower()
+                    timestamp = str(int(datetime.utcnow().timestamp()))
+                    unique_filename = f"cv_{user['id']}_{timestamp}{ext}"
+                    filepath = os.path.join(upload_dir, unique_filename)
+
+                    # Guardar archivo
                     cv_file.save(filepath)
-                    # Actualizar el curriculum_url del empleado
-                    empleado.curriculum_url = url_for('static', filename=f"uploads/cv/{filename}", _external=True)
+
+                    # Borrar CV anterior si existía
+                    if empleado.curriculum_url:
+                        old_path = os.path.join(current_app.root_path, empleado.curriculum_url.lstrip('/'))
+                        if os.path.exists(old_path):
+                            try:
+                                os.remove(old_path)
+                            except Exception:
+                                pass
+
+                    # Guardar URL web relativa (servida por /static)
+                    empleado.curriculum_url = f"/static/uploads/cv/{unique_filename}"
                 except Exception as e:
                     print(f"Error al guardar el archivo: {str(e)}")
                     flash("Hubo un error al procesar tu archivo CV. Por favor, inténtalo de nuevo.", "danger")
