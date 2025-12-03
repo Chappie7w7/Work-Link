@@ -250,7 +250,14 @@ def publicar_empleo():
     user = get_user_from_session(session)
     if not user:
         return redirect(url_for("IndexRoute.index"))
-    return render_template("empresa/publicar_empleo.jinja2", usuario=user)
+    empresa = EmpresaModel.query.get(user["id"])
+    usuario_empresa = UsuarioModel.query.get(user["id"])
+    return render_template(
+        "empresa/publicar_empleo.jinja2",
+        usuario=user,
+        empresa=empresa,
+        usuario_empresa=usuario_empresa,
+    )
 
 
 @rt_empresa.route("/empleos/nueva", methods=["GET", "POST"])
@@ -361,7 +368,15 @@ def editar_vacante(id):
             flash("❌ Ocurrió un error al actualizar la oferta", "error")
 
     # Si es GET, mostrar el formulario de edición
-    return render_template("empresa/editar_vacante.jinja2", vacante=vacante, usuario=user)
+    empresa = EmpresaModel.query.get(user["id"])
+    usuario_empresa = UsuarioModel.query.get(user["id"])
+    return render_template(
+        "empresa/editar_vacante.jinja2",
+        vacante=vacante,
+        usuario=user,
+        empresa=empresa,
+        usuario_empresa=usuario_empresa,
+    )
 
 
 @rt_empresa.route("/empleos/eliminar/<int:id>", methods=["POST", "DELETE"])
@@ -411,6 +426,10 @@ def ver_candidato(candidato_id):
         return redirect(url_for("rt_empresa.dashboard"))
     
     usuario = UsuarioModel.query.get(candidato_id)
+
+    # Datos de empresa logueada para navbar
+    empresa = EmpresaModel.query.get(user["id"])
+    usuario_empresa = UsuarioModel.query.get(user["id"])
     
     # Obtener postulaciones del candidato para esta empresa
     postulaciones = PostulacionModel.query.join(VacanteModel) \
@@ -422,7 +441,9 @@ def ver_candidato(candidato_id):
         "empresa/ver_candidato.jinja2",
         empleado=empleado,
         usuario=usuario,
-        postulaciones=postulaciones
+        postulaciones=postulaciones,
+        empresa=empresa,
+        usuario_empresa=usuario_empresa,
     )
 
 
@@ -646,11 +667,16 @@ def mensajes_empresa():
         UsuarioModel.tipo_usuario == 'empleado'
     ).distinct().all()
     
+    empresa = EmpresaModel.query.get(user["id"])
+    usuario_empresa = UsuarioModel.query.get(user["id"])
+
     return render_template(
         "empresa/mensajes_empresa.jinja2",
         usuario=user,
         conversaciones=conversaciones,
-        empleados_disponibles=empleados_disponibles
+        empleados_disponibles=empleados_disponibles,
+        empresa=empresa,
+        usuario_empresa=usuario_empresa,
     )
 
 
@@ -821,12 +847,17 @@ def notificaciones_empresa():
     
     # Contar notificaciones no leídas
     no_leidas = NotificacionModel.query.filter_by(usuario_id=user['id'], leido=False).count()
-    
+
+    # Datos de empresa logueada para navbar
+    empresa = EmpresaModel.query.get(user["id"])
+    usuario_empresa = UsuarioModel.query.get(user["id"])
+
     return render_template(
         "empresa/notificaciones_empresa.jinja2",
-        usuario=user,
         notificaciones=notificaciones_list,
-        no_leidas=no_leidas
+        no_leidas=no_leidas,
+        empresa=empresa,
+        usuario_empresa=usuario_empresa,
     )
 
 

@@ -113,8 +113,8 @@
     gap: 15px;
 }
 
-.form-group input,
-.form-group textarea {
+.footer .form-group input,
+.footer .form-group textarea {
     width: 100%;
     padding: 12px 15px;
     border: 1px solid rgb(4, 8, 8);
@@ -126,13 +126,13 @@
     transition: all 0.3s ease;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
+.footer .form-group input::placeholder,
+.footer .form-group textarea::placeholder {
     color: rgba(0, 0, 0, 0.966);
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.footer .form-group input:focus,
+.footer .form-group textarea:focus {
     outline: none;
     border-color: #fbbf24;
     background: rgb(255, 255, 255);

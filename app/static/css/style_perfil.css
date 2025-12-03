@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #1e293b;
     line-height: 1.6;
     min-height: 100vh;
@@ -248,7 +248,7 @@ body {
     border: 2px solid #e2e8f0;
     border-radius: 12px;
     font-size: 14.5px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-weight: 500;
     background: #f8fafc;
     color: #1e293b;
@@ -271,7 +271,7 @@ body {
 .form-textarea-edit {
     resize: vertical;
     min-height: 100px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* ========== BOTONES ========== */
@@ -299,7 +299,7 @@ body {
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .btn-cancel-edit:hover {
@@ -325,7 +325,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .btn-save-edit:hover {
