@@ -7,6 +7,14 @@
 <!-- AOS Animaciones -->
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.AOS && !window.AOS_INITIALIZED) {
+            AOS.init();
+            window.AOS_INITIALIZED = true;
+        }
+    });
+ </script>
 <!-- Tus estilos -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_footer.css') }}">
 

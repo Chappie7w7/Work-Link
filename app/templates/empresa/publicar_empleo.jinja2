@@ -1,4 +1,6 @@
 {% import "components/flash_messages.jinja2" as flash %}
+{% import "components/navbar_empresa.jinja2" as navbar_empresa %}
+{% import "components/footer.jinja2" as footer %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -13,28 +15,8 @@
 </head>
 
 <body>
+    {{ navbar_empresa.navbar(empresa, usuario_empresa) }}
     {{ flash.render_flash_messages() }}
-
-    <!-- Navigation Bar -->
-    <nav class="empresa-navbar">
-        <div class="nav-brand">
-            <h1>WorkLink</h1>
-        </div>
-        <div class="nav-links">
-            <a href="{{ url_for('rt_empresa.dashboard') }}" class="nav-link" style="position: relative;">
-                <i class="fas fa-home"></i> Dashboard
-            </a>
-            <a href="{{ url_for('rt_empresa.mensajes_empresa') }}" class="nav-link" style="position: relative;">
-                <i class="fas fa-envelope"></i> Mensajes
-            </a>
-            <a href="{{ url_for('rt_empresa.notificaciones_empresa') }}" class="nav-link" style="position: relative;">
-                <i class="fas fa-bell"></i> Notificaciones
-            </a>
-            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
-                <i class="fas fa-sign-out-alt"></i> Salir
-            </a>
-        </div>
-    </nav>
 
     <!-- Main Content -->
     <div class="main-container">
@@ -184,6 +166,8 @@
             </div>
         </div>
     </div>
+
+    {{ footer.footer() }}
 
     <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
 </body>
