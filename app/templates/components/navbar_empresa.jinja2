@@ -15,6 +15,14 @@
     <div class="logo">
         <h1>WorkLink</h1>
     </div>
+
+    <!-- Botón hamburguesa para móviles -->
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+    </button>
+
     <nav class="nav-links">
         <a href="{{ url_for('rt_empresa.dashboard') }}">Dashboard</a>
         <a href="{{ url_for('rt_empresa.mensajes_empresa') }}" style="position: relative;">
@@ -55,6 +63,6 @@
     </nav>
 </header>
 
-<script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/navbar.js') }}?v=2"></script>
 
 {% endmacro %}

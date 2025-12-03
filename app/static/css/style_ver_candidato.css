@@ -314,3 +314,80 @@
     background: #e2e8f0;
     transform: translateY(-2px);
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .candidate-layout {
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+        gap: 20px;
+    }
+
+    .candidate-profile-card,
+    .candidate-applications-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .candidate-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .candidate-profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .candidate-avatar img {
+        width: 96px;
+        height: 96px;
+    }
+
+    .candidate-main-info {
+        width: 100%;
+    }
+
+    .candidate-applications-card {
+        margin-top: 10px;
+    }
+
+    .candidate-application-title {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .candidate-status-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-primary-small,
+    .btn-danger-outline {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .candidate-back {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .candidate-profile-card,
+    .candidate-applications-card {
+        padding: 16px;
+    }
+
+    .candidate-info-grid {
+        gap: 12px;
+    }
+
+    .candidate-application-item {
+        padding: 14px;
+    }
+
+    .candidate-application-status {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
