@@ -5,10 +5,10 @@ from app.utils.roles import Roles
 
 def first_user():
     """Crea un super admin si no existe"""
-    if not UsuarioModel.query.filter_by(correo="admin@worklink.com").first():
+    if not UsuarioModel.query.filter_by(correo="worklinkOco@gmail.com").first():
         admin = UsuarioModel(
             nombre="Admin",
-            correo="admin@worklink.com",
+            correo="worklinkOco@gmail.com",
             contraseña= generate_password_hash("admin123"),
             tipo_usuario=Roles.SUPERADMIN
         )

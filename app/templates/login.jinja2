@@ -111,6 +111,34 @@
 
     <!-- Tu archivo JS -->
     <!--script src="{{ url_for('static', filename='js/login.js') }}"></script-->
+
+    <script>
+        (function () {
+            const dropdown = document.querySelector('.dropdown');
+            const toggleBtn = document.getElementById('sign-up');
+
+            if (!dropdown || !toggleBtn) return;
+
+            // Abrir/cerrar menú al hacer clic en el botón
+            toggleBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('open');
+            });
+
+            // Evitar que los clics dentro del menú cierren el dropdown
+            const dropdownContent = dropdown.querySelector('.dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                });
+            }
+
+            // Cerrar el menú al hacer clic fuera
+            document.addEventListener('click', function () {
+                dropdown.classList.remove('open');
+            });
+        })();
+    </script>
 </body>
 
 </html>

@@ -1,10 +1,33 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const navbar = document.querySelector('.navbar');
-  if (!navbar) return;
+const navbars = document.querySelectorAll('.navbar');
+if (navbars.length) {
+  // Delegación de eventos para el botón hamburguesa
+  document.addEventListener('click', (event) => {
+    const toggleBtn = event.target.closest('.nav-toggle');
+    if (!toggleBtn) return;
 
-  // Cambia aquí el selector si quieres otra sección como trigger:
-  const triggerSelector = '#informacion'; // ejemplo: '#informacion' o '.hero'
-  const triggerElement = document.querySelector(triggerSelector) || document.querySelector('#informacion') || document.body;
+    const navbar = toggleBtn.closest('.navbar');
+    if (!navbar) return;
+
+    const navLinks = navbar.querySelector('.nav-links');
+    if (!navLinks) return;
+
+    const isOpen = navLinks.classList.toggle('open');
+    toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+    if (isOpen) {
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          if (navLinks.classList.contains('open')) {
+            navLinks.classList.remove('open');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+          }
+        }, { once: true });
+      });
+    }
+  });
+
+  // Selector de sección que dispara el comportamiento de ocultar/mostrar
+  const triggerElement = document.querySelector('#informacion') || document.body;
 
   let canHide = false;              // sólo permitimos ocultar después de pasar trigger
   let lastScrollTop = 0;
@@ -19,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // cuando el trigger está **fuera** de la vista (isIntersecting=false) permitimos ocultar
         canHide = !entry.isIntersecting;
         if (!canHide) {
-          navbar.classList.remove('hidden'); // aseguramos que sea visible antes del trigger
+          navbars.forEach(nb => nb.classList.remove('hidden'));
         }
       });
     }, { root: null, threshold: 0, rootMargin: '0px' });
@@ -38,24 +61,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentScroll = lastKnownScrollY;
 
         // efecto shrink
-        if (currentScroll > 50) {
-          navbar.classList.add('shrink');
-        } else {
-          navbar.classList.remove('shrink');
-        }
+        navbars.forEach(nb => {
+          if (currentScroll > 50) {
+            nb.classList.add('shrink');
+          } else {
+            nb.classList.remove('shrink');
+          }
+        });
 
         // sólo ocultamos si ya pasamos la sección trigger
         if (canHide) {
           if (currentScroll > lastScrollTop + scrollThreshold) {
-            // baja lo suficiente → ocultar
-            navbar.classList.add('hidden');
+            navbars.forEach(nb => nb.classList.add('hidden'));
           } else if (currentScroll < lastScrollTop) {
-            // sube → mostrar inmediatamente
-            navbar.classList.remove('hidden');
+            navbars.forEach(nb => nb.classList.remove('hidden'));
           }
         } else {
-          // antes del trigger, forzamos visible
-          navbar.classList.remove('hidden');
+          navbars.forEach(nb => nb.classList.remove('hidden'));
         }
 
         lastScrollTop = Math.max(0, currentScroll);
@@ -64,4 +86,4 @@ document.addEventListener('DOMContentLoaded', () => {
       ticking = true;
     }
   }, { passive: true });
-});
+}

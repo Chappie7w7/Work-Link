@@ -301,3 +301,53 @@ body {
         max-height: 50vh;
     }
 }
+
+/* ===== RESPONSIVE LAYOUT ===== */
+@media (max-width: 900px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        padding: 20px 10px;
+    }
+
+    .container-form {
+        flex-direction: column;
+        height: auto;
+        max-width: 480px;
+    }
+
+    .information,
+    .form-information {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .information {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 0;
+        padding: 20px 0;
+    }
+
+    .form-information {
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        padding: 20px 0;
+    }
+
+    .form-information-childs,
+    .info-childs {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .info-childs h2 {
+        font-size: 2rem;
+    }
+
+    .form-information-childs h2 {
+        font-size: 1.6rem;
+    }
+}
