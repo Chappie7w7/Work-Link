@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://js.pusher.com/8.0/pusher.min.js"></script>
 </head>
 
 <body>
@@ -34,9 +35,17 @@
                 {% if conversaciones %}
                     {% for conv in conversaciones %}
                     <li class="conversation" data-user-id="{{ conv.id }}" onclick="cargarConversacion({{ conv.id }}, '{{ conv.nombre }}')">
-                        <div class="avatar">{{ conv.nombre[0].upper() }}</div>
+                        <div class="avatar">
+                            {% if conv.logo_url %}
+                                <img src="{{ conv.logo_url }}" alt="Logo" onerror="this.remove()">
+                            {% elif conv.foto_perfil %}
+                                <img src="{{ conv.foto_perfil }}" alt="Foto" onerror="this.remove()">
+                            {% else %}
+                                {{ (conv.nombre_empresa or conv.nombre)[0].upper() }}
+                            {% endif %}
+                        </div>
                         <div class="details">
-                            <h4>{{ conv.nombre }} {% if conv.tipo_usuario == 'empresa' %}(Empresa){% endif %}</h4>
+                            <h4>{{ conv.nombre_empresa or conv.nombre }} {% if conv.tipo_usuario == 'empresa' %}(Empresa){% endif %}</h4>
                             <p>Haz clic para ver la conversación</p>
                         </div>
                     </li>
@@ -59,9 +68,15 @@
                 </li>
                 {% for empresa in empresas_disponibles %}
                 <li class="conversation" data-user-id="{{ empresa.id }}" onclick="cargarConversacion({{ empresa.id }}, '{{ empresa.nombre }}')">
-                    <div class="avatar">{{ empresa.nombre[0].upper() }}</div>
+                    <div class="avatar">
+                        {% if empresa.empresa and empresa.empresa.logo_url %}
+                            <img src="{{ empresa.empresa.logo_url }}" alt="Logo" onerror="this.remove()">
+                        {% else %}
+                            {{ (empresa.empresa.nombre_empresa if empresa.empresa and empresa.empresa.nombre_empresa else empresa.nombre)[0].upper() }}
+                        {% endif %}
+                    </div>
                     <div class="details">
-                        <h4>{{ empresa.nombre }} (Empresa)</h4>
+                        <h4>{{ (empresa.empresa.nombre_empresa if empresa.empresa and empresa.empresa.nombre_empresa else empresa.nombre) }} (Empresa)</h4>
                         <p>Iniciar conversación</p>
                     </div>
                 </li>
@@ -118,16 +133,43 @@
     <!-- Inicializar AOS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/notificaciones_tiempo_real.js') }}"></script>
     <script>
         AOS.init();
     </script>
     
     <script>
         let destinatarioActual = null;
-        let msgSinceId = 0;
-        let pollingActivo = false;
+        let idsVistos = new Set();
+        let conversacionCache = new Map(); // userId -> [{id, contenido, fecha_envio, es_mio}]
+        let conversacionHtmlCache = new Map(); // userId -> innerHTML del contenedor
         
+        function renderMensajes(lista) {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = '';
+            if (!lista || lista.length === 0) {
+                chatMessages.innerHTML = `
+                    <div class="empty-chat-state">
+                        <div class="empty-chat-icon">
+                            <i class="fas fa-comment-dots"></i>
+                        </div>
+                        <p class="empty-chat-text">No hay mensajes aún. ¡Inicia la conversación!</p>
+                    </div>
+                `;
+                return;
+            }
+            lista.forEach(msg => {
+                if (idsVistos.has(msg.id)) return;
+                const div = document.createElement('div');
+                div.className = msg.es_mio ? 'message sent' : 'message received';
+                div.innerHTML = `<p>${msg.contenido}</p><span class="time">${msg.fecha_envio}</span>`;
+                chatMessages.appendChild(div);
+                idsVistos.add(msg.id);
+            });
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Guardar HTML exacto
+            try { conversacionHtmlCache.set(destinatarioActual, chatMessages.innerHTML); } catch(e){}
+        }
+
         function cargarConversacion(userId, nombre) {
             destinatarioActual = userId;
             
@@ -143,41 +185,69 @@
             });
             document.querySelector(`[data-user-id="${userId}"]`).classList.add('active');
             
-            // Cargar mensajes
-            fetch(`/mensajes/conversacion/${userId}`)
+            // Reiniciar estado de ids vistos
+            idsVistos = new Set();
+
+            // Render inmediato desde caché (si existe) para evitar parpadeos/limpieza
+            if (conversacionCache.has(userId)) {
+                try { console.debug('[Chat usuario] Render desde cache', userId); } catch(e){}
+                const chatMessages = document.getElementById('chatMessages');
+                const html = conversacionHtmlCache.get(userId);
+                if (html != null) {
+                    chatMessages.innerHTML = html;
+                } else {
+                    renderMensajes(conversacionCache.get(userId));
+                }
+            }
+
+            // Cargar mensajes (evitar cache)
+            const cacheBuster = Date.now();
+            fetch(`/mensajes/conversacion/${userId}?_=${cacheBuster}`, { cache: 'no-store' })
                 .then(response => response.json())
                 .then(data => {
-                    const chatMessages = document.getElementById('chatMessages');
-                    chatMessages.innerHTML = '';
-                    
-                    if (data.mensajes.length === 0) {
-                        chatMessages.innerHTML = `
-                            <div class="empty-chat-state">
-                                <div class="empty-chat-icon">
-                                    <i class="fas fa-comment-dots"></i>
-                                </div>
-                                <p class="empty-chat-text">No hay mensajes aún. ¡Inicia la conversación!</p>
-                            </div>
-                        `;
+                    try { console.debug('[Chat usuario] Conversación', userId, 'mensajes:', (data && data.mensajes) ? data.mensajes.length : 'N/A'); } catch(e){}
+                    // Si el servidor trae mensajes, renderizar y actualizar caché
+
+                    // Actualizar header con datos del destinatario (preferir nombre_mostrar y avatar)
+                    try {
+                        const dest = data.destinatario || {};
+                        const nombreMostrar = dest.nombre_mostrar || dest.nombre || nombre || '';
+                        const avatarUrl = dest.logo_url || dest.foto_perfil || null;
+                        const avatarEl = document.getElementById('chatAvatar');
+                        const nombreEl = document.getElementById('chatNombre');
+                        nombreEl.textContent = nombreMostrar;
+                        if (avatarUrl) {
+                            avatarEl.innerHTML = `<img src="${avatarUrl}" alt="Avatar" onerror="this.parentElement.textContent='${nombreMostrar.charAt(0).toUpperCase()}'">`;
+                        } else {
+                            avatarEl.textContent = (nombreMostrar[0] || '?').toUpperCase();
+                        }
+                    } catch (e) { /* noop */ }
+
+                    if (Array.isArray(data.mensajes) && data.mensajes.length > 0) {
+                        conversacionCache.set(userId, data.mensajes);
+                        renderMensajes(data.mensajes);
                     } else {
-                        data.mensajes.forEach(msg => {
-                            const messageDiv = document.createElement('div');
-                            messageDiv.className = msg.es_mio ? 'message sent' : 'message received';
-                            messageDiv.innerHTML = `
-                                <p>${msg.contenido}</p>
-                                <span class="time">${msg.fecha_envio}</span>
-                            `;
-                            chatMessages.appendChild(messageDiv);
-                        });
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                        // Inicializar since_id con el último id recibido
-                        try {
-                            const ult = data.mensajes[data.mensajes.length - 1];
-                            msgSinceId = ult.id || 0;
-                        } catch(e) { msgSinceId = 0; }
+                        // Si no hay datos del servidor: mantener lo renderizado desde caché.
+                        // Solo si no había caché previo, mostrar placeholder vacío.
+                        if (!conversacionCache.has(userId)) renderMensajes([]);
                     }
-                    // Iniciar polling para esta conversación
-                    iniciarPollingMensajes();
+                    // Marcar como leídos en backend (por si quedó algo sin marcar)
+                    try {
+                        fetch('/mensajes/marcar_leidos', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ remitente_id: destinatarioActual })
+                        }).then(() => {
+                            if (window.notificacionesTiempoReal && typeof window.notificacionesTiempoReal.actualizarMensajes === 'function') {
+                                window.notificacionesTiempoReal.actualizarMensajes();
+                            }
+                        }).catch(()=>{});
+                    } catch(e){}
+                    // Listeners de Pusher manejarán nuevos mensajes siguientes
+                    // Refrescar contador de mensajes no leídos inmediatamente
+                    if (window.notificacionesTiempoReal && typeof window.notificacionesTiempoReal.actualizarMensajes === 'function') {
+                        window.notificacionesTiempoReal.actualizarMensajes();
+                    }
                 })
                 .catch(error => console.error('Error:', error));
         }
@@ -203,8 +273,9 @@
                 if (data.success) {
                     const chatMessages = document.getElementById('chatMessages');
                     
-                    // Si era el mensaje de inicio, limpiar el placeholder
-                    if (chatMessages.querySelector('[style*="display: flex"]')) {
+                    // Si era el mensaje de inicio, limpiar el placeholder solo si es el único contenido
+                    const emptyState = chatMessages.querySelector('.empty-chat-state');
+                    if (emptyState && chatMessages.children.length === 1) {
                         chatMessages.innerHTML = '';
                     }
                     
@@ -216,38 +287,78 @@
                     `;
                     chatMessages.appendChild(messageDiv);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
+                    try { conversacionHtmlCache.set(destinatarioActual, chatMessages.innerHTML); } catch(e){}
+                    if (data.mensaje && typeof data.mensaje.id === 'number') {
+                        idsVistos.add(data.mensaje.id);
+                        // Actualizar caché local
+                        const lista = conversacionCache.get(destinatarioActual) || [];
+                        lista.push({
+                            id: data.mensaje.id,
+                            contenido: data.mensaje.contenido,
+                            fecha_envio: data.mensaje.fecha_envio,
+                            es_mio: true
+                        });
+                        conversacionCache.set(destinatarioActual, lista);
+                    }
                     
                     input.value = '';
+                    // Refrescar contador de no leídos del navbar
+                    if (window.notificacionesTiempoReal && typeof window.notificacionesTiempoReal.actualizarMensajes === 'function') {
+                        window.notificacionesTiempoReal.actualizarMensajes();
+                    }
+                    // El listener de Pusher traerá el mensaje al destinatario
                 }
             })
             .catch(error => console.error('Error:', error));
         }
 
-        async function iniciarPollingMensajes() {
-            pollingActivo = true;
-            const localDest = destinatarioActual;
-            while (pollingActivo && localDest === destinatarioActual && destinatarioActual) {
+        // Listener global: cuando llegue un evento Pusher de nuevo mensaje
+        window.addEventListener('pusher:new-message', (ev) => {
+            try {
+                const data = ev.detail || {};
+                const msg = data.mensaje || {};
+                // Mostrar solo si la conversación abierta corresponde al remitente
+                if (!destinatarioActual || msg.remitente_id !== destinatarioActual) return;
+                if (idsVistos.has(msg.id)) return;
+                const chatMessages = document.getElementById('chatMessages');
+                // Quitar estado vacío si existe
+                const emptyState = chatMessages.querySelector('.empty-chat-state');
+                if (emptyState) emptyState.remove();
+                const div = document.createElement('div');
+                div.className = 'message received';
+                const contenido = (msg && msg.contenido) ? msg.contenido : (data.message || '');
+                const horaRaw = (msg && msg.fecha_envio) ? msg.fecha_envio : (data.timestamp || '');
+                const hora = horaRaw ? (isNaN(Date.parse(horaRaw)) ? horaRaw : new Date(horaRaw).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})) : '';
+                div.innerHTML = `<p>${contenido}</p><span class="time">${hora}</span>`;
+                chatMessages.appendChild(div);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                idsVistos.add(msg.id);
+                try { conversacionHtmlCache.set(destinatarioActual, chatMessages.innerHTML); } catch(e){}
+                // Actualizar caché local como recibido
                 try {
-                    const resp = await fetch(`/api/poll/mensajes?destinatario_id=${destinatarioActual}&since_id=${msgSinceId}&timeout=25`, { credentials: 'same-origin' });
-                    if (!resp.ok) { continue; }
-                    const data = await resp.json();
-                    if (Array.isArray(data.mensajes) && data.mensajes.length) {
-                        const chatMessages = document.getElementById('chatMessages');
-                        data.mensajes.forEach(m => {
-                            const div = document.createElement('div');
-                            div.className = m.es_mio ? 'message sent' : 'message received';
-                            const hora = m.fecha_envio ? new Date(m.fecha_envio).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
-                            div.innerHTML = `<p>${m.contenido}</p><span class="time">${hora}</span>`;
-                            chatMessages.appendChild(div);
-                        });
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                        msgSinceId = data.last_id || msgSinceId;
-                    }
-                } catch(e) {
-                    // ignorar errores intermitentes
-                }
-            }
-        }
+                    const lista = conversacionCache.get(destinatarioActual) || [];
+                    lista.push({
+                        id: msg.id,
+                        contenido: contenido,
+                        fecha_envio: (msg && msg.fecha_envio) ? msg.fecha_envio : (hora || ''),
+                        es_mio: false
+                    });
+                    conversacionCache.set(destinatarioActual, lista);
+                } catch(e){}
+                // Marcar como leído inmediatamente y refrescar contador
+                try {
+                    fetch('/mensajes/marcar_leidos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ remitente_id: destinatarioActual })
+                    }).then(() => {
+                        if (window.notificacionesTiempoReal && typeof window.notificacionesTiempoReal.actualizarMensajes === 'function') {
+                            window.notificacionesTiempoReal.actualizarMensajes();
+                        }
+                    }).catch(()=>{});
+                } catch(e){}
+            } catch (e) { /* noop */ }
+        });
     </script>
 </body>
 </html>

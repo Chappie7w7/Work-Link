@@ -5,72 +5,79 @@
 
 class NotificacionesTiempoReal {
     constructor() {
-        this.socketNotificaciones = null;
-        this.socketMensajes = null;
-        this._notifSinceId = 0;
-        this._pollingActivo = true;
+        this.pusher = null;
+        this.channel = null;
         this.init();
     }
 
     init() {
-        // Cargar Socket.IO desde CDN si no está disponible
-        if (typeof io === 'undefined') {
-            // Migrado a long polling: iniciar bucles de polling
-            this.iniciarPolling();
-        } else {
-            // Migrado a long polling: iniciar bucles de polling
-            this.iniciarPolling();
-        }
-        
         // Cargar contadores iniciales
         this.actualizarContadoresIniciales();
+        // Conectar a Pusher
+        this.iniciarPusher();
     }
 
-    conectarWebSockets() {
-        // Migrado a long polling: sin conexión de sockets, usado para compatibilidad
-        this.iniciarPolling();
+    async loadPusherIfNeeded() {
+        if (typeof Pusher !== 'undefined') return true;
+        try {
+            await new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = 'https://js.pusher.com/8.0/pusher.min.js';
+                s.async = true;
+                s.onload = resolve;
+                s.onerror = reject;
+                document.head.appendChild(s);
+            });
+            return typeof Pusher !== 'undefined';
+        } catch (e) {
+            console.warn('No se pudo cargar Pusher JS:', e);
+            return false;
+        }
     }
 
-    iniciarPolling() {
-        const pollNotificaciones = async () => {
-            if (!this._pollingActivo) return;
-            try {
-                const resp = await fetch(`/api/poll/notificaciones?since_id=${this._notifSinceId}&timeout=25`, { credentials: 'same-origin' });
-                if (resp.ok) {
-                    const data = await resp.json();
-                    if (Array.isArray(data.notificaciones) && data.notificaciones.length) {
-                        data.notificaciones.forEach(n => this.mostrarNotificacionPopup(n));
-                        this._notifSinceId = data.last_id || this._notifSinceId;
-                        // Actualizar badges al recibir novedades
-                        this.actualizarBadgeNotificaciones();
-                        this.actualizarBadgeMensajes();
-                    }
+    async iniciarPusher() {
+        try {
+            const [cfgResp, meResp] = await Promise.all([
+                fetch('/pusher/config', { credentials: 'same-origin' }),
+                fetch('/pusher/me', { credentials: 'same-origin' })
+            ]);
+            if (!cfgResp.ok || !meResp.ok) return;
+            const cfg = await cfgResp.json();
+            const me = await meResp.json();
+            if (!cfg.key || !cfg.cluster || !me.id) return;
+
+            if (!(await this.loadPusherIfNeeded())) return;
+
+            this.pusher = new Pusher(cfg.key, {
+                cluster: cfg.cluster,
+                forceTLS: true,
+                channelAuthorization: {
+                    endpoint: '/pusher/auth',
+                    transport: 'ajax',
+                    headers: {}
                 }
-            } catch (e) {
-                // Silencio errores intermitentes
-            } finally {
-                // Reintentar inmediatamente (el endpoint espera hasta 25s)
-                if (this._pollingActivo) pollNotificaciones();
-            }
-        };
+            });
+            this.channel = this.pusher.subscribe(`private-chat-${me.id}`);
+            this.channel.bind('pusher:subscription_succeeded', () => {
+                try { console.debug('[Pusher usuario] Suscripción OK', `private-chat-${me.id}`); } catch(e){}
+            });
+            this.channel.bind('pusher:subscription_error', (status) => {
+                try { console.error('[Pusher usuario] Error de suscripción', status); } catch(e){}
+            });
 
-        const pollContadores = async () => {
-            if (!this._pollingActivo) return;
-            try {
-                await Promise.all([
-                    this.actualizarMensajes(),
-                    this.actualizarNotificaciones()
-                ]);
-            } catch (e) {
-                // noop
-            } finally {
-                setTimeout(pollContadores, 10000);
-            }
-        };
-
-        // Iniciar loops
-        pollNotificaciones();
-        pollContadores();
+            this.channel.bind('new-message', (data) => {
+                try {
+                    // Actualizar badges cuando llega un mensaje nuevo
+                    this.actualizarMensajes();
+                    this.actualizarNotificaciones();
+                    // Emitir evento global para que vistas de chat lo consuman
+                    window.dispatchEvent(new CustomEvent('pusher:new-message', { detail: data }));
+                    try { console.debug('[Pusher usuario] new-message', data); } catch(e){}
+                } catch (e) { /* noop */ }
+            });
+        } catch (e) {
+            console.error('Error iniciando Pusher:', e);
+        }
     }
 
     async actualizarContadoresIniciales() {
@@ -171,13 +178,10 @@ class NotificacionesTiempoReal {
     }
 
     desconectar() {
-        if (this.socketNotificaciones) {
-            this.socketNotificaciones.disconnect();
-        }
-        if (this.socketMensajes) {
-            this.socketMensajes.disconnect();
-        }
-        this._pollingActivo = false;
+        try {
+            if (this.channel) this.pusher.unsubscribe(this.channel.name);
+            if (this.pusher) this.pusher.disconnect();
+        } catch (e) { /* noop */ }
     }
 }
 

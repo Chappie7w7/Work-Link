@@ -32,6 +32,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   const NAV_TIMEOUT_MS = 8000;
+  const url = new URL(req.url);
 
   async function fetchWithTimeout(request, ms) {
     if (typeof AbortController === 'undefined') {
@@ -70,12 +71,35 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (req.method !== 'GET') {
+    return;
+  }
+
   // 2) API: nunca cachear (network-first con timeout). Evita respuestas obsoletas de /api/offline_jobs
   if (req.url.includes('/api/')) {
     event.respondWith(
       fetchWithTimeout(req, NAV_TIMEOUT_MS)
         .catch(async () => {
           // Intentar devolver algo del cache si existiera (aunque no lo almacenamos), de lo contrario, vacío
+          const cached = await caches.match(req);
+          if (cached) return cached;
+          if (req.headers.get('accept')?.includes('application/json')) {
+            return new Response('[]', { status: 200, headers: { 'Content-Type': 'application/json' } });
+          }
+          return new Response('Service Unavailable', { status: 503 });
+        })
+    );
+    return;
+  }
+
+  const isChat = (
+    url.pathname.startsWith('/mensajes/conversacion/') ||
+    url.pathname.startsWith('/empresa/mensajes/conversacion/')
+  );
+  if (isChat) {
+    event.respondWith(
+      fetchWithTimeout(req, NAV_TIMEOUT_MS)
+        .catch(async () => {
           const cached = await caches.match(req);
           if (cached) return cached;
           if (req.headers.get('accept')?.includes('application/json')) {

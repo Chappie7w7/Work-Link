@@ -15,6 +15,7 @@ flask-jwt-extended
 python-dotenv
 flask-socketio
 python-socketio
+pusher
 
 # Autenticación con Google
 google-auth==2.16.0
