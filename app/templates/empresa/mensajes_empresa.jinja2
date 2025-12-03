@@ -3,6 +3,7 @@
 {% import "components/footer.jinja2" as footer %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,30 +18,31 @@
 <body>
     {{ navbar_empresa.navbar(empresa, usuario_empresa) }}
     {{ flash.render_flash_messages() }}
-    
+
     <div class="messages-container">
         <div class="messages-wrapper">
-        <!-- Barra lateral de conversaciones -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-title">
-                    <i class="fas fa-comments"></i>
-                    <span>Mensajes</span>
+            <!-- Barra lateral de conversaciones -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-title">
+                        <i class="fas fa-comments"></i>
+                        <span>Mensajes</span>
+                    </div>
                 </div>
-            </div>
-            <div class="search-box">
-                <input type="text" placeholder="Buscar conversación...">
-            </div>
+                <!--div class="search-box">
+                    <input type="text" placeholder="Buscar conversación...">
+                </div-->
 
-            <ul class="conversation-list" id="conversationList">
-                {% if conversaciones %}
+                <ul class="conversation-list" id="conversationList">
+                    {% if conversaciones %}
                     {% for conv in conversaciones %}
-                    <li class="conversation" data-user-id="{{ conv.id }}" onclick="cargarConversacion({{ conv.id }}, '{{ conv.nombre }}')">
+                    <li class="conversation" data-user-id="{{ conv.id }}"
+                        onclick="cargarConversacion({{ conv.id }}, '{{ conv.nombre }}')">
                         <div class="avatar">
                             {% if conv.foto_perfil %}
-                                <img src="{{ conv.foto_perfil }}" alt="Foto" onerror="this.remove()">
+                            <img src="{{ conv.foto_perfil }}" alt="Foto" onerror="this.remove()">
                             {% else %}
-                                {{ conv.nombre[0].upper() }}
+                            {{ conv.nombre[0].upper() }}
                             {% endif %}
                         </div>
                         <div class="details">
@@ -49,120 +51,102 @@
                         </div>
                     </li>
                     {% endfor %}
-                {% else %}
+                    {% else %}
                     <li class="empty-conversations">
                         <div class="empty-conversations-icon">
                             <i class="fas fa-comments"></i>
-                            <span>Mensajes</span>
                         </div>
                         <p class="empty-conversations-text">No tienes conversaciones aún</p>
                         {% if empleados_disponibles %}
                         <p class="empty-conversations-hint">Selecciona un candidato abajo para iniciar chat</p>
                         {% endif %}
                     </li>
-                {% endif %}
-                
-                {% if empleados_disponibles %}
-                <li class="section-divider">
-                    <span>INICIAR NUEVA CONVERSACIÓN</span>
-                </li>
-                {% for empleado in empleados_disponibles %}
-                <li class="conversation" data-user-id="{{ empleado.id }}" onclick="cargarConversacion({{ empleado.id }}, '{{ empleado.nombre }}')">
-                    <div class="avatar">
-                        {% if empleado.foto_perfil %}
+                    {% endif %}
+
+                    {% if empleados_disponibles %}
+                    <li class="section-divider">
+                        <span>INICIAR NUEVA CONVERSACIÓN</span>
+                    </li>
+                    {% for empleado in empleados_disponibles %}
+                    <li class="conversation" data-user-id="{{ empleado.id }}"
+                        onclick="cargarConversacion({{ empleado.id }}, '{{ empleado.nombre }}')">
+                        <div class="avatar">
+                            {% if empleado.foto_perfil %}
                             <img src="{{ empleado.foto_perfil }}" alt="Foto" onerror="this.remove()">
-                        {% else %}
+                            {% else %}
                             {{ empleado.nombre[0].upper() }}
-                        {% endif %}
-                    </div>
-                    <div class="details">
-                        <h4>{{ empleado.nombre }} (Candidato)</h4>
-                        <p>Iniciar conversación</p>
-                    </div>
-
-                    <div class="search-box">
-                        <input type="text" placeholder="Buscar conversación...">
-                    </div>
-
-                    <ul class="conversation-list" id="conversationList">
-                        {% if conversaciones %}
-                            {% for conv in conversaciones %}
-                            <li class="conversation" data-user-id="{{ conv.id }}" onclick="cargarConversacion({{ conv.id }}, '{{ conv.nombre }}')">
-                                <div class="avatar">{{ conv.nombre[0].upper() }}</div>
-                                <div class="details">
-                                    <h4>{{ conv.nombre }} {% if conv.tipo_usuario == 'empleado' %}(Candidato){% endif %}</h4>
-                                    <p>Haz clic para ver la conversación</p>
-                                </div>
-                            </li>
-                            {% endfor %}
-                        {% else %}
-                            <li class="empty-conversations">
-                                <div class="empty-conversations-icon">
-                                    <i class="fas fa-comments"></i>
-                                </div>
-                                <p class="empty-conversations-text">No tienes conversaciones aún</p>
-                                {% if empleados_disponibles %}
-                                <p class="empty-conversations-hint">Selecciona un candidato abajo para iniciar chat</p>
-                                {% endif %}
-                            </li>
-                        {% endif %}
-                        
-                        {% if empleados_disponibles %}
-                        <li class="section-divider">
-                            <span>INICIAR NUEVA CONVERSACIÓN</span>
-                        </li>
-                        {% for empleado in empleados_disponibles %}
-                        <li class="conversation" data-user-id="{{ empleado.id }}" onclick="cargarConversacion({{ empleado.id }}, '{{ empleado.nombre }}')">
-                            <div class="avatar">{{ empleado.nombre[0].upper() }}</div>
-                            <div class="details">
-                                <h4>{{ empleado.nombre }} (Candidato)</h4>
-                                <p>Iniciar conversación</p>
-                            </div>
-                        </li>
-                        {% endfor %}
-                        {% endif %}
-                    </ul>
-                </aside>
-
-                <!-- Área principal del chat -->
-                <main class="chat-section">
-                    <header class="chat-header" id="chatHeader" style="display: none;">
-                        <div class="chat-header-left">
-                            <div class="chat-avatar" id="chatAvatar">?</div>
-                            <div class="chat-info">
-                                <h3 id="chatNombre">Selecciona una conversación</h3>
-                                <span class="status" id="chatStatus"></span>
-                            </div>
+                            {% endif %}
                         </div>
-                        <div class="chat-header-actions">
-                            <i class="fas fa-phone"></i>
-                            <i class="fas fa-video"></i>
-                            <i class="fas fa-ellipsis-v"></i>
+                        <div class="details">
+                            <h4>{{ empleado.nombre }} (Candidato)</h4>
+                            <p>Iniciar conversación</p>
                         </div>
-                    </header>
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+                </ul>
+            </aside>
 
-            <div class="chat-input" id="chatInput" style="display: none;">
-                <div class="chat-input-wrapper">
-                    <div class="chat-input-actions">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M21.44 11.05L12.95 2.56a5 5 0 00-7.07 7.07l8.49 8.49a3 3 0 004.24-4.24L9.88 5.73a1 1 0 10-1.41 1.41l8.18 8.18a1 1 0 11-1.41 1.41L6.99 8.67a3 3 0 114.24-4.24l8.49 8.49a5 5 0 11-7.07 7.07L3.58 10.74" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+            <!-- Área principal del chat -->
+            <main class="chat-section">
+                <header class="chat-header" id="chatHeader" style="display: none;">
+                    <div class="chat-header-left">
+                        <div class="chat-avatar" id="chatAvatar">?</div>
+                        <div class="chat-info">
+                            <h3 id="chatNombre">Selecciona una conversación</h3>
+                            <span class="status" id="chatStatus"></span>
+                        </div>
                     </div>
-                    <input type="text" id="mensajeInput" placeholder="Type a message here..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
-                    <div class="chat-input-actions">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M12 14a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M19.5 21a7.5 7.5 0 10-15 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                    <div class="chat-header-actions">
+                        <i class="fas fa-phone"></i>
+                        <i class="fas fa-video"></i>
+                        <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                </header>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="empty-chat-state">
+                        <div class="empty-chat-icon">
+                            <i class="fas fa-comment-dots"></i>
+                        </div>
+                        <p class="empty-chat-text">Selecciona una conversación para comenzar</p>
                     </div>
                 </div>
-                <button onclick="enviarMensaje()" aria-label="Enviar">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M22 2L11 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </button>
-            </div>
+
+                <div class="chat-input" id="chatInput" style="display: none;">
+                    <div class="chat-input-wrapper">
+                        <div class="chat-input-actions">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path
+                                    d="M21.44 11.05L12.95 2.56a5 5 0 00-7.07 7.07l8.49 8.49a3 3 0 004.24-4.24L9.88 5.73a1 1 0 10-1.41 1.41l8.18 8.18a1 1 0 11-1.41 1.41L6.99 8.67a3 3 0 114.24-4.24l8.49 8.49a5 5 0 11-7.07 7.07L3.58 10.74"
+                                    stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <input type="text" id="mensajeInput" placeholder="Type a message here..."
+                            onkeypress="if(event.key === 'Enter') enviarMensaje()">
+                        <div class="chat-input-actions">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M12 14a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" stroke-width="1.7"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M19.5 21a7.5 7.5 0 10-15 0" stroke="currentColor" stroke-width="1.7"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </div>
+                    <button onclick="enviarMensaje()" aria-label="Enviar">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.7"
+                                stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        </svg>
+                    </button>
+                </div>
+            </main>
         </div>
     </div>
 
@@ -198,24 +182,24 @@
                 idsVistos.add(msg.id);
             });
             chatMessages.scrollTop = chatMessages.scrollHeight;
-            try { conversacionHtmlCache.set(destinatarioActual, chatMessages.innerHTML); } catch(e){}
+            try { conversacionHtmlCache.set(destinatarioActual, chatMessages.innerHTML); } catch (e) { }
         }
-        
+
         function cargarConversacion(userId, nombre) {
             destinatarioActual = userId;
-            
+
             // Actualizar UI del header
             document.getElementById('chatHeader').style.display = 'flex';
             document.getElementById('chatInput').style.display = 'flex';
             document.getElementById('chatAvatar').textContent = nombre[0].toUpperCase();
             document.getElementById('chatNombre').textContent = nombre;
-            
+
             // Marcar conversación como activa y reiniciar estado
             idsVistos = new Set();
 
             // Render inmediato desde caché si existe
             if (conversacionCache.has(userId)) {
-                try { console.debug('[Chat empresa] Render desde cache', userId); } catch(e){}
+                try { console.debug('[Chat empresa] Render desde cache', userId); } catch (e) { }
                 const chatMessages = document.getElementById('chatMessages');
                 const html = conversacionHtmlCache.get(userId);
                 if (html != null) {
@@ -224,13 +208,13 @@
                     renderMensajes(conversacionCache.get(userId));
                 }
             }
-            
+
             // Cargar mensajes (evitar cache)
             const cacheBuster = Date.now();
             fetch(`/empresa/mensajes/conversacion/${userId}?_=${cacheBuster}`, { cache: 'no-store' })
                 .then(response => response.json())
                 .then(data => {
-                    try { console.debug('[Chat empresa] Conversación', userId, 'mensajes:', (data && data.mensajes) ? data.mensajes.length : 'N/A'); } catch(e){}
+                    try { console.debug('[Chat empresa] Conversación', userId, 'mensajes:', (data && data.mensajes) ? data.mensajes.length : 'N/A'); } catch (e) { }
                     const chatMessages = document.getElementById('chatMessages');
 
                     // Actualizar header con datos del destinatario (preferir nombre_mostrar y foto_perfil)
@@ -266,8 +250,8 @@
                             if (window.notificacionesEmpresaTiempoReal && typeof window.notificacionesEmpresaTiempoReal.actualizarMensajes === 'function') {
                                 window.notificacionesEmpresaTiempoReal.actualizarMensajes();
                             }
-                        }).catch(()=>{});
-                    } catch(e){}
+                        }).catch(() => { });
+                    } catch (e) { }
 
                     // Refrescar contador inmediatamente
                     if (window.notificacionesEmpresaTiempoReal && typeof window.notificacionesEmpresaTiempoReal.actualizarMensajes === 'function') {
@@ -275,15 +259,15 @@
                     }
                 })
                 .catch(error => console.error('Error:', error));
-            }
-        
-        
+        }
+
+
         function enviarMensaje() {
             const input = document.getElementById('mensajeInput');
             const contenido = input.value.trim();
-            
+
             if (!contenido || !destinatarioActual) return;
-            
+
             fetch('/empresa/mensajes/enviar', {
                 method: 'POST',
                 headers: {
@@ -294,42 +278,42 @@
                     contenido: contenido
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const chatMessages = document.getElementById('chatMessages');
-                    
-                    // Si era el mensaje de inicio, limpiar el placeholder
-                    if (chatMessages.querySelector('.empty-chat-state')) {
-                        chatMessages.innerHTML = '';
-                    }
-                    
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'message sent';
-                    messageDiv.innerHTML = `
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const chatMessages = document.getElementById('chatMessages');
+
+                        // Si era el mensaje de inicio, limpiar el placeholder
+                        if (chatMessages.querySelector('.empty-chat-state')) {
+                            chatMessages.innerHTML = '';
+                        }
+
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = 'message sent';
+                        messageDiv.innerHTML = `
                         <p>${data.mensaje.contenido}</p>
                         <span class="time">${data.mensaje.fecha_envio}</span>
                     `;
-                    chatMessages.appendChild(messageDiv);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                    try { conversacionHtmlCache.set(destinatarioActual, chatMessages.innerHTML); } catch(e){}
-                    if (data.mensaje && typeof data.mensaje.id === 'number') {
-                        idsVistos.add(data.mensaje.id);
-                        // Actualizar caché local
-                        const lista = conversacionCache.get(destinatarioActual) || [];
-                        lista.push({
-                            id: data.mensaje.id,
-                            contenido: data.mensaje.contenido,
-                            fecha_envio: data.mensaje.fecha_envio,
-                            es_mio: true
-                        });
-                        conversacionCache.set(destinatarioActual, lista);
+                        chatMessages.appendChild(messageDiv);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        try { conversacionHtmlCache.set(destinatarioActual, chatMessages.innerHTML); } catch (e) { }
+                        if (data.mensaje && typeof data.mensaje.id === 'number') {
+                            idsVistos.add(data.mensaje.id);
+                            // Actualizar caché local
+                            const lista = conversacionCache.get(destinatarioActual) || [];
+                            lista.push({
+                                id: data.mensaje.id,
+                                contenido: data.mensaje.contenido,
+                                fecha_envio: data.mensaje.fecha_envio,
+                                es_mio: true
+                            });
+                            conversacionCache.set(destinatarioActual, lista);
+                        }
+
+                        input.value = '';
                     }
-                    
-                    input.value = '';
-                }
-            })
-            .catch(error => console.error('Error:', error));
+                })
+                .catch(error => console.error('Error:', error));
         }
 
         // Listener global: cuando llegue un evento Pusher de nuevo mensaje
@@ -348,12 +332,12 @@
                 div.className = 'message received';
                 const contenido = (msg && msg.contenido) ? msg.contenido : (data.message || '');
                 const horaRaw = (msg && msg.fecha_envio) ? msg.fecha_envio : (data.timestamp || '');
-                const hora = horaRaw ? (isNaN(Date.parse(horaRaw)) ? horaRaw : new Date(horaRaw).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})) : '';
+                const hora = horaRaw ? (isNaN(Date.parse(horaRaw)) ? horaRaw : new Date(horaRaw).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : '';
                 div.innerHTML = `<p>${contenido}</p><span class=\"time\">${hora}</span>`;
                 chatMessages.appendChild(div);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
                 idsVistos.add(msg.id);
-                try { conversacionHtmlCache.set(destinatarioActual, chatMessages.innerHTML); } catch(e){}
+                try { conversacionHtmlCache.set(destinatarioActual, chatMessages.innerHTML); } catch (e) { }
                 // Actualizar caché local como recibido
                 try {
                     const lista = conversacionCache.get(destinatarioActual) || [];
@@ -364,7 +348,7 @@
                         es_mio: false
                     });
                     conversacionCache.set(destinatarioActual, lista);
-                } catch(e){}
+                } catch (e) { }
                 // Marcar como leído inmediatamente y refrescar contador
                 try {
                     fetch('/empresa/mensajes/marcar_leidos', {
@@ -375,10 +359,11 @@
                         if (window.notificacionesEmpresaTiempoReal && typeof window.notificacionesEmpresaTiempoReal.actualizarMensajes === 'function') {
                             window.notificacionesEmpresaTiempoReal.actualizarMensajes();
                         }
-                    }).catch(()=>{});
-                } catch(e){}
+                    }).catch(() => { });
+                } catch (e) { }
             } catch (e) { /* noop */ }
         });
     </script>
 </body>
+
 </html>
