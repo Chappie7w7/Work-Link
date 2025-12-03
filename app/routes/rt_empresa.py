@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request, flash, jsonify
+from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify, make_response
 from app.utils.decorators import login_role_required
 from app.utils.roles import Roles
 from app.controller.ctr_empleos import get_user_from_session
@@ -13,6 +13,8 @@ from app.models.md_usuarios import UsuarioModel
 from app.models.md_notificacion import NotificacionModel
 from sqlalchemy import or_, and_, desc, func
 from app.utils.timezone_helper import get_mexico_time
+from app.utils.validators import validar_rfc
+from app.utils.pusher_client import pusher_client
 from app.utils.mensaje_helper import contar_mensajes_no_leidos
 
 rt_empresa = Blueprint("rt_empresa", __name__, url_prefix="/empresa")
@@ -637,6 +639,7 @@ def mensajes_empresa():
         UsuarioModel.id,
         UsuarioModel.nombre,
         UsuarioModel.tipo_usuario,
+        UsuarioModel.foto_perfil,
         db.func.max(MensajeModel.fecha_envio).label('ultima_fecha')
     ).join(
         MensajeModel,
@@ -647,7 +650,7 @@ def mensajes_empresa():
     ).filter(
         UsuarioModel.id != user['id']
     ).group_by(
-        UsuarioModel.id, UsuarioModel.nombre, UsuarioModel.tipo_usuario
+        UsuarioModel.id, UsuarioModel.nombre, UsuarioModel.tipo_usuario, UsuarioModel.foto_perfil
     ).order_by(
         desc('ultima_fecha')
     ).all()
@@ -684,6 +687,14 @@ def obtener_conversacion_empresa(destinatario_id):
     if not user:
         return jsonify({"error": "No autenticado"}), 401
     
+    # Marcar mensajes como leídos ANTES de consultar
+    MensajeModel.query.filter(
+        MensajeModel.remitente_id == destinatario_id,
+        MensajeModel.destinatario_id == user['id'],
+        MensajeModel.leido == False
+    ).update({"leido": True}, synchronize_session=False)
+    db.session.commit()
+
     # Obtener mensajes entre el usuario actual y el destinatario
     mensajes_list = MensajeModel.query.filter(
         or_(
@@ -692,16 +703,10 @@ def obtener_conversacion_empresa(destinatario_id):
         )
     ).order_by(MensajeModel.fecha_envio.asc()).all()
     
-    # Marcar mensajes como leídos
-    MensajeModel.query.filter(
-        MensajeModel.remitente_id == destinatario_id,
-        MensajeModel.destinatario_id == user['id'],
-        MensajeModel.leido == False
-    ).update({"leido": True})
-    db.session.commit()
-    
     # Obtener información del destinatario
     destinatario = UsuarioModel.query.get(destinatario_id)
+    nombre_mostrar = destinatario.nombre if destinatario else ''
+    foto = destinatario.foto_perfil if destinatario else None
     
     return jsonify({
         "mensajes": [{
@@ -714,7 +719,9 @@ def obtener_conversacion_empresa(destinatario_id):
         "destinatario": {
             "id": destinatario.id,
             "nombre": destinatario.nombre,
-            "tipo_usuario": destinatario.tipo_usuario
+            "tipo_usuario": destinatario.tipo_usuario,
+            "nombre_mostrar": nombre_mostrar,
+            "foto_perfil": foto
         }
     })
 
@@ -757,27 +764,26 @@ def enviar_mensaje_empresa():
     db.session.add(notificacion)
     db.session.flush()  # Para obtener el ID
     
-    # Enviar notificación y mensaje en tiempo real usando WebSockets
+    # Enviar evento en tiempo real via Pusher Channels
     try:
-        from app.socketio_events import enviar_notificacion_tiempo_real, enviar_mensaje_tiempo_real
-        enviar_notificacion_tiempo_real(destinatario_id, {
-            'id': notificacion.id,
-            'usuario_id': destinatario_id,
-            'mensaje': notificacion.mensaje,
-            'tipo': 'mensaje',
-            'leido': False,
-            'fecha_envio': notificacion.fecha_envio.isoformat()
-        })
-        enviar_mensaje_tiempo_real(destinatario_id, {
-            'id': nuevo_mensaje.id,
-            'remitente_id': user['id'],
-            'destinatario_id': destinatario_id,
-            'contenido': nuevo_mensaje.contenido,
-            'fecha_envio': nuevo_mensaje.fecha_envio.isoformat(),
-            'leido': False
-        })
+        channel = f"private-chat-{destinatario_id}"
+        event = "new-message"
+        payload = {
+            'user': {
+                'id': user['id'],
+                'nombre': (EmpresaModel.query.get(user['id']).nombre_empresa if EmpresaModel.query.get(user['id']) else user.get('nombre'))
+            },
+            'message': nuevo_mensaje.contenido,
+            'timestamp': nuevo_mensaje.fecha_envio.isoformat(),
+            'mensaje': {
+                'id': nuevo_mensaje.id,
+                'remitente_id': user['id'],
+                'destinatario_id': destinatario_id
+            }
+        }
+        pusher_client.trigger(channel, event, payload)
     except Exception as e:
-        print(f"Error al enviar notificación/mensaje en tiempo real: {str(e)}")
+        print(f"Error al emitir evento Pusher: {str(e)}")
     
     db.session.commit()
     
@@ -795,13 +801,35 @@ def enviar_mensaje_empresa():
 @rt_empresa.route("/api/mensajes/contador")
 @login_role_required(Roles.EMPRESA)
 def contador_mensajes_empresa():
-    """API endpoint para obtener el contador de mensajes no leídos en tiempo real"""
+    """API endpoint para obtener el contador de mensajes no leídos para la empresa autenticada"""
     user = get_user_from_session(session)
     if not user:
         return jsonify({"count": 0})
-    
     count = contar_mensajes_no_leidos(user['id'])
     return jsonify({"count": count})
+
+
+@rt_empresa.route("/mensajes/marcar_leidos", methods=["POST"])
+@login_role_required(Roles.EMPRESA)
+def empresa_marcar_leidos_en_tiempo_real():
+    user = get_user_from_session(session)
+    if not user:
+        return jsonify({"success": False}), 401
+    data = request.get_json() or {}
+    remitente_id = data.get('remitente_id')
+    if not remitente_id:
+        return jsonify({"success": False, "error": "remitente_id requerido"}), 400
+    try:
+        MensajeModel.query.filter(
+            MensajeModel.remitente_id == remitente_id,
+            MensajeModel.destinatario_id == user['id'],
+            MensajeModel.leido == False
+        ).update({"leido": True}, synchronize_session=False)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception:
+        db.session.rollback()
+        return jsonify({"success": False}), 500
 
 
 @rt_empresa.route("/notificaciones")
