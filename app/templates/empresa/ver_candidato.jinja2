@@ -1,137 +1,148 @@
 {% import "components/flash_messages.jinja2" as flash %}
+{% import "components/navbar_empresa.jinja2" as navbar_empresa %}
+{% import "components/footer.jinja2" as footer %}
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Perfil de Empresa</title>
+    <title>Perfil del Candidato</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_ver_candidato.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_perfil.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Navigation Bar -->
-    <nav class="empresa-navbar">
-        <div class="nav-brand">
-            <h1>WorkLink</h1>
+    {{ navbar_empresa.navbar(empresa, usuario_empresa) }}
+    {{ flash.render_flash_messages() }}
+
+    <div class="main-container">
+        <div class="page-header">
+            <h2 class="page-title">Perfil del Candidato</h2>
+            <p class="page-subtitle">Revisa la información del candidato y su historial de postulaciones</p>
         </div>
-        <div class="nav-links">
-            <a href="{{ url_for('rt_empresa.dashboard') }}" class="nav-link">
-                <i class="fas fa-arrow-left"></i> 
-                <span>Dashboard</span>
-            </a>
-            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
-                <i class="fas fa-sign-out-alt"></i> Salir
-            </a>
-        </div>
-    </nav>
 
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_empresa.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-
-    <div class="container mt-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h3>Perfil del Candidato</h3>
-            </div>
-            <div class="card-body">
-                {% if usuario %}
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <img src="{{ usuario.foto_perfil if usuario.foto_perfil else url_for('static', filename='img/default-user.png') }}" 
-                             alt="Foto de perfil" class="img-fluid rounded-circle" style="max-width: 150px;">
+        <div class="candidate-layout">
+            <div class="section-card candidate-profile-card">
+                <div class="candidate-profile-header">
+                    {% if usuario %}
+                    <div class="candidate-avatar">
+                        <img src="{{ usuario.foto_perfil if usuario.foto_perfil else url_for('static', filename='img/default-user.png') }}"
+                             alt="Foto de perfil">
                     </div>
-                    <div class="col-md-9">
-                        <h4>{{ usuario.nombre }}</h4>
-                        <p><strong>Correo:</strong> {{ usuario.correo }}</p>
-                        <p><strong>Ubicación:</strong> {{ usuario.ubicacion or 'No especificada' }}</p>
-                        <p><strong>Fecha de registro:</strong> {{ usuario.fecha_registro.strftime('%d/%m/%Y') if usuario.fecha_registro else 'N/A' }}</p>
+                    <div class="candidate-main-info">
+                        <h3 class="candidate-name">{{ usuario.nombre }}</h3>
+                        <div class="candidate-meta">
+                            <div class="candidate-meta-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ usuario.correo }}</span>
+                            </div>
+                            <div class="candidate-meta-item">
+                                <i class="fas fa-location-dot"></i>
+                                <span>{{ usuario.ubicacion or 'No especificada' }}</span>
+                            </div>
+                            <div class="candidate-meta-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Registrado el {{ usuario.fecha_registro.strftime('%d/%m/%Y') if usuario.fecha_registro else 'N/A' }}</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                {% endif %}
-
-                <hr>
-
-                {% if empleado %}
-                <div class="mb-4">
-                    <h5>Educación</h5>
-                    <p>{{ empleado.educacion or 'No especificada' }}</p>
-                </div>
-
-                <div class="mb-4">
-                    <h5>Experiencia</h5>
-                    <p>{{ empleado.experiencia or 'No especificada' }}</p>
-                </div>
-
-                <div class="mb-4">
-                    <h5>Habilidades</h5>
-                    <p>{{ empleado.habilidades or 'No especificadas' }}</p>
-                </div>
-
-                <div class="mb-4">
-                    <h5>Currículum</h5>
-                    {% if empleado.curriculum_url %}
-                        <a href="{{ empleado.curriculum_url }}" target="_blank" class="btn btn-sm btn-success">
-                            📄 Descargar CV
-                        </a>
-                    {% else %}
-                        <p class="text-muted">No ha subido CV</p>
                     {% endif %}
                 </div>
 
-                <div class="mb-4">
-                    <p>
-                        <strong>CV Destacado:</strong> 
-                        {% if empleado.cv_destacado %}
-                            <span class="badge bg-warning">⭐ Sí</span>
+                {% if empleado %}
+                <div class="candidate-info-grid">
+                    <div class="candidate-info-block">
+                        <h4><i class="fas fa-graduation-cap"></i> Educación</h4>
+                        <p>{{ empleado.educacion or 'No especificada' }}</p>
+                    </div>
+
+                    <div class="candidate-info-block">
+                        <h4><i class="fas fa-briefcase"></i> Experiencia</h4>
+                        <p>{{ empleado.experiencia or 'No especificada' }}</p>
+                    </div>
+
+                    <div class="candidate-info-block">
+                        <h4><i class="fas fa-lightbulb"></i> Habilidades</h4>
+                        <p>{{ empleado.habilidades or 'No especificadas' }}</p>
+                    </div>
+
+                    <div class="candidate-info-block">
+                        <h4><i class="fas fa-file-pdf"></i> Currículum</h4>
+                        {% if empleado.curriculum_url %}
+                            <a href="{{ empleado.curriculum_url }}" target="_blank" class="btn-download-cv">
+                                <i class="fas fa-download"></i> Descargar CV
+                            </a>
                         {% else %}
-                            <span class="badge bg-secondary">No</span>
+                            <p class="candidate-muted">No ha subido CV</p>
                         {% endif %}
-                    </p>
+                    </div>
+
+                    <div class="candidate-info-block">
+                        <h4><i class="fas fa-star"></i> CV Destacado</h4>
+                        <p>
+                            {% if empleado.cv_destacado %}
+                                ⭐ Sí
+                            {% else %}
+                                No
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
                 {% else %}
-                <p class="text-muted">El candidato no ha completado su perfil.</p>
+                <p class="candidate-muted">El candidato no ha completado su perfil.</p>
                 {% endif %}
+            </div>
 
-                <hr>
+            <div class="section-card candidate-applications-card">
+                <div class="candidate-applications-header">
+                    <h3>
+                        <i class="fas fa-clipboard-list"></i>
+                        Postulaciones a tus vacantes
+                    </h3>
+                </div>
 
-                <!-- Postulaciones del candidato -->
-                <h5 class="mb-3">📋 Postulaciones a tus vacantes</h5>
                 {% if postulaciones %}
-                    {% for post in postulaciones %}
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title">{{ post.vacante.titulo }}</h6>
-                            <p class="mb-2"><strong>Fecha:</strong> {{ post.fecha_postulacion.strftime('%d/%m/%Y %H:%M') if post.fecha_postulacion else 'N/A' }}</p>
-                            <p class="mb-2">
-                                <strong>Estado actual:</strong> 
-                                {% if post.estado == 'postulado' %}
-                                    <span class="badge bg-info">📩 Postulado</span>
-                                {% elif post.estado == 'visto' %}
-                                    <span class="badge bg-primary">👁️ Visto</span>
-                                {% elif post.estado == 'en_proceso' %}
-                                    <span class="badge bg-warning">⏳ En proceso</span>
-                                {% elif post.estado == 'rechazado' %}
-                                    <span class="badge bg-danger">❌ Rechazado</span>
-                                {% elif post.estado == 'contratado' %}
-                                    <span class="badge bg-success">✅ Contratado</span>
-                                {% endif %}
-                            </p>
-                            {% if post.notas_empresa %}
-                            <p class="mb-2"><strong>Notas:</strong> {{ post.notas_empresa }}</p>
-                            {% endif %}
+                    <div class="candidate-applications-list">
+                        {% for post in postulaciones %}
+                        <div class="candidate-application-item">
+                            <div class="candidate-application-main">
+                                <div class="candidate-application-title">
+                                    <h4>{{ post.vacante.titulo }}</h4>
+                                    <span class="candidate-application-date">
+                                        <i class="fas fa-clock"></i>
+                                        {{ post.fecha_postulacion.strftime('%d/%m/%Y %H:%M') if post.fecha_postulacion else 'N/A' }}
+                                    </span>
+                                </div>
 
-                            <!-- Formulario para cambiar estado -->
-                            <form action="{{ url_for('rt_empresa.cambiar_estado_postulacion', postulacion_id=post.id) }}" method="POST" class="mt-3">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="estado_{{ post.id }}" class="form-label">Cambiar estado:</label>
-                                        <select name="estado" id="estado_{{ post.id }}" class="form-select form-select-sm">
+                                <div class="candidate-application-status">
+                                    <span class="status-label">Estado actual:</span>
+                                    {% if post.estado == 'postulado' %}
+                                        <span>📩 Postulado</span>
+                                    {% elif post.estado == 'visto' %}
+                                        <span>👁️ Visto</span>
+                                    {% elif post.estado == 'en_proceso' %}
+                                        <span>⏳ En proceso</span>
+                                    {% elif post.estado == 'rechazado' %}
+                                        <span>❌ Rechazado</span>
+                                    {% elif post.estado == 'contratado' %}
+                                        <span>✅ Contratado</span>
+                                    {% endif %}
+                                </div>
+
+                                {% if post.notas_empresa %}
+                                <p class="candidate-application-notes"><strong>Notas:</strong> {{ post.notas_empresa }}</p>
+                                {% endif %}
+                            </div>
+
+                            <form action="{{ url_for('rt_empresa.cambiar_estado_postulacion', postulacion_id=post.id) }}" method="POST" class="candidate-status-form">
+                                <div class="candidate-status-grid">
+                                    <div class="candidate-status-field">
+                                        <label for="estado_{{ post.id }}">Cambiar estado:</label>
+                                        <select name="estado" id="estado_{{ post.id }}">
                                             <option value="postulado" {% if post.estado == 'postulado' %}selected{% endif %}>📩 Postulado</option>
                                             <option value="visto" {% if post.estado == 'visto' %}selected{% endif %}>👁️ Visto</option>
                                             <option value="en_proceso" {% if post.estado == 'en_proceso' %}selected{% endif %}>⏳ En proceso</option>
@@ -139,49 +150,39 @@
                                             <option value="contratado" {% if post.estado == 'contratado' %}selected{% endif %}>✅ Contratado</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="notas_{{ post.id }}" class="form-label">Notas (opcional):</label>
-                                        <input type="text" name="notas_empresa" id="notas_{{ post.id }}" class="form-control form-control-sm" placeholder="Agregar notas..." value="{{ post.notas_empresa or '' }}">
+                                    <div class="candidate-status-field">
+                                        <label for="notas_{{ post.id }}">Notas (opcional):</label>
+                                        <input type="text" name="notas_empresa" id="notas_{{ post.id }}" placeholder="Agregar notas..." value="{{ post.notas_empresa or '' }}">
                                     </div>
                                 </div>
-                                <div class="d-flex gap-2 mt-2">
-                                    <button type="submit" class="btn btn-primary btn-sm">Actualizar Estado</button>
+                                <div class="candidate-status-actions">
+                                    <button type="submit" class="btn-primary-small">Actualizar estado</button>
                                     {% if post.estado != 'rechazado' and post.estado != 'contratado' %}
-                                    <button type="button" class="btn btn-danger btn-sm" onclick="cancelarPostulacion({{ post.id }})">
-                                        <i class="fas fa-times"></i> Cancelar Postulación
+                                    <button type="button" class="btn-danger-outline" onclick="cancelarPostulacion({{ post.id }})">
+                                        <i class="fas fa-times"></i> Cancelar postulación
                                     </button>
                                     {% endif %}
                                 </div>
                             </form>
                         </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 {% else %}
-                    <p class="text-muted">Este candidato no tiene postulaciones a tus vacantes.</p>
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Este candidato no tiene postulaciones a tus vacantes.</p>
+                    </div>
                 {% endif %}
 
-                <div class="text-end mt-4">
-                    <a href="{{ url_for('rt_empresa.dashboard') }}" class="btn btn-secondary">Volver</a>
+                <div class="candidate-back">
+                    <a href="{{ url_for('rt_empresa.dashboard') }}" class="btn-secondary-link">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver al panel de empresa
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Mensajes flash -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
-                {% for category, message in messages %}
-                <div class="toast show align-items-center text-white bg-{{ 'success' if category == 'success' else 'danger' }} border-0" role="alert">
-                    <div class="d-flex">
-                        <div class="toast-body">{{ message }}</div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
 
     <script>
         function cancelarPostulacion(postulacionId) {
@@ -200,5 +201,7 @@
             }
         }
     </script>
+
+    {{ footer.footer() }}
 </body>
 </html>

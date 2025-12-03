@@ -1,3 +1,5 @@
+{% import "components/navbar_empresa.jinja2" as navbar_empresa %}
+{% import "components/footer.jinja2" as footer %}
 {% import "components/flash_messages.jinja2" as flash %}
 <!DOCTYPE html>
 <html lang="es">
@@ -14,29 +16,8 @@
 </head>
 
 <body>
+    {{ navbar_empresa.navbar(empresa, usuario_empresa) }}
     {{ flash.render_flash_messages() }}
-    
-    <!-- Navigation Bar -->
-    <nav class="empresa-navbar">
-        <div class="nav-brand">
-            <h1>WorkLink</h1>
-        </div>
-        <div class="nav-links">
-            <a href="{{ url_for('rt_empresa.mensajes_empresa') }}" class="nav-link" style="position: relative;">
-                <i class="fas fa-envelope"></i> 
-                <span>Mensajes</span>
-                <span id="badge-mensajes-header" class="badge-header" style="display: none;"></span>
-            </a>
-            <a href="{{ url_for('rt_empresa.notificaciones_empresa') }}" class="nav-link" style="position: relative;">
-                <i class="fas fa-bell"></i> 
-                <span>Notificaciones</span>
-                <span id="badge-notificaciones-header" class="badge-header" style="display: none;"></span>
-            </a>
-            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
-                <i class="fas fa-sign-out-alt"></i> Salir
-            </a>
-        </div>
-    </nav>
 
     <!-- Main Content -->
     <div class="main-container">
@@ -46,7 +27,7 @@
         </div>
 
         <!-- Company Profile Card -->
-        <div class="company-profile-card">
+        <!--div class="company-profile-card">
             <div class="company-header">
                 <div class="company-logo-section">
                     {% if empresa and empresa.logo_url %}
@@ -103,7 +84,7 @@
                 </div>
                 {% endif %}
             </div>
-        </div>
+        </div-->
 
         <!-- Statistics Cards -->
         <div class="stats-grid">
@@ -131,7 +112,7 @@
                     </p>
                 </div>
             </div>
-            <div class="stat-card">
+            <!--div class="stat-card">
                 <div class="stat-icon">
                     <i class="fas fa-user-check"></i>
                 </div>
@@ -142,8 +123,8 @@
                         <i class="fas fa-arrow-down"></i> -2% este mes
                     </p>
                 </div>
-            </div>
-            <div class="stat-card">
+            </div-->
+            <!--div class="stat-card">
                 <div class="stat-icon">
                     <i class="fas fa-clock"></i>
                 </div>
@@ -154,7 +135,7 @@
                         <i class="fas fa-arrow-down"></i> -3 días
                     </p>
                 </div>
-            </div>
+            </div-->
         </div>
 
         <!-- Detailed Statistics Section -->
@@ -447,6 +428,8 @@
         </div>
     </div>
 
+    {{ footer.footer() }}
+
     <!-- Modal de confirmación para eliminar -->
     <div id="confirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
         <div style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px;">
@@ -693,65 +676,6 @@
             });
         }
     </script>
-    <style>
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-clear-all {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: background-color 0.3s;
-        }
-
-        .btn-clear-all:hover {
-            background-color: #c82333;
-        }
-
-        .btn-clear-all:disabled {
-            background-color: #6c757d;
-            cursor: not-allowed;
-        }
-
-        .btn-delete-postulacion {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.875rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-            margin-left: 8px;
-        }
-
-        .btn-delete-postulacion:hover {
-            background-color: #c82333;
-        }
-
-        .candidate-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .candidate-item {
-            transition: opacity 0.3s;
-        }
-    </style>
 </body>
 
 </html>

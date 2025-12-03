@@ -1,4 +1,6 @@
 {% import "components/flash_messages.jinja2" as flash %}
+{% import "components/navbar_empresa.jinja2" as navbar_empresa %}
+{% import "components/footer.jinja2" as footer %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -13,25 +15,10 @@
 </head>
 
 <body>
-    <!-- Navigation Bar -->
-    <nav class="empresa-navbar">
-        <div class="nav-brand">
-            <h1>WorkLink</h1>
-        </div>
-        <div class="nav-links">
-            <a href="{{ url_for('rt_empresa.dashboard') }}" class="nav-link">
-                <i class="fas fa-arrow-left"></i> 
-                <span>Dashboard</span>
-            </a>
-            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
-                <i class="fas fa-sign-out-alt"></i> Salir
-            </a>
-        </div>
-    </nav>
-
+    {{ navbar_empresa.navbar(empresa, usuario_empresa) }}
     {{ flash.render_flash_messages() }}
 
-    <div class="main-content-edit">
+    <div class="main-content-edit main-container">
         <form action="{{ url_for('rt_empresa.editar_perfil') }}" method="post" class="perfil-form-edit" enctype="multipart/form-data">
             <div class="edit-profile-grid">
                 <!-- Panel Izquierdo -->
@@ -163,6 +150,8 @@
             </div>
         </form>
     </div>
+
+    {{ footer.footer() }}
 
     <script>
         // Hacer que el label funcione como botón para el input file

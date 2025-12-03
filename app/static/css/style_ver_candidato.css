@@ -1,0 +1,316 @@
+/* Estilos específicos para la página de ver perfil de candidato (empresa/ver_candidato.jinja2) */
+
+.candidate-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.7fr);
+    gap: 30px;
+}
+
+.candidate-profile-card {
+    padding: 30px;
+}
+
+.candidate-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 25px;
+}
+
+.candidate-avatar img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.25);
+}
+
+.candidate-main-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.candidate-name {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.candidate-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.candidate-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: #64748b;
+}
+
+.candidate-meta-item i {
+    color: #3b82f6;
+}
+
+.candidate-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.candidate-info-block {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.candidate-info-block h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.candidate-info-block h4 i {
+    color: #3b82f6;
+}
+
+.candidate-info-block p {
+    font-size: 0.95rem;
+    color: #475569;
+    margin: 0;
+}
+
+.candidate-muted {
+    font-size: 0.95rem;
+    color: #94a3b8;
+}
+
+.btn-download-cv {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-download-cv:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.4);
+}
+
+.candidate-applications-card {
+    padding: 26px 24px;
+}
+
+.candidate-applications-header h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.candidate-applications-header h3 i {
+    color: #3b82f6;
+}
+
+.candidate-applications-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.candidate-application-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 18px 16px;
+    background: #f9fafb;
+}
+
+.candidate-application-main {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.candidate-application-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.candidate-application-title h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.candidate-application-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.candidate-application-date i {
+    color: #3b82f6;
+}
+
+.candidate-application-status {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.candidate-application-status .status-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.candidate-application-notes {
+    font-size: 0.9rem;
+    color: #475569;
+    margin: 0;
+}
+
+.candidate-status-form {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.candidate-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.candidate-status-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.candidate-status-field label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.candidate-status-field select,
+.candidate-status-field input {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    color: #1e293b;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.candidate-status-field select:focus,
+.candidate-status-field input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.candidate-status-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-primary-small {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-primary-small:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4);
+}
+
+.btn-danger-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1.5px solid #ef4444;
+    background: transparent;
+    color: #ef4444;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-danger-outline:hover {
+    background: rgba(239, 68, 68, 0.08);
+    transform: translateY(-2px);
+}
+
+.candidate-back {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-secondary-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #1e293b;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary-link:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}

@@ -1,4 +1,6 @@
 {% import "components/flash_messages.jinja2" as flash %}
+{% import "components/navbar_empresa.jinja2" as navbar_empresa %}
+{% import "components/footer.jinja2" as footer %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,126 +14,110 @@
 </head>
 
 <body>
+    {{ navbar_empresa.navbar(empresa, usuario_empresa) }}
     {{ flash.render_flash_messages() }}
     
-    <!-- Navigation Bar -->
-    <nav class="empresa-navbar">
-        <div class="nav-brand">
-            <h1>WorkLink</h1>
-        </div>
-        <div class="nav-links">
-            <a href="{{ url_for('rt_empresa.dashboard') }}" class="nav-link">
-                <i class="fas fa-arrow-left"></i> 
-                <span>Dashboard</span>
-            </a>
-            <a href="{{ url_for('rt_empresa.notificaciones_empresa') }}" class="nav-link" style="position: relative;">
-                <i class="fas fa-bell"></i> 
-                <span>Notificaciones</span>
-                <span id="badge-notificaciones-header" class="badge-header" style="display: none;"></span>
-            </a>
-            <a href="{{ url_for('IndexRoute.index') }}" class="btn-salir">
-                <i class="fas fa-sign-out-alt"></i> Salir
-            </a>
-        </div>
-    </nav>
-
     <div class="messages-container">
         <div class="messages-wrapper">
-        <!-- Barra lateral de conversaciones -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-title">
-                    <i class="fas fa-comments"></i>
-                    <span>Mensajes</span>
-                </div>
-            </div>
-            <div class="search-box">
-                <input type="text" placeholder="Buscar conversación...">
-            </div>
-
-            <ul class="conversation-list" id="conversationList">
-                {% if conversaciones %}
-                    {% for conv in conversaciones %}
-                    <li class="conversation" data-user-id="{{ conv.id }}" onclick="cargarConversacion({{ conv.id }}, '{{ conv.nombre }}')">
-                        <div class="avatar">{{ conv.nombre[0].upper() }}</div>
-                        <div class="details">
-                            <h4>{{ conv.nombre }} {% if conv.tipo_usuario == 'empleado' %}(Candidato){% endif %}</h4>
-                            <p>Haz clic para ver la conversación</p>
-                        </div>
-                    </li>
-                    {% endfor %}
-                {% else %}
-                    <li class="empty-conversations">
-                        <div class="empty-conversations-icon">
+                <!-- Barra lateral de conversaciones -->
+                <aside class="sidebar">
+                    <div class="sidebar-header">
+                        <div class="sidebar-title">
                             <i class="fas fa-comments"></i>
+                            <span>Mensajes</span>
                         </div>
-                        <p class="empty-conversations-text">No tienes conversaciones aún</p>
-                        {% if empleados_disponibles %}
-                        <p class="empty-conversations-hint">Selecciona un candidato abajo para iniciar chat</p>
+                    </div>
+
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar conversación...">
+                    </div>
+
+                    <ul class="conversation-list" id="conversationList">
+                        {% if conversaciones %}
+                            {% for conv in conversaciones %}
+                            <li class="conversation" data-user-id="{{ conv.id }}" onclick="cargarConversacion({{ conv.id }}, '{{ conv.nombre }}')">
+                                <div class="avatar">{{ conv.nombre[0].upper() }}</div>
+                                <div class="details">
+                                    <h4>{{ conv.nombre }} {% if conv.tipo_usuario == 'empleado' %}(Candidato){% endif %}</h4>
+                                    <p>Haz clic para ver la conversación</p>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="empty-conversations">
+                                <div class="empty-conversations-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <p class="empty-conversations-text">No tienes conversaciones aún</p>
+                                {% if empleados_disponibles %}
+                                <p class="empty-conversations-hint">Selecciona un candidato abajo para iniciar chat</p>
+                                {% endif %}
+                            </li>
                         {% endif %}
-                    </li>
-                {% endif %}
-                
-                {% if empleados_disponibles %}
-                <li class="section-divider">
-                    <span>INICIAR NUEVA CONVERSACIÓN</span>
-                </li>
-                {% for empleado in empleados_disponibles %}
-                <li class="conversation" data-user-id="{{ empleado.id }}" onclick="cargarConversacion({{ empleado.id }}, '{{ empleado.nombre }}')">
-                    <div class="avatar">{{ empleado.nombre[0].upper() }}</div>
-                    <div class="details">
-                        <h4>{{ empleado.nombre }} (Candidato)</h4>
-                        <p>Iniciar conversación</p>
-                    </div>
-                </li>
-                {% endfor %}
-                {% endif %}
-            </ul>
-        </aside>
+                        
+                        {% if empleados_disponibles %}
+                        <li class="section-divider">
+                            <span>INICIAR NUEVA CONVERSACIÓN</span>
+                        </li>
+                        {% for empleado in empleados_disponibles %}
+                        <li class="conversation" data-user-id="{{ empleado.id }}" onclick="cargarConversacion({{ empleado.id }}, '{{ empleado.nombre }}')">
+                            <div class="avatar">{{ empleado.nombre[0].upper() }}</div>
+                            <div class="details">
+                                <h4>{{ empleado.nombre }} (Candidato)</h4>
+                                <p>Iniciar conversación</p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                        {% endif %}
+                    </ul>
+                </aside>
 
-        <!-- Área principal del chat -->
-        <main class="chat-section">
-            <header class="chat-header" id="chatHeader" style="display: none;">
-                <div class="chat-header-left">
-                    <div class="chat-avatar" id="chatAvatar">?</div>
-                    <div class="chat-info">
-                        <h3 id="chatNombre">Selecciona una conversación</h3>
-                        <span class="status" id="chatStatus"></span>
-                    </div>
-                </div>
-                <div class="chat-header-actions">
-                    <i class="fas fa-phone"></i>
-                    <i class="fas fa-video"></i>
-                    <i class="fas fa-ellipsis-v"></i>
-                </div>
-            </header>
+                <!-- Área principal del chat -->
+                <main class="chat-section">
+                    <header class="chat-header" id="chatHeader" style="display: none;">
+                        <div class="chat-header-left">
+                            <div class="chat-avatar" id="chatAvatar">?</div>
+                            <div class="chat-info">
+                                <h3 id="chatNombre">Selecciona una conversación</h3>
+                                <span class="status" id="chatStatus"></span>
+                            </div>
+                        </div>
+                        <div class="chat-header-actions">
+                            <i class="fas fa-phone"></i>
+                            <i class="fas fa-video"></i>
+                            <i class="fas fa-ellipsis-v"></i>
+                        </div>
+                    </header>
 
-            <div class="chat-messages" id="chatMessages">
-                <div class="empty-chat-state">
-                    <div class="empty-chat-icon">
-                        <i class="fas fa-comment-dots"></i>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="empty-chat-state">
+                            <div class="empty-chat-icon">
+                                <i class="fas fa-comment-dots"></i>
+                            </div>
+                            <p class="empty-chat-text">Selecciona una conversación para comenzar</p>
+                        </div>
                     </div>
-                    <p class="empty-chat-text">Selecciona una conversación para comenzar</p>
-                </div>
+
+                    <div class="chat-input" id="chatInput" style="display: none;">
+                        <div class="chat-input-wrapper">
+                            <div class="chat-input-actions">
+                                <i class="fas fa-paperclip"></i>
+                            </div>
+                            <input type="text" id="mensajeInput" placeholder="Type a message here..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
+                            <div class="chat-input-actions">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                        </div>
+                        <button onclick="enviarMensaje()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </main>
             </div>
-
-            <div class="chat-input" id="chatInput" style="display: none;">
-                <div class="chat-input-wrapper">
-                    <div class="chat-input-actions">
-                        <i class="fas fa-paperclip"></i>
-                    </div>
-                    <input type="text" id="mensajeInput" placeholder="Type a message here..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
-                    <div class="chat-input-actions">
-                        <i class="fas fa-microphone"></i>
-                    </div>
-                </div>
-                <button onclick="enviarMensaje()">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </main>
         </div>
     </div>
+
+    {{ footer.footer() }}
 
     <script src="{{ url_for('static', filename='js/notificaciones_empresa_tiempo_real.js') }}"></script>
     <script>
