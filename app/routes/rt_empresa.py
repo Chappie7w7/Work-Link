@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify, make_response
+from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify, make_response, flash
 from app.utils.decorators import login_role_required
 from app.utils.roles import Roles
 from app.controller.ctr_empleos import get_user_from_session
