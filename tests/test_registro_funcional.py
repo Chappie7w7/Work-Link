@@ -32,17 +32,17 @@ def test_registro_usuario_exitoso(driver, base_url):
     privacy_check = driver.find_element(By.ID, "privacyCheck")
 
     nombre_input.clear()
-    nombre_input.send_keys("Usuario Selenium")
+    nombre_input.send_keys("Ángel Antonio")
 
     # Cambia el correo si ya existe en tu BD
     correo_input.clear()
-    correo_input.send_keys("selenium_user@example.com")
+    correo_input.send_keys("angelA@gmail.com")
 
     password_input.clear()
-    password_input.send_keys("clave123")
+    password_input.send_keys("qwerty123")
 
     confirmar_input.clear()
-    confirmar_input.send_keys("clave123")
+    confirmar_input.send_keys("qwerty123")
 
     # Aceptar aviso de privacidad
     if not privacy_check.is_selected():

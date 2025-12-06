@@ -25,5 +25,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
+        env:
+          BASE_URL: "https://worklink.pythonanywhere.com"
         run: |
           python -m pytest

@@ -2,8 +2,9 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+import os
 
-BASE_URL = "http://127.0.0.1:5000"
+BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:5000")
 
 
 @pytest.fixture(scope="session")
