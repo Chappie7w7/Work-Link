@@ -29,3 +29,20 @@ jobs:
           BASE_URL: "https://worklink.pythonanywhere.com"
         run: |
           python -m pytest
+
+      - name: Log in to Docker Hub
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+
+      - name: Build and push Docker image
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          IMAGE_NAME="$DOCKERHUB_USERNAME/work-link"
+          TAG="v1"
+          echo "Building image $IMAGE_NAME:$TAG"
+          docker build -t "$IMAGE_NAME:$TAG" .
+          docker push "$IMAGE_NAME:$TAG"
