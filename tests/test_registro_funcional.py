@@ -32,11 +32,11 @@ def test_registro_usuario_exitoso(driver, base_url):
     privacy_check = driver.find_element(By.ID, "privacyCheck")
 
     nombre_input.clear()
-    nombre_input.send_keys("Ángela")
+    nombre_input.send_keys("Ángela López")
 
     # Cambia el correo si ya existe en tu BD
     correo_input.clear()
-    correo_input.send_keys("angela@gmail.com")
+    correo_input.send_keys("angelaL@gmail.com")
 
     password_input.clear()
     password_input.send_keys("qwerty123")
