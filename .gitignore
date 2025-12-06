@@ -65,7 +65,7 @@ db.sqlite3-journal
 crear_tabla_*.py
 crear_tabla_*.sql
 create_*_table.sql
-test_*.py
+#test_*.py
 *_README.md
 CONTADOR_*.md
 SISTEMA_*.md
