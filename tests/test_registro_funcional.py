@@ -32,11 +32,11 @@ def test_registro_usuario_exitoso(driver, base_url):
     privacy_check = driver.find_element(By.ID, "privacyCheck")
 
     nombre_input.clear()
-    nombre_input.send_keys("Ángela López")
+    nombre_input.send_keys("Ángel López Román")
 
     # Cambia el correo si ya existe en tu BD
     correo_input.clear()
-    correo_input.send_keys("angelaL@gmail.com")
+    correo_input.send_keys("angelLR@gmail.com")
 
     password_input.clear()
     password_input.send_keys("qwerty123")
@@ -55,9 +55,9 @@ def test_registro_usuario_exitoso(driver, base_url):
     time.sleep(2)
 
     # Tras registro redirige a LoginRoute.login_form (login.jinja2)
-    assert "/form-registro-empleado" in driver.current_url
+    assert "/login" in driver.current_url
 
     # Verificar mensaje de éxito
     mensajes = driver.find_elements(By.CSS_SELECTOR, ".mensajes p")
     textos = [m.text for m in mensajes]
-    assert any("Cuenta creada con éxito" in t for t in textos)
+    assert any("Cuenta creada con éxito. Un administrador debe aprobar tu cuenta antes de poder iniciar sesión." in t for t in textos)
