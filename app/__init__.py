@@ -30,6 +30,7 @@ def create_app():
             from app.utils.mensaje_helper import contar_mensajes_no_leidos
             return {'mensajes_no_leidos': contar_mensajes_no_leidos(usuario['id'])}
         return {'mensajes_no_leidos': 0}
+    
 
     # Registrar TODAS las rutas
     register_routes(app)

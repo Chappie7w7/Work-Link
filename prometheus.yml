@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+
+scrape_configs:
+
+  # Para monitorear al propio Prometheus
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  # Node Exporter (métricas del servidor donde corre)
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['node_exporter:9100']
+
+  # Tu aplicación Flask Worklink
+  - job_name: 'worklink_app'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['host.docker.internal:5000']
+

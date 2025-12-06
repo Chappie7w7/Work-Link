@@ -1,0 +1,10 @@
+groups:
+  - name: ejemplo-alertas
+    rules:
+      - alert: WorklinkDown
+        expr: up{job="worklink_app"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          description: "La aplicación Worklink no responde en el endpoint /metrics"
