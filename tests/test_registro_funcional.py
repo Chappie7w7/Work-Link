@@ -55,7 +55,7 @@ def test_registro_usuario_exitoso(driver, base_url):
     time.sleep(2)
 
     # Tras registro redirige a LoginRoute.login_form (login.jinja2)
-    assert "/login" in driver.current_url
+    assert "/form-registro-empleado" in driver.current_url
 
     # Verificar mensaje de éxito
     mensajes = driver.find_elements(By.CSS_SELECTOR, ".mensajes p")
