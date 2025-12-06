@@ -16,6 +16,9 @@ python-dotenv
 flask-socketio
 python-socketio
 pusher
+selenium
+pytest
+webdriver-manager
 
 # Autenticación con Google
 google-auth==2.16.0
