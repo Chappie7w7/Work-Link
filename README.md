@@ -110,3 +110,85 @@ Todos los comandos deben de tener un resultado exitoso y ver los cambios en la b
 Ejecuta tu app con:
 python main.py 
 para que debug=True funcione directamente.
+
+## Scripts, entorno y monitoreo
+
+### Ejecución de scripts
+
+En la carpeta `scripts/` se encuentran utilidades para automatizar tareas frecuentes:
+
+- `scripts/run_tests.sh`
+  - Ejecuta toda la batería de pruebas con `pytest`.
+  - Uso:
+    ```sh
+    ./scripts/run_tests.sh
+    ```
+
+- `scripts/build_image.sh`
+  - Construye la imagen Docker de la aplicación.
+  - Uso:
+    ```sh
+    ./scripts/build_image.sh [IMAGE_NAME] [TAG]
+    # Ejemplo
+    ./scripts/build_image.sh chappie420/work-link v1
+    ```
+
+- `scripts/deploy_local.sh`
+  - Realiza `docker pull` de la imagen indicada y levanta el stack definido en `docker-compose.monitoring.yml`.
+  - Uso:
+    ```sh
+    ./scripts/deploy_local.sh [IMAGE_NAME] [TAG]
+    # Ejemplo
+    ./scripts/deploy_local.sh chappie420/work-link v1
+    ```
+
+- `scripts/monitoring_up.sh` y `scripts/monitoring_down.sh`
+  - Levantan y detienen el entorno de monitoreo (WorkLink + Prometheus + Node Exporter + Grafana).
+  - Uso:
+    ```sh
+    ./scripts/monitoring_up.sh    # Inicia monitoreo
+    ./scripts/monitoring_down.sh  # Detiene monitoreo
+    ```
+
+### Cómo reproducir el entorno con Docker
+
+Para construir la imagen Docker de Work-Link y ejecutarla localmente:
+
+```sh
+./scripts/build_image.sh chappie420/work-link v1
+
+docker run -p 5000:5000 \
+  --add-host=host.docker.internal:host-gateway \
+  -e SQLALCHEMY_DATABASE_URI="mysql+pymysql://USER:PASS@host.docker.internal:3306/worklink" \
+  chappie420/work-link:v1
+```
+
+Con esto la aplicación queda disponible en:
+
+- `http://localhost:5000`
+
+### Cómo activar el monitoreo
+
+El archivo `docker-compose.monitoring.yml` define el stack de monitoreo que incluye:
+
+- `worklink_app`: aplicación Work-Link en Docker.
+- `prometheus`: servidor de métricas.
+- `node_exporter`: métricas del sistema.
+- `grafana`: visualización de métricas.
+
+Para activar el monitoreo:
+
+```sh
+./scripts/monitoring_up.sh
+```
+
+Servicios disponibles:
+
+- Aplicación: `http://localhost:5000`
+- Prometheus: `http://localhost:9090`
+- Grafana: `http://localhost:3000`
+
+Para detener el monitoreo y los contenedores asociados:
+
+```sh
+./scripts/monitoring_down.sh

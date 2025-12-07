@@ -19,6 +19,7 @@ pusher
 selenium
 pytest
 webdriver-manager
+prometheus-client
 
 # Autenticación con Google
 google-auth==2.16.0
